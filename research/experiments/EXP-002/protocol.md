@@ -1,7 +1,7 @@
 <!-- SPDX-License-Identifier: LicenseRef-TOKEN-NC-Research-1.0 -->
 # EXP-002 protocol: cold-start versus warm latency of installed local models
 
-**Status: DRAFT v0.1, 2026-11-24. Not frozen; awaiting the owner (G-FREEZE). Protocol hash: none until frozen.** Parent: `research/protocol.md` (draft v0.1).
+**Status: FROZEN v1.0 (owner-approved 2026-11-24, G-FREEZE).** SHA-256 recorded in `research/freeze.json` and `research/experiment_registry.csv`; any edit after the freeze makes the run refused and needs a new owner freeze. Parent: `research/protocol.md` (v1.0, frozen 2026-11-24).
 
 1. **Precise question.** For A0 phi4-mini:3.8b, A1 llama3.1:8b and A2 ministral-3:8b (Q4_K_M) on this machine, how large is the latency penalty of a runtime-cold request (model unloaded from the runtime) relative to a warm request, and does it increase with model file size?
 2. **Mechanism.** A cold request must map and initialise the model weights before prefill; the cost should scale with file size, moderated by the OS page cache.
@@ -24,4 +24,8 @@
 19. **Anticipated failure modes.** Unload not honoured; another client reloading a model; page-cache effects masking size dependence.
 20. **Sensitivity tests.** Repeat the cold trials after loading a different arm in between (to displace that model from cache) as an exploratory check of page-cache influence.
 21. **Reproducibility commands (M2).** `uv run token-lab run --exp EXP-002`.
-22. **Owner approval.** Not yet given. Note that unloading models affects the shared runtime; the owner must schedule the window.
+22. **Owner approval.** Given 2026-11-24 (freeze with amendments; see below). Unloading models affects the shared runtime; the coordinator schedules the exclusive window.
+
+## Amendments before freeze (owner-approved 2026-11-24)
+
+Applied from the parent protocol's amendments: F5 (energy modelled only), F6 (Llama 3.1 Community License accepted for A1), F8 (each arm's chat template, system prompt, parameters and Modelfile hashes recorded in the run manifest). F1: the real smoke run, including its 5 cold and 5 warm trials for one arm, happens in a separate exclusive window and cannot change this protocol. F2, F3, F4, F7 and F9 do not change this experiment's design. Implementation note: the M2 runner has no cold/warm mode yet, so this experiment has no runnable config at the freeze (`research/freeze.json`); the cold/warm mode must implement exactly items 9 to 12 above, and its config is added under a new owner freeze record entry before it runs.

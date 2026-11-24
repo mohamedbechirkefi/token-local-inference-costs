@@ -32,6 +32,8 @@ class StubState:
         self.reply = ["B", "."]
         self.calls = 0
         self.sleep_s = 2.0
+        self.show_calls = 0
+        self.show_mode = "ok"  # ok | error
 
 
 @pytest.fixture
@@ -58,7 +60,17 @@ def stub_ollama():
 
         def do_POST(self):
             n = int(self.headers.get("Content-Length", 0))
-            json.loads(self.rfile.read(n))
+            body = json.loads(self.rfile.read(n))
+            if self.path == "/api/show":
+                state.show_calls += 1
+                if state.show_mode == "error":
+                    self._send(b'{"error":"model not found"}', 404)
+                    return
+                self._send(json.dumps({"template": "{{ .Prompt }}", "system": "",
+                                       "parameters": "stop <eot>", "modelfile": f"FROM {body.get('model')}",
+                                       "details": {"format": "gguf", "quantization_level": "Q4_K_M",
+                                                   "parameter_size": "8.0B"}}).encode())
+                return
             state.calls += 1
             m = state.mode
             if m == "http500":

@@ -1,0 +1,28 @@
+{
+ "dataset": "ARC-Challenge (allenai/ai2_arc)",
+ "license": "CC-BY-SA-4.0",
+ "split": "validation",
+ "source_url": "https://huggingface.co/datasets/allenai/ai2_arc/resolve/210d026faf9955653af8916fad021475a3f00453/ARC-Challenge/validation-00000-of-00001.parquet",
+ "revision": "210d026faf9955653af8916fad021475a3f00453",
+ "parquet_sha256": "395a5c88d1580d69855fbaee9450270578df1ad5af6259771cd0a42c20e99f05",
+ "jsonl_path": "results/raw/arc/ARC-Challenge-validation.jsonl",
+ "jsonl_sha256": "16b59737cb520f748020546b5e3fa76f0893d1a1237bb350dd81dd43a09f151b",
+ "n_source_items": 299,
+ "subset_size": 10,
+ "subset_seed": 20261124,
+ "sampling": "token_lab.items.seeded_subset: ids sorted, numpy default_rng(seed).choice without replacement",
+ "use": "exploratory smoke matrix (protocol section 10); never used for confirmatory analysis",
+ "note": "Item IDs only; question texts are not committed (regenerate with scripts/fetch_arc.py).",
+ "item_ids": [
+  "MCAS_2014_8_17",
+  "MDSA_2007_5_39",
+  "Mercury_189490",
+  "Mercury_7038133",
+  "Mercury_7159268",
+  "Mercury_7185133",
+  "Mercury_7207620",
+  "Mercury_7228603",
+  "NYSEDREGENTS_2014_4_2",
+  "NYSEDREGENTS_2014_4_28"
+ ]
+}

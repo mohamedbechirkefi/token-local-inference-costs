@@ -297,3 +297,103 @@ def test_memory_sampler_sees_own_process():
     assert s2.summary()["peak_rss_mib"] is None  # never imputed
     with pytest.raises(ValueError):
         MemorySampler(lambda p: True, hz=0)
+
+
+# ---- freeze amendments (owner-approved 2026-11-24) ----
+
+from token_lab.analysis import arm_summaries as _arm_summaries  # noqa: E402
+from token_lab.runner import arm_fingerprints, verify_items  # noqa: E402
+from token_lab.runtime import RuntimeReportedError, model_fingerprint  # noqa: E402
+
+
+def test_model_fingerprint_hashes_and_missing_fields():
+    fp = model_fingerprint({"template": "{{ .Prompt }}", "parameters": "stop x", "details": {"format": "gguf"}})
+    assert fp["template_sha256"] == hashlib.sha256(b"{{ .Prompt }}").hexdigest()
+    assert fp["parameters_sha256"] == hashlib.sha256(b"stop x").hexdigest()
+    assert fp["system_sha256"] is None and fp["modelfile_sha256"] is None  # never imputed
+    assert fp["format"] == "gguf"
+    assert model_fingerprint({"template": "a"})["template_sha256"] != model_fingerprint({"template": "b"})["template_sha256"]
+
+
+def test_runner_records_template_hashes_from_stub(repo, tmp_path, stub_ollama):
+    cfg = parse_config(base_config(repetitions=1, runtime_seeds=[0], backend={"name": "ollama"}))
+    doc, path = execute(cfg, repo, backend=OllamaBackend(stub_ollama.url, 5), out_root=tmp_path)
+    ar = doc["manifest"]["arm_runtime"]
+    assert set(ar) == {"A0", "A1", "A2"} and stub_ollama.show_calls == 3
+    assert ar["A0"]["template_sha256"] == hashlib.sha256(b"{{ .Prompt }}").hexdigest()
+    assert ar["A1"]["modelfile_sha256"] == hashlib.sha256(b"FROM llama3.1:8b").hexdigest()
+    assert json.loads((path.parent / "run_manifest.json").read_text())["arm_runtime"] == ar
+
+
+class _NoShow(SimulatedBackend):
+    def show(self, model):
+        raise RuntimeReportedError("no such model")
+
+
+def test_fingerprint_failure_exploratory_recorded_confirmatory_aborts():
+    cfg = parse_config(base_config())
+    out = arm_fingerprints(cfg, _NoShow())
+    assert all("error" in v for v in out.values())
+    raw = json.loads(json.dumps(base_config()))
+    conf = parse_config({**raw, "exp_id": "EXP-001", "mode": "confirmatory", "backend": {"name": "ollama"},
+                         "items": {**raw["items"], "source_sha256": "0" * 64, "subset_ids_path": "x.json"}})
+    with pytest.raises(RuntimeReportedError):
+        arm_fingerprints(conf, _NoShow())
+
+
+def test_confirmatory_config_must_pin_items():
+    raw = base_config(exp_id="EXP-001", mode="confirmatory", backend={"name": "ollama"})
+    raw["items"] = {**raw["items"], "subset_size": 5}
+    with pytest.raises(ConfigError, match="pin"):
+        parse_config(raw)
+    raw["items"]["source_sha256"] = "XYZ"
+    with pytest.raises(ConfigError, match="source_sha256"):
+        parse_config(raw)
+
+
+def test_verify_items_fails_closed(repo, tmp_path):
+    from token_lab.items import load_items, seeded_subset
+    items, sha = load_items(repo / "data" / "fixtures" / "synthetic_mc.jsonl")
+    sub = seeded_subset(items, 5, 20261124)
+    ids = tmp_path / "ids.json"
+    ids.write_text(json.dumps({"item_ids": sorted(i.item_id for i in sub)}))
+    raw = base_config()
+    raw["items"] = {**raw["items"], "subset_size": 5, "source_sha256": sha, "subset_ids_path": str(ids)}
+    verify_items(parse_config(raw), sha, sub, repo)  # matches: no error
+    with pytest.raises(ValueError, match="SHA-256"):
+        verify_items(parse_config({**raw, "items": {**raw["items"], "source_sha256": "f" * 64}}), sha, sub, repo)
+    ids.write_text(json.dumps({"item_ids": sorted(i.item_id for i in items[:5])[::-1] + ["other"]}))
+    with pytest.raises(ValueError, match="item IDs"):
+        verify_items(parse_config(raw), sha, sub, repo)
+
+
+def test_frozen_subset_ids_match_committed_manifest(repo):
+    ids = json.loads((repo / "data" / "arc_challenge_test_subset_ids.json").read_text())
+    assert ids["subset_size"] == len(ids["item_ids"]) == len(set(ids["item_ids"])) == 300
+    assert ids["subset_seed"] == 20261124 and ids["license"] == "CC-BY-SA-4.0"
+    cfg = json.loads((repo / "experiments" / "EXP-001.json").read_text())
+    assert cfg["items"]["source_sha256"] == ids["jsonl_sha256"]
+    assert "question" not in json.dumps(ids["item_ids"])  # IDs only, no texts
+    arc = repo / "results" / "raw" / "arc" / "ARC-Challenge-test.jsonl"
+    if arc.is_file():  # the raw file is not committed; check it when present
+        from token_lab.items import load_items, seeded_subset
+        items, sha = load_items(arc)
+        assert sha == ids["jsonl_sha256"]
+        assert sorted(i.item_id for i in seeded_subset(items, 300, 20261124)) == ids["item_ids"]
+
+
+def test_named_memory_metric_runtime_reported(repo, tmp_path, stub_ollama):
+    cfg = parse_config(base_config(repetitions=1, runtime_seeds=[0], backend={"name": "ollama"},
+                                   arms=[{"arm_id": "A0", "model": "m"}, {"arm_id": "A1", "model": "n"}]))
+    doc, _ = execute(cfg, repo, backend=OllamaBackend(stub_ollama.url, 5), out_root=tmp_path)
+    s = {x["arm"]: x for x in _arm_summaries(doc)}
+    assert s["A0"]["runtime_model_mib"] == pytest.approx(123 / 2**20)  # stub /api/ps reports model "m"
+    assert s["A1"]["runtime_model_mib"] is None  # not reported, never imputed
+
+
+def test_mcnemar_majority_rule_over_repetitions():
+    from token_lab.stats import paired_compare
+    # item means over five repetitions: 0.6 -> correct, 0.4 -> incorrect (majority rule)
+    pd = paired_compare([0.6, 0.4, 1.0, 0.0], [0.4, 0.6, 1.0, 0.0], n_boot=200, seed=7)
+    assert (pd.b, pd.c) == (1, 1)
+    assert pd.delta == pytest.approx(0.0)

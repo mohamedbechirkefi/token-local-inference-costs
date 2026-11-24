@@ -10,7 +10,7 @@ import numpy as np
 from .stats import cv, holm, median_iqr, paired_compare
 from .tokens import throughput_tps
 
-# Planned request counts from research/protocol.md section 10 (draft v0.1).
+# Planned request counts from research/protocol.md section 10 (v1.0, frozen 2026-11-24).
 PLANNED_REQUESTS = {"EXP-001": 4500, "EXP-002": 60, "EXP-003": 3000}
 
 
@@ -55,6 +55,12 @@ def arm_summaries(doc: dict) -> list[dict]:
             resp_by[r["item_id"]].add(r["response"])
         determ = float(np.mean([len(s) == 1 for s in resp_by.values()]))
         blocks = [b for b in doc["blocks"] if b["arm"] == arm]
+        # Primary memory metric (amendment A2, owner-approved 2026-11-24):
+        # runtime-reported model memory, the largest ``size`` that /api/ps reports
+        # for this arm's model at the end of its blocks. Runtime-reported, not
+        # sampled; RSS, system used memory and swap stay secondary.
+        rt_sizes = [m.get("size") for b in blocks for m in (b.get("loaded_after") or [])
+                    if m.get("name") == model and isinstance(m.get("size"), (int, float))]
         rss = [b["memory"].get("peak_rss_mib") for b in blocks if b["memory"].get("peak_rss_mib") is not None]
         swap = [b["memory"].get("swap_delta_mib", 0.0) for b in blocks]
         # per-repetition spread
@@ -77,6 +83,7 @@ def arm_summaries(doc: dict) -> list[dict]:
             "decode_tps_median": dec[0] if dec else None,
             "prefill_tps_median": pre[0] if pre else None,
             "determinism": determ,
+            "runtime_model_mib": max(rt_sizes) / 2**20 if rt_sizes else None,
             "peak_rss_mib": max(rss) if rss else None,
             "swap_delta_mib_max": max(swap) if swap else None,
             "block_wall_s": [b["wall_s"] for b in blocks],

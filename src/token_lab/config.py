@@ -48,6 +48,8 @@ class RunConfig:
     warmup: bool
     memory_sample_hz: float
     process_match: str
+    items_source_sha256: str | None = None
+    subset_ids_path: str | None = None
 
     @property
     def sha256(self) -> str:
@@ -100,6 +102,14 @@ def parse_config(raw: dict) -> RunConfig:
     subset = items.get("subset_size")
     if subset is not None and (isinstance(subset, bool) or not isinstance(subset, int) or subset < 1):
         raise ConfigError("items.subset_size must be a positive int or null")
+    src_sha = items.get("source_sha256")
+    if src_sha is not None and (not isinstance(src_sha, str) or not re.fullmatch(r"[0-9a-f]{64}", src_sha)):
+        raise ConfigError("items.source_sha256 must be 64 lowercase hex characters")
+    ids_path = items.get("subset_ids_path")
+    if ids_path is not None and not isinstance(ids_path, str):
+        raise ConfigError("items.subset_ids_path must be a string")
+    if mode == "confirmatory" and (src_sha is None or (subset is not None and ids_path is None)):
+        raise ConfigError("a confirmatory config must pin items.source_sha256 and items.subset_ids_path")
     template = _req(raw, "template", str)
     if template not in TEMPLATE_IDS:
         raise ConfigError(f"template must be one of {TEMPLATE_IDS}")
@@ -139,6 +149,8 @@ def parse_config(raw: dict) -> RunConfig:
         warmup=bool(raw.get("warmup", True)),
         memory_sample_hz=float(hz),
         process_match=str(raw.get("process_match", "ollama")),
+        items_source_sha256=src_sha,
+        subset_ids_path=ids_path,
     )
 
 
@@ -174,7 +186,34 @@ def frozen_protocol_hash(repo: Path, exp_id: str) -> str | None:
     return None
 
 
+FREEZE_RECORD = Path("research") / "freeze.json"
+
+
+def _sha256_file(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def load_freeze_record(repo: Path) -> dict | None:
+    p = repo / FREEZE_RECORD
+    if not p.is_file():
+        return None
+    try:
+        rec = json.loads(p.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return None
+    return rec if isinstance(rec, dict) else None
+
+
 def require_frozen_if_confirmatory(cfg: RunConfig, repo: Path) -> str | None:
+    """Fail closed unless every frozen artifact still matches the freeze record.
+
+    A confirmatory run needs: (1) a registry row whose 64-hex protocol hash
+    equals the SHA-256 of the experiment protocol; (2) ``research/freeze.json``
+    whose main-protocol hash equals the SHA-256 of ``research/protocol.md``;
+    (3) an entry for the experiment with the same protocol hash; and (4) the
+    canonical SHA-256 of the requested config equal to the frozen config hash.
+    Any edit to a protocol or config after the freeze makes the run refused.
+    """
     if cfg.mode != "confirmatory":
         return None
     h = frozen_protocol_hash(repo, cfg.exp_id)
@@ -182,5 +221,20 @@ def require_frozen_if_confirmatory(cfg: RunConfig, repo: Path) -> str | None:
         raise ProtocolNotFrozen(
             f"{cfg.exp_id}: protocol is not frozen (no matching SHA-256 in the registry). "
             "Confirmatory runs are refused until the owner freezes it (G-FREEZE)."
+        )
+    rec = load_freeze_record(repo)
+    if rec is None:
+        raise ProtocolNotFrozen(f"{cfg.exp_id}: no freeze record at {FREEZE_RECORD} (G-FREEZE)")
+    main = rec.get("main_protocol") or {}
+    main_path = repo / str(main.get("path", "research/protocol.md"))
+    if not main_path.is_file() or _sha256_file(main_path) != main.get("sha256"):
+        raise ProtocolNotFrozen(f"{cfg.exp_id}: research/protocol.md differs from the frozen version")
+    entry = (rec.get("experiments") or {}).get(cfg.exp_id)
+    if not isinstance(entry, dict) or entry.get("protocol_sha256") != h:
+        raise ProtocolNotFrozen(f"{cfg.exp_id}: not listed in the freeze record with this protocol hash")
+    if entry.get("config_canonical_sha256") != cfg.sha256:
+        raise ProtocolNotFrozen(
+            f"{cfg.exp_id}: config differs from the frozen config "
+            f"(canonical SHA-256 {cfg.sha256}, frozen {entry.get('config_canonical_sha256')})"
         )
     return h

@@ -1,7 +1,7 @@
 {
-  "schema_version": "0.1.0",
+  "schema_version": "0.2.0",
   "generated": "2026-11-24",
-  "status": "M2: candidate sources only; no dataset downloaded (M2 brief forbids downloads); synthetic offline fixture added",
+  "status": "Frozen 2026-11-24: ARC-Challenge test and validation downloaded (item IDs and SHA-256 committed, texts not committed); synthetic offline fixture kept for tests",
   "datasets": [
     {
       "id": "arc-challenge",
@@ -9,20 +9,38 @@
       "source_url": "https://huggingface.co/datasets/allenai/ai2_arc",
       "paper": "arXiv:1803.05457",
       "license": "CC-BY-SA-4.0 (per dataset card, accessed 2026-11-24)",
-      "redistribution": "Allowed with attribution and ShareAlike; any bundled subset keeps CC BY-SA 4.0 and is not relicensed under the project licence. Owner decision pending: bundle a subset or commit item IDs only.",
+      "redistribution": "Allowed with attribution and ShareAlike. Owner decision (2026-11-24): commit item IDs and SHA-256 only; question texts are not committed and are regenerated with scripts/fetch_arc.py.",
       "splits_used": {
-        "test": "fixed 300-item subset (seed 20261124), proposed",
-        "validation": "prompt development and smoke runs"
+        "test": "fixed 300-item subset (seed 20261124), data/arc_challenge_test_subset_ids.json",
+        "validation": "smoke runs (10 items, seed 20261124, data/arc_challenge_validation_smoke_ids.json) and prompt development"
       },
       "split_sizes": {
         "train": 1119,
         "validation": 299,
         "test": 1172
       },
-      "version": null,
-      "sha256": null,
-      "retrieved": null,
-      "status": "candidate (primary)"
+      "version": "Hugging Face allenai/ai2_arc revision 210d026faf9955653af8916fad021475a3f00453",
+      "sha256": "see files (parquet as downloaded; jsonl as converted by scripts/fetch_arc.py)",
+      "retrieved": "2026-11-24",
+      "status": "primary; downloaded with owner approval 2026-11-24",
+      "files": {
+        "test": {
+          "url": "https://huggingface.co/datasets/allenai/ai2_arc/resolve/210d026faf9955653af8916fad021475a3f00453/ARC-Challenge/test-00000-of-00001.parquet",
+          "parquet_sha256": "62f03257e737aed263f55c6abf87c7bb0028a44a6bdd2a26eb1279eb42c1d1e9",
+          "parquet_bytes": 203808,
+          "jsonl_path": "results/raw/arc/ARC-Challenge-test.jsonl (not committed)",
+          "jsonl_sha256": "86ccaace4cd159b5c02b6b3339ebe8a7022a54f1b488e433c060b3bc38ac1f63",
+          "n_items": 1172
+        },
+        "validation": {
+          "url": "https://huggingface.co/datasets/allenai/ai2_arc/resolve/210d026faf9955653af8916fad021475a3f00453/ARC-Challenge/validation-00000-of-00001.parquet",
+          "parquet_sha256": "395a5c88d1580d69855fbaee9450270578df1ad5af6259771cd0a42c20e99f05",
+          "parquet_bytes": 55743,
+          "jsonl_path": "results/raw/arc/ARC-Challenge-validation.jsonl (not committed)",
+          "jsonl_sha256": "16b59737cb520f748020546b5e3fa76f0893d1a1237bb350dd81dd43a09f151b",
+          "n_items": 299
+        }
+      }
     },
     {
       "id": "gsm8k",
@@ -58,7 +76,7 @@
       "quantization": "Q4_K_M",
       "parameters": "8.0B",
       "size_bytes_model_layer": 4920738944,
-      "license": "Llama 3.1 Community License (local licence layer)",
+      "license": "Llama 3.1 Community License (accepted by the owner for this study, 2026-11-24)",
       "redistributed": false,
       "role": "EXP-001 arm A1; EXP-003 baseline"
     },
@@ -79,15 +97,15 @@
       "parameters": null,
       "license": "Apache-2.0 (local licence layer)",
       "redistributed": false,
-      "role": "excluded pending smoke check"
+      "role": "excluded by the owner (2026-11-24)"
     },
     {
-      "tag": "llama3.1 8B Q8_0 (tag to be confirmed)",
+      "tag": "llama3.1:8b-instruct-q8_0 (planned; verified at the pull)",
       "format": "GGUF",
       "quantization": "Q8_0",
-      "license": "Llama 3.1 Community License",
+      "license": "Llama 3.1 Community License (accepted by the owner for this study, 2026-11-24)",
       "redistributed": false,
-      "role": "EXP-003 arm; not installed; download requires owner approval"
+      "role": "EXP-003 arm Q8; download approved by the owner 2026-11-24; pulled later in the exclusive window, not yet installed"
     }
   ],
   "synthetic": [

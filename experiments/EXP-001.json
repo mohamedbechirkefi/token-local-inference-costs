@@ -1,20 +1,50 @@
 {
  "exp_id": "EXP-001",
  "mode": "confirmatory",
- "description": "EXP-001 confirmatory matrix per research/experiments/EXP-001/protocol.md (draft v0.1). The runner refuses this config until the owner freezes the protocol and its SHA-256 is in the registry. items.path is a placeholder until the ARC-Challenge test file is obtained with owner approval.",
- "backend": {"name": "ollama", "base_url": "http://127.0.0.1:11434", "timeout_s": 120},
+ "description": "EXP-001 confirmatory matrix per research/experiments/EXP-001/protocol.md (v1.0, frozen by the owner 2026-11-24). Items: ARC-Challenge test (regenerate with scripts/fetch_arc.py); the file and the 300-item subset are checked against the frozen SHA-256 and item IDs before any request.",
+ "backend": {
+  "name": "ollama",
+  "base_url": "http://127.0.0.1:11434",
+  "timeout_s": 120
+ },
  "arms": [
-  {"arm_id": "A0", "model": "phi4-mini:3.8b"},
-  {"arm_id": "A1", "model": "llama3.1:8b"},
-  {"arm_id": "A2", "model": "ministral-3:8b"}
+  {
+   "arm_id": "A0",
+   "model": "phi4-mini:3.8b"
+  },
+  {
+   "arm_id": "A1",
+   "model": "llama3.1:8b"
+  },
+  {
+   "arm_id": "A2",
+   "model": "ministral-3:8b"
+  }
  ],
  "baseline_arm": "A0",
- "items": {"path": "results/raw/arc/ARC-Challenge-test.jsonl", "synthetic": false, "subset_size": 300, "subset_seed": 20261124},
+ "items": {
+  "path": "results/raw/arc/ARC-Challenge-test.jsonl",
+  "synthetic": false,
+  "subset_size": 300,
+  "subset_seed": 20261124,
+  "source_sha256": "86ccaace4cd159b5c02b6b3339ebe8a7022a54f1b488e433c060b3bc38ac1f63",
+  "subset_ids_path": "data/arc_challenge_test_subset_ids.json"
+ },
  "template": "T1",
  "repetitions": 5,
- "runtime_seeds": [0, 1, 2, 3, 4],
+ "runtime_seeds": [
+  0,
+  1,
+  2,
+  3,
+  4
+ ],
  "order_seed_base": 1000,
- "decoding": {"temperature": 0, "num_predict": 8, "num_ctx": 2048},
+ "decoding": {
+  "temperature": 0,
+  "num_predict": 8,
+  "num_ctx": 2048
+ },
  "max_retries": 2,
  "warmup": true,
  "memory_sample_hz": 10,

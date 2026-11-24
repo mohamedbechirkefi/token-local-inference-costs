@@ -78,6 +78,32 @@ class Backend(Protocol):
 
     def loaded_models(self) -> list[dict]: ...
 
+    def show(self, model: str) -> dict: ...
+
+
+def _sha(value) -> str | None:
+    if value is None:
+        return None
+    text = value if isinstance(value, str) else json.dumps(value, sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+def model_fingerprint(show: dict) -> dict:
+    """SHA-256 of each model's chat template, default system prompt, default
+    parameters and Modelfile as reported by ``/api/show`` (protocol amendment
+    A5, owner-approved 2026-11-24). A missing field hashes to None, never to a
+    made-up value; the raw texts are not stored."""
+    details = show.get("details") if isinstance(show.get("details"), dict) else {}
+    return {
+        "template_sha256": _sha(show.get("template")),
+        "system_sha256": _sha(show.get("system")),
+        "parameters_sha256": _sha(show.get("parameters")),
+        "modelfile_sha256": _sha(show.get("modelfile")),
+        "format": details.get("format"),
+        "quantization_level": details.get("quantization_level"),
+        "parameter_size": details.get("parameter_size"),
+    }
+
 
 class OllamaBackend:
     name = "ollama"
@@ -131,6 +157,18 @@ class OllamaBackend:
         if not isinstance(models, list):
             raise MalformedResponse("/api/ps: models is not a list")
         return [m for m in models if isinstance(m, dict)]
+
+    def show(self, model: str) -> dict:
+        """``POST /api/show`` for one model (read-only; loads nothing)."""
+        with self._open("/api/show", {"model": model}) as resp:
+            raw = resp.read()
+        try:
+            obj = json.loads(raw)
+        except json.JSONDecodeError:
+            raise MalformedResponse("/api/show: not JSON") from None
+        if not isinstance(obj, dict):
+            raise MalformedResponse("/api/show: not a JSON object")
+        return obj
 
     def generate(self, model: str, prompt: str, decoding: Decoding, seed: int) -> Generation:
         body = {
@@ -215,6 +253,10 @@ class SimulatedBackend:
 
     def loaded_models(self) -> list[dict]:
         return []
+
+    def show(self, model: str) -> dict:
+        return {"template": f"SIMULATED template for {model}", "system": None,
+                "parameters": None, "modelfile": None, "details": {"format": "simulated"}}
 
     def generate(self, model: str, prompt: str, decoding: Decoding, seed: int) -> Generation:
         t0 = time.perf_counter_ns()

@@ -1,7 +1,7 @@
 <!-- SPDX-License-Identifier: LicenseRef-TOKEN-NC-Research-1.0 -->
 # TOKEN research protocol
 
-**Status: DRAFT v0.1 (2026-11-24). Not frozen. Awaiting the owner's review and freeze (G-FREEZE).** No confirmatory run may use this protocol until the owner freezes it and its SHA-256 is recorded in `research/experiment_registry.csv` and `research/decision_log.md`. Any run before that is exploratory.
+**Status: FROZEN v1.0 (owner-approved 2026-11-24, G-FREEZE).** Draft v0.1 plus the owner-approved amendments listed in the section "Amendments before freeze (owner-approved 2026-11-24)" at the end. The SHA-256 of this file is recorded in `research/freeze.json`, `research/experiment_registry.csv` and `research/decision_log.md` (DL-008). Any edit to this file after the freeze makes `token-lab run` refuse confirmatory configs and constitutes a new protocol version that needs a new owner freeze.
 
 Feasibility audit: `research/feasibility.md`. Sources: `research/literature_review.md`. Proposed decisions: DL-003 to DL-005 in `research/decision_log.md`.
 
@@ -10,6 +10,8 @@ Feasibility audit: `research/feasibility.md`. Sources: `research/literature_revi
 Section 10 question: how do local model configurations trade off quality, latency and resource use?
 
 Operational question (draft): on one Apple M1 Pro laptop with 16 GB unified memory, running the Ollama runtime with fixed prompts and greedy decoding, do the installed, freely licensed 8B-class instruction models (llama3.1:8b, ministral-3:8b, both Q4_K_M) differ in accuracy on a fixed public benchmark subset from the smallest installed instruction model (phi4-mini:3.8b, Q4_K_M), and what latency and memory cost accompanies any difference?
+
+Excluded model: qwen3.5:4b (installed, safetensors nvfp4) is excluded from every experiment by the owner's decision (amendment F4).
 
 Scope: these configurations on this machine and runtime. No claim about other hardware, other runtimes, model internals, hosted providers or real-world task quality.
 
@@ -45,12 +47,14 @@ Justification: quality is the only outcome that cannot be predicted from model s
 | Decode throughput | eval_count / eval_duration x 1e9 | tokens/s (model's own tokenizer) | runtime counters |
 | Prefill throughput | prompt_eval_count / prompt_eval_duration x 1e9 | tokens/s | runtime counters |
 | Load time | load_duration | ms | runtime counter |
-| Peak resident memory | max RSS of the Ollama runner process during the arm, sampled at 10 Hz | MiB | measured, psutil |
+| Runtime-reported model memory (the named memory metric, amendment F7) | largest `size` that `/api/ps` reports for the arm's model at the end of its blocks; includes weights, KV cache and Metal allocations as the runtime accounts for them | MiB | runtime-reported (not sampled by the harness) |
+| Peak resident memory (secondary) | max summed RSS of processes whose name contains `ollama` during the arm, sampled at 10 Hz; may undercount Metal allocations on Apple silicon | MiB | measured, psutil |
+| Peak system memory used (secondary) | max system-wide used memory during the arm, sampled at 10 Hz | MiB | measured, psutil |
 | Swap delta | change in system swap used during the arm | MiB | measured |
 | Model file size | sum of manifest layer sizes | GB | measured on disk |
 | Format failure rate | proportion of responses with no extractable label | proportion | measured |
 | Accuracy per second | accuracy / median per-item latency | 1/s | derived |
-| Modelled energy | wall-clock x assumed power P, P in a stated range | Wh | **modelled**, never mixed with measured values |
+| Modelled energy | wall-clock x assumed power P, P in a stated range | Wh | **modelled**, never mixed with measured values; no `sudo powermetrics` (amendment F5) |
 
 Token counts come from the runtime's own counters and are tested against hand-counted fixtures (section 11).
 
@@ -58,8 +62,11 @@ Token counts come from the runtime's own counters and are tested against hand-co
 
 - **Benchmark:** ARC-Challenge, test split (1,172 items, CC BY-SA 4.0). Fixed subset of n = 300 items, simple random sample without replacement, seed 20261124, drawn once; item IDs and the SHA-256 of the source file are committed before any model sees the subset. No tuning on these items. Prompt development uses the ARC-Challenge validation split only.
 - **Unit for accuracy:** the item (n = 300). **Unit for timing:** the item; each item's five timed repetitions are reduced to their median before analysis, so repetitions are not treated as independent.
-- **Seeds:** five repetitions per arm with runtime seeds {0, 1, 2, 3, 4}. Decoding is greedy (temperature 0), so outputs should be identical; the five repetitions serve the timing distribution and a determinism check. Item order within an arm and arm order within a repetition are shuffled with seed 1000 + repetition index, identical across arms (common random numbers).
+- **Seeds and repetitions (amendment F9):** five repetitions per arm with runtime seeds {0, 1, 2, 3, 4}. Decoding is greedy (temperature 0), so outputs should be identical; the five repetitions serve the timing distribution (each item's five latencies are reduced to their median) and a determinism check (the proportion of items whose response text is identical across the five repetitions, reported per arm). They are not independent accuracy samples. Accuracy uses c_ik = the mean correctness of item i over the five repetitions. The exact McNemar test uses majority correctness: item i counts as correct for arm k if c_ik >= 0.5; with five repetitions no tie can occur. Item order within an arm and arm order within a repetition are shuffled with seed 1000 + repetition index, identical across arms (common random numbers).
 - **Fixed decoding:** temperature 0, num_predict 8, num_ctx 2048, a single fixed zero-shot prompt template T1 (answer with the label only), no system prompt beyond the template.
+- **Chat templates (amendment F8):** `/api/generate` applies each model's own chat template and any default system prompt from its Modelfile. Before the first request of every run, the harness records for each arm the SHA-256 of the chat template, default system prompt, default parameters and Modelfile reported by `/api/show` in the run manifest (`arm_runtime`). A confirmatory run aborts before any request if a model cannot be described. A change of any of these hashes between runs of the same experiment is reported as a deviation.
+- **Data (amendment F2):** ARC-Challenge was downloaded on 2026-11-24 from the Hugging Face `allenai/ai2_arc` repository at revision 210d026faf9955653af8916fad021475a3f00453 (CC BY-SA 4.0). Only item IDs and SHA-256 values are committed (`data/arc_challenge_test_subset_ids.json`, `data/manifest.json`); question texts stay out of git and are regenerated with `scripts/fetch_arc.py`. The runner refuses a confirmatory run if the item file or the drawn subset differs from the committed SHA-256 and item IDs.
+- **Model licences (amendment F6):** the owner accepts the Llama 3.1 Community License for llama3.1:8b and its Q8_0 variant in this study.
 
 ## 7. Sample-size rationale
 
@@ -89,7 +96,7 @@ With n = 300 paired items and an assumed discordant-pair proportion of about 0.2
 
 ## 10. Matrices
 
-**Smoke matrix (exploratory, before the freeze).** 10 items from the ARC-Challenge *validation* split x 3 arms x 2 repetitions, plus 5 cold and 5 warm trials for one arm. Purpose: verify the runner, parsing, counters, memory sampler and timing projection. Results are never used for confirmatory analysis.
+**Smoke matrix (exploratory; amendment F1).** 10 items from the ARC-Challenge *validation* split (seed 20261124, IDs in `data/arc_challenge_validation_smoke_ids.json`) x 3 arms x 2 repetitions, plus 5 cold and 5 warm trials for one arm. Purpose: verify the runner, parsing, counters, memory sampler and timing projection. It runs as a real smoke run in an exclusive Ollama window on mains power, scheduled separately by the coordinator, after this freeze and before any confirmatory run. Its results are never used for confirmatory analysis and do not change any frozen value; if it shows that a frozen experiment cannot fit its wall-clock cap or cannot run as specified, that is recorded as a deviation and any change needs a new owner freeze.
 
 **Full matrix (confirmatory, after the freeze).**
 
@@ -97,7 +104,7 @@ With n = 300 paired items and an assumed discordant-pair proportion of about 0.2
 |---|---|---|---|---|
 | EXP-001 | A0 phi4-mini:3.8b, A1 llama3.1:8b, A2 ministral-3:8b (all Q4_K_M) | 300 | 5 | 4,500 |
 | EXP-002 | A0, A1, A2, cold vs warm | 1 fixed prompt | 10 cold + 10 warm per arm | 60 |
-| EXP-003 (conditional on owner approval of a download) | llama3.1:8b Q4_K_M vs Q8_0 | same 300 | 5 | 3,000 |
+| EXP-003 (download approved, amendment F3) | llama3.1:8b Q4_K_M vs Q8_0 | same 300 | 5 | 3,000 |
 
 ## 11. Sensitivity analyses
 
@@ -120,3 +127,19 @@ Training data contamination of ARC in any model; instruction-following and forma
 ## 14. Verification required before the freeze (project-specific)
 
 Scoring tested with known answers; token-count handling tested on fixtures; hardware logging tested; error handling tested (runtime down, malformed response, timeout).
+
+## Amendments before freeze (owner-approved 2026-11-24)
+
+The owner approved these amendments on 2026-11-24 (`_shared/owner-approvals-2026-11-24.md`, TOKEN section; decisions DL-007 and DL-008). Nothing else changed from draft v0.1.
+
+- **F1, real smoke run.** The smoke matrix (section 10) runs as a real smoke run in an exclusive Ollama window on mains power, scheduled separately by the coordinator. It is exploratory and cannot change frozen values. (DL-007 A1.)
+- **F2, ARC-Challenge data.** Downloaded (CC BY-SA 4.0); item IDs and SHA-256 committed, question texts not committed (section 6). Owner answer to D5: commit item IDs only.
+- **F3, EXP-003 stays in.** The free Q8_0 download of Llama 3.1 8B is approved; EXP-003 is no longer conditional (section 10). The pull happens later, in the exclusive window.
+- **F4, qwen3.5:4b excluded** (section 1). Owner answer to D4.
+- **F5, energy stays modelled;** no `sudo powermetrics` (section 5). Owner answer to D6.
+- **F6, Llama 3.1 Community License accepted** by the owner (section 6).
+- **F7, memory metric named:** runtime-reported model memory from `/api/ps` (section 5); peak RSS and peak system memory used are secondary. (DL-007 A2.)
+- **F8, chat template hashed** per arm and per run (section 6). (DL-007 A5.)
+- **F9, repetition use and McNemar majority rule stated** (section 6). (DL-007 A4.) The repetition count stays at five.
+
+DL-007 A3 (10 Hz sampler with PID caching) is an implementation detail already in the code; it is not a protocol amendment. Section 13 lists the commands as planned in draft v0.1; the implemented commands are `uv run token-lab run --config experiments/EXP-001.json` and `uv run token-lab report --result <result.json>` (see `research/freeze.json`); the text was left unchanged because the correction was not among the approved amendments.

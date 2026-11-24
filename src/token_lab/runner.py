@@ -20,7 +20,7 @@ from .config import RunConfig, require_frozen_if_confirmatory
 from .hardware import MemorySampler, git_state, harness_peak_rss_bytes, host_info, name_matcher, now_utc, package_versions
 from .items import Item, load_items, seeded_subset
 from .prompts import render
-from .runtime import Backend, BackendError, RuntimeUnavailable, make_backend
+from .runtime import Backend, BackendError, RuntimeUnavailable, make_backend, model_fingerprint
 from .schema import SCHEMA_VERSION, export_result
 from .scoring import extract, is_correct
 
@@ -62,6 +62,38 @@ def _safe_loaded(backend: Backend) -> list | None:
         return None
 
 
+def verify_items(cfg: RunConfig, items_sha: str, items: list[Item], repo: Path) -> None:
+    """Fail closed if the item file or the drawn subset differs from what was frozen."""
+    if cfg.items_source_sha256 is not None and items_sha != cfg.items_source_sha256:
+        raise ValueError(f"item file SHA-256 {items_sha} differs from the frozen {cfg.items_source_sha256}")
+    if cfg.subset_ids_path is not None:
+        p = Path(cfg.subset_ids_path)
+        p = p if p.is_absolute() else repo / p
+        frozen = json.loads(p.read_text(encoding="utf-8"))
+        ids = frozen["item_ids"] if isinstance(frozen, dict) else frozen
+        if sorted(ids) != sorted(it.item_id for it in items):
+            raise ValueError(f"drawn subset differs from the frozen item IDs in {cfg.subset_ids_path}")
+
+
+def arm_fingerprints(cfg: RunConfig, backend: Backend) -> dict:
+    """Per-arm hashes of chat template, system prompt, parameters and Modelfile.
+
+    A confirmatory run aborts before any request if a model cannot be
+    described; an exploratory run records the error instead.
+    """
+    out = {}
+    for arm in cfg.arms:
+        try:
+            out[arm.arm_id] = {"model": arm.model, **model_fingerprint(backend.show(arm.model))}
+        except RuntimeUnavailable:
+            raise
+        except BackendError as exc:
+            if cfg.mode == "confirmatory":
+                raise
+            out[arm.arm_id] = {"model": arm.model, "error": f"{type(exc).__name__}: {exc}"}
+    return out
+
+
 def execute(cfg: RunConfig, repo: Path, backend: Backend | None = None, out_root: Path | None = None) -> tuple[dict, Path]:
     """Run ``cfg`` and export a validated result. Raises before any request if
     a confirmatory config is not frozen, or if the runtime is unreachable."""
@@ -72,6 +104,8 @@ def execute(cfg: RunConfig, repo: Path, backend: Backend | None = None, out_root
     items_path = (repo / cfg.items_path) if not Path(cfg.items_path).is_absolute() else Path(cfg.items_path)
     all_items, items_sha = load_items(items_path)
     items: list[Item] = seeded_subset(all_items, cfg.subset_size, cfg.subset_seed)
+    verify_items(cfg, items_sha, items, repo)
+    fingerprints = arm_fingerprints(cfg, backend)
 
     label = cfg.mode
     out_root = out_root or (repo / "results" / ("exploratory" if label == "exploratory" else "confirmatory"))
@@ -148,6 +182,7 @@ def execute(cfg: RunConfig, repo: Path, backend: Backend | None = None, out_root
         "backend": {"name": backend.name, "simulated": backend.simulated, "runtime_version": runtime_version},
         "start_utc": start_utc, "end_utc": now_utc(), "runtime_s": runtime_s,
         "harness_peak_rss_mib": harness_peak_rss_bytes() / 2**20,
+        "arm_runtime": fingerprints,
         "n_requests": len(records), "n_failures": len(failures),
         "schema_version": SCHEMA_VERSION,
     }
