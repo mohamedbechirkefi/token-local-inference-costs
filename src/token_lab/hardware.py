@@ -109,6 +109,9 @@ class MemorySampler:
     swap_start_bytes: int = 0
     swap_end_bytes: int = 0
     samples: int = 0
+    rediscover_s: float = 1.0
+    _pids: list = field(default_factory=list)
+    _last_discovery: float = float("-inf")
     _stop: threading.Event = field(default_factory=threading.Event)
     _thread: threading.Thread | None = None
 
@@ -116,16 +119,24 @@ class MemorySampler:
         if self.hz <= 0:
             raise ValueError("hz must be positive")
 
+    def _discover(self) -> None:
+        # A full process scan is expensive (several ms on a busy machine), so it
+        # runs at most once per ``rediscover_s``; between scans only cached PIDs
+        # are read. A runner process spawned after a scan is picked up at the next.
+        self._pids = [p for p in psutil.process_iter() if self.match(p)]
+        self._last_discovery = time.monotonic()
+
     def _sample(self) -> None:
+        if time.monotonic() - self._last_discovery >= self.rediscover_s:
+            self._discover()
         total = 0
         seen = False
-        for p in psutil.process_iter():
-            if self.match(p):
-                try:
-                    total += p.memory_info().rss
-                    seen = True
-                except (psutil.Error, OSError):
-                    continue
+        for p in self._pids:
+            try:
+                total += p.memory_info().rss
+                seen = True
+            except (psutil.Error, OSError):
+                continue
         if seen:
             self.peak_rss_bytes = max(self.peak_rss_bytes or 0, total)
         self.peak_system_used_bytes = max(self.peak_system_used_bytes, int(psutil.virtual_memory().used))

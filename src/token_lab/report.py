@@ -31,13 +31,16 @@ def _fmt(v, nd: int = 3) -> str:
     if v is None:
         return "n/a"
     if isinstance(v, float):
+        if v != 0 and abs(v) < 10 ** (-nd):
+            return f"{v:.3g}"
         return f"{v:.{nd}f}"
     return str(v)
 
 
 def latency_svg(summaries: list[dict], title: str) -> str:
     """Strip plot of per-item median latency (ms) per arm, log-free linear axis."""
-    w, h, left, right, top, bottom = 640, 80 + 60 * len(summaries), 150, 30, 50, 50
+    w, left, right, top, bottom = 640, 150, 30, 50, 50
+    h = top + 60 * len(summaries) + 20 + bottom
     vals = [v for s in summaries for v in s.get("item_latency_ms", [])]
     vmax = max(vals) if vals else 1.0
     vmax = vmax * 1.05 if vmax > 0 else 1.0
@@ -115,7 +118,7 @@ def build_report(result_path: str | Path, out_dir: str | Path | None = None, pdf
         f"SHA-256 `{doc['items_source']['sha256']}`",
         f"- Host: {m['host']['before'].get('cpu')}, {m['host']['before'].get('os')}, "
         f"power {m['host']['before'].get('power', {}).get('source')}, "
-        f"load average at start {m['host']['before'].get('load_avg_1_5_15')}",
+        f"load average at start {[round(x, 2) for x in m['host']['before'].get('load_avg_1_5_15', [])]}",
         f"- Start {m['start_utc']}, end {m['end_utc']}, runtime {m['runtime_s']:.3f} s, "
         f"{m['n_requests']} requests, {m['n_failures']} failures",
         f"- Harness peak RSS: {m['harness_peak_rss_mib']:.1f} MiB", "",

@@ -261,7 +261,7 @@ def test_report_outputs(repo, tmp_path):
     info = build_report(path)
     md = open(info["report_md"]).read()
     assert "EXPLORATORY" in md and "SIMULATED" in md and "synthetic fixture" in md
-    assert "—" not in md  # no em dashes
+    assert chr(0x2014) not in md  # no em dashes
     svg = open(info["figure"]).read()
     assert svg.startswith("<svg") and "<title>" in svg
     with open(info["metrics_csv"]) as fh:
