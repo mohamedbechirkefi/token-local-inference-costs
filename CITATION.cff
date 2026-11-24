@@ -1,0 +1,13 @@
+# SPDX-License-Identifier: LicenseRef-TOKEN-NC-Research-1.0
+# Licence: TOKEN Source-Available Non-Commercial Research License v1.0 (custom; see LICENSE).
+# The SPDX "license" field is intentionally omitted because the licence is not on the SPDX list.
+cff-version: 1.2.0
+message: "If you use this work, please cite it as below."
+title: "TOKEN: local inference economics"
+type: software
+authors:
+  - family-names: Kefi
+    given-names: Mohamed Bechir
+version: 0.0.0
+date-released: 2026-11-24
+abstract: "Research project in progress (M0). No findings yet."
