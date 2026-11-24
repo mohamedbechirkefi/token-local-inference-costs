@@ -8,9 +8,9 @@ Status values: not started, in progress, done (all acceptance criteria checked),
 | ID | Milestone | Depends on | Priority | Effort (estimate) | Status | Blockers |
 |---|---|---|---|---|---|---|
 | M0 | Bootstrap and feasibility | none | P0 | 0.5 day | done (2026-11-24), pending owner review of the gate | none |
-| M1 | Research and preregistration | M0 | P0 | 0.5 day | in progress (drafts only) | owner freeze (G-FREEZE); owner decisions D1 to D6 in `progress.md` |
-| M2 | Core implementation | M1 drafts (implementation may start before the freeze) | P0 | 1.5 days | in progress: core, tests, schema, manifests, report generator and CLI done (2026-11-24); real-runtime smoke not run | Ollama server not running this session; ARC download not permitted under the M2 brief (owner decision) |
-| M3 | Experiments | M1 freeze, M2 | P0 | 1 day | not started | owner freeze; exclusive Ollama window; AC power; EXP-003 needs download approval |
+| M1 | Research and preregistration | M0 | P0 | 0.5 day | done (2026-11-24): M1 gate passed, owner freeze v1.0 with amendments F1 to F9 (DL-008, `research/freeze.json`) | none |
+| M2 | Core implementation | M1 drafts (implementation may start before the freeze) | P0 | 1.5 days | in progress: core, freeze amendments and ARC loader on the real file done (2026-11-24); real-runtime smoke and EXP-002 cold/warm mode not done | real smoke in the coordinator's exclusive window (F1); EXP-002 runner mode |
+| M3 | Experiments | M1 freeze, M2 | P0 | 1 day | not started | exclusive Ollama window scheduled by the coordinator; AC power; Q8_0 pull for EXP-003 in that window |
 | M4 | Interpretation | M3 | P0 | 0.5 day | not started | M3 |
 | M5 | Interactive experience | M4 (results), M2 (schema) | P1 (cut first) | 0.5 day | not started | M4 |
 | M6 | Release candidate | M4, M5 | P0 | 0.5 day | not started | owner approval for any publication (G-PUBLIC) |
@@ -24,7 +24,7 @@ Status values: not started, in progress, done (all acceptance criteria checked),
 
 - Deliverables: draft protocols (done as drafts), fixture manifest for the 300-item subset (IDs plus source SHA-256), owner decisions recorded, frozen protocol hashes.
 - Acceptance: owner freezes `research/protocol.md` and each `EXP-NNN/protocol.md`; SHA-256 recorded in the registry and decision log; exploratory results (smoke) visibly separated.
-- Blockers: owner freeze; decisions D1 to D6.
+- Status (2026-11-24, freeze session): [x] amendments F1 to F9 applied; [x] subset IDs and source SHA-256 committed; [x] owner decisions recorded (DL-008); [x] frozen hashes in `research/freeze.json`, the registry and DL-008. M1 gate passed.
 
 ## M2: Core implementation (11.6: versioned output schemas, reproducibility manifests and report generators alongside the core)
 
@@ -36,8 +36,9 @@ Status values: not started, in progress, done (all acceptance criteria checked),
   - [x] `run` refuses confirmatory configs while the protocol is unfrozen (tested on the real registry).
   - [x] Exploratory harness smoke on the simulated backend (RUN-SMOKE-0001 to 0004, JRN-0003); one report PDF generated and inspected.
   - [ ] Exploratory smoke on the real runtime (JRN-0002: server not running; brief forbids starting it). Planning values for the freeze are therefore still unmeasured (DL-007 A1).
-  - [ ] ARC loader run on the real file (format implemented and tested on the fixture; download is an owner decision).
-  - [ ] Per-arm chat template and system prompt hash in the manifest (DL-007 A5).
+  - [x] ARC loader run on the real file (2026-11-24, freeze session): test 1,172 and validation 299 items load; 300-item subset IDs committed.
+  - [x] Per-arm chat template, system prompt, parameters and Modelfile hashes in the manifest (F8, freeze session).
+  - [ ] EXP-002 cold/warm runner mode and config (needs an owner-recorded config hash before it runs).
 
 ## M3: Experiments (11.6: individual reports as experiments finish; record all failures and deviations)
 

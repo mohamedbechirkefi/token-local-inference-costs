@@ -68,11 +68,59 @@ def _fake_repo(tmp_path, protocol_text="frozen protocol v1\n", recorded=None):
     return proto
 
 
-def test_freeze_guard_real_repo_refuses(repo):
+@pytest.mark.parametrize("exp", ["EXP-001", "EXP-003"])
+def test_freeze_guard_real_repo_accepts_frozen_configs(repo, exp):
+    cfg = parse_config(json.loads((repo / "experiments" / f"{exp}.json").read_text()))
+    h = require_frozen_if_confirmatory(cfg, repo)
+    assert h == hashlib.sha256((repo / "research" / "experiments" / exp / "protocol.md").read_bytes()).hexdigest()
+
+
+@pytest.mark.parametrize("change", [
+    lambda c: c["decoding"].update(num_predict=16),
+    lambda c: c.update(repetitions=4, runtime_seeds=[0, 1, 2, 3]),
+    lambda c: c["arms"].append({"arm_id": "A3", "model": "qwen3.5:4b"}),
+    lambda c: c["items"].update(subset_seed=1),
+])
+def test_freeze_guard_refuses_changed_config(repo, change):
+    raw = json.loads((repo / "experiments" / "EXP-001.json").read_text())
+    change(raw)
+    with pytest.raises(ProtocolNotFrozen, match="config differs"):
+        require_frozen_if_confirmatory(parse_config(raw), repo)
+
+
+def _frozen_copy(repo, tmp_path):
+    fake = tmp_path / "repo"
+    for rel in ["research/protocol.md", "research/freeze.json", "research/experiment_registry.csv",
+                "research/experiments/EXP-001/protocol.md", "experiments/EXP-001.json"]:
+        (fake / rel).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy(repo / rel, fake / rel)
+    return fake
+
+
+def test_freeze_guard_refuses_edited_protocols_and_missing_record(repo, tmp_path):
     cfg = parse_config(json.loads((repo / "experiments" / "EXP-001.json").read_text()))
-    assert frozen_protocol_hash(repo, "EXP-001") is None
-    with pytest.raises(ProtocolNotFrozen):
-        require_frozen_if_confirmatory(cfg, repo)
+    fake = _frozen_copy(repo, tmp_path)
+    assert require_frozen_if_confirmatory(cfg, fake)
+    main = fake / "research" / "protocol.md"
+    main.write_text(main.read_text() + "\nedited after the freeze\n")
+    with pytest.raises(ProtocolNotFrozen, match="protocol.md differs"):
+        require_frozen_if_confirmatory(cfg, fake)
+    fake2 = _frozen_copy(repo, tmp_path / "b")
+    exp = fake2 / "research" / "experiments" / "EXP-001" / "protocol.md"
+    exp.write_text(exp.read_text() + "x")
+    with pytest.raises(ProtocolNotFrozen, match="not frozen"):
+        require_frozen_if_confirmatory(cfg, fake2)
+    fake3 = _frozen_copy(repo, tmp_path / "c")
+    (fake3 / "research" / "freeze.json").unlink()
+    with pytest.raises(ProtocolNotFrozen, match="no freeze record"):
+        require_frozen_if_confirmatory(cfg, fake3)
+
+
+def test_freeze_guard_exp002_has_no_config(repo):
+    raw = json.loads((repo / "experiments" / "EXP-001.json").read_text())
+    raw["exp_id"] = "EXP-002"
+    with pytest.raises(ProtocolNotFrozen, match="config differs"):
+        require_frozen_if_confirmatory(parse_config(raw), repo)
 
 
 def test_freeze_guard_hash_logic(tmp_path):
@@ -88,9 +136,19 @@ def test_freeze_guard_placeholder_hash(tmp_path):
     assert frozen_protocol_hash(tmp_path, "EXP-001") is None
 
 
-def test_cli_run_refuses_confirmatory(repo, capsys):
-    assert cli.main(["run", "--config", str(repo / "experiments" / "EXP-001.json")]) == 2
-    assert "not frozen" in capsys.readouterr().err
+def test_cli_run_accepts_frozen_and_refuses_changed(repo, tmp_path, monkeypatch, capsys, dead_url):
+    # The guard runs before any runtime contact. Point the backend at a dead port so
+    # the accepted config stops at "runtime unavailable" (exit 3) without touching Ollama.
+    from token_lab import runner
+    monkeypatch.setattr(runner, "make_backend", lambda spec: OllamaBackend(dead_url, 1))
+    assert cli.main(["run", "--config", str(repo / "experiments" / "EXP-001.json")]) == 3
+    assert "runtime unavailable" in capsys.readouterr().err
+    raw = json.loads((repo / "experiments" / "EXP-001.json").read_text())
+    raw["repetitions"], raw["runtime_seeds"] = 3, [0, 1, 2]
+    p = tmp_path / "changed.json"
+    p.write_text(json.dumps(raw))
+    assert cli.main(["run", "--config", str(p)]) == 2
+    assert "config differs" in capsys.readouterr().err
 
 
 def test_cli_smoke_refuses_confirmatory(repo, tmp_path, capsys):

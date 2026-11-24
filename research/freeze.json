@@ -1,0 +1,89 @@
+{
+ "kind": "token-lab-freeze-record",
+ "freeze_version": "1.0",
+ "date": "2026-11-24",
+ "approved_by": "the owner",
+ "approval": {
+  "source": "labs/_shared/owner-approvals-2026-11-24.md (TOKEN section and common decisions)",
+  "quote_answers": "for TOKEN \"1. yes 2. yes 3. yes 4. exclude it 5. keep 6. yes\"",
+  "quote_amendments": [
+   "Run a real smoke run in an exclusive Ollama window on mains power, scheduled separately by the coordinator.",
+   "Download ARC-Challenge (CC BY-SA 4.0) and commit item IDs only, with SHA-256.",
+   "The Q8_0 download is approved, so EXP-003 stays in.",
+   "Exclude qwen3.5:4b.",
+   "Keep energy modelled; no sudo powermetrics.",
+   "The owner accepts the Llama 3.1 Community License (record it).",
+   "Name the memory metric.",
+   "Hash each model's chat template.",
+   "State the repetition use and the McNemar majority rule."
+  ],
+  "gate": "G-FREEZE, owner-approved 2026-11-24"
+ },
+ "amendments_applied": [
+  "F1 real smoke run (scheduled separately, exploratory)",
+  "F2 ARC-Challenge downloaded, IDs and SHA-256 committed",
+  "F3 EXP-003 stays in",
+  "F4 qwen3.5:4b excluded",
+  "F5 energy modelled, no powermetrics",
+  "F6 Llama 3.1 Community License accepted",
+  "F7 memory metric named: runtime-reported model memory (/api/ps size)",
+  "F8 chat template hashed per arm",
+  "F9 repetition use and McNemar majority rule stated"
+ ],
+ "common_decisions": {
+  "C1": "Data: synthetic data only. For TOKEN, no data is generated about people; the benchmark is the public ARC-Challenge set, whose download the owner approved specifically for this project (approvals file, TOKEN section). The 10-item synthetic fixture is used for tests only.",
+  "C2": "PDFs: pandoc and Typst with -V mainfont=\"Libertinus Serif\"; no LaTeX on the machine.",
+  "C3": "Authorship: \"Mohamed Bechir Kefi\", no affiliation. The AI is disclosed as a research and development assistant, not as an author.",
+  "C4": "Disclosure: no real model output and no ARC item was seen before the freeze. The only primary-contrast values computed were from the SIMULATED backend (no model, deterministic hash of the prompt) on the 10-item synthetic fixture, in the exploratory runs RUN-SMOKE-0001 to RUN-SMOKE-0004 (JRN-0003): strict extraction, Delta(A1 - A0) = -30.0 pp (95% CI -60.0 to 0.0, McNemar p 0.25, Holm 0.5) and Delta(A2 - A0) = +10.0 pp (95% CI -30.0 to 50.0, p 1.0, Holm 1.0), identical in all four runs and under lenient extraction. Stored in results/exploratory/RUN-SMOKE-000{1,2,3,4}/contrasts.csv and result.json. They carry no information about the models. The real-runtime smoke attempt (JRN-0002) produced no output (server down)."
+ },
+ "git_revision": "f99c4176c322d311aec93fd7a85b8f7fecfa7cb6",
+ "git_revision_note": "Commit holding exactly the frozen protocols and configs below; the freeze record itself is added in the next commit, which leaves those files unchanged.",
+ "main_protocol": {
+  "path": "research/protocol.md",
+  "version": "1.0",
+  "sha256": "ea86d0bb2d1864f69ac545bde1c8dd263276c8dbd9d1b3fee5b7a49b8dd4d2c3"
+ },
+ "experiments": {
+  "EXP-001": {
+   "protocol_path": "research/experiments/EXP-001/protocol.md",
+   "protocol_version": "1.0",
+   "protocol_sha256": "1997317c931cf95d04c271ab2414aef82306f5976f1eea7262eb1e4d54fee8e4",
+   "config_path": "experiments/EXP-001.json",
+   "config_file_sha256": "805a20a9c2829f800fa274010bca8a5599c56d03ceb7da5e5d80058b5afccc94",
+   "config_canonical_sha256": "355d86f1cd3bc28373bef6e3e36c32828337583b0893d2b87d4c33fa48c7913e"
+  },
+  "EXP-002": {
+   "protocol_path": "research/experiments/EXP-002/protocol.md",
+   "protocol_version": "1.0",
+   "protocol_sha256": "54d46696e6b479c83235c789839ae3acaaaeeac1f38eccc6ef7c399d191c011e",
+   "config_path": null,
+   "config_file_sha256": null,
+   "config_canonical_sha256": null,
+   "note": "No runnable config: the runner has no cold/warm mode yet. run refuses EXP-002 until a config is added and the owner records its hash here."
+  },
+  "EXP-003": {
+   "protocol_path": "research/experiments/EXP-003/protocol.md",
+   "protocol_version": "1.0",
+   "protocol_sha256": "8196740a07ce6b0d0e254a23729aa18e5866e0b72b7ac3dd97b779e23a024068",
+   "config_path": "experiments/EXP-003.json",
+   "config_file_sha256": "70a732505a7d1c88874db857c3bb0183105b07b8f3c47422b09031f8924af038",
+   "config_canonical_sha256": "3ebe5b2a60e4ddb6ae1c8e1e35f3d316f35f0fd56272f90299b992e702065560"
+  }
+ },
+ "data": {
+  "arc_challenge_test_subset_ids": {
+   "path": "data/arc_challenge_test_subset_ids.json",
+   "sha256": "8e694e8b842596dd642f4a022ddf438ff892994e7d0f69acdcae1e712f99d00f"
+  },
+  "arc_challenge_test_jsonl_sha256": "86ccaace4cd159b5c02b6b3339ebe8a7022a54f1b488e433c060b3bc38ac1f63",
+  "arc_challenge_test_parquet_sha256": "62f03257e737aed263f55c6abf87c7bb0028a44a6bdd2a26eb1279eb42c1d1e9",
+  "source": "https://huggingface.co/datasets/allenai/ai2_arc at revision 210d026faf9955653af8916fad021475a3f00453",
+  "license": "CC-BY-SA-4.0"
+ },
+ "commands": {
+  "fetch_items": "/usr/local/bin/python3 -I scripts/fetch_arc.py --repo .",
+  "run": "uv run token-lab run --config experiments/EXP-00N.json",
+  "report": "uv run token-lab report --result <result.json>"
+ },
+ "guard": "token_lab.config.require_frozen_if_confirmatory: registry hash = protocol SHA-256, main protocol SHA-256, experiment entry, canonical config SHA-256 must all match."
+}

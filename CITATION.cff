@@ -8,6 +8,7 @@ type: software
 authors:
   - family-names: Kefi
     given-names: Mohamed Bechir
-version: 0.0.0
+# No affiliation. An AI system was used as a research and development assistant; it is not an author.
+version: 0.1.0
 date-released: 2026-11-24
-abstract: "Research project in progress (M0). No findings yet."
+abstract: "Research project in progress. Protocol frozen by the owner on 2026-11-24; no confirmatory results yet."

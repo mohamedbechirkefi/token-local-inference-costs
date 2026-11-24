@@ -1,7 +1,7 @@
 ---
 title: "The local cost of intelligence (working title)"
-author: "Owner-approved authorship pending"
-status: "Skeleton (M0). Independent research manuscript draft, not peer reviewed. No results."
+author: "Mohamed Bechir Kefi"
+status: "Skeleton. Protocol frozen 2026-11-24 (research/freeze.json). Independent research manuscript draft, not peer reviewed. No results."
 ---
 
 <!-- SPDX-License-Identifier: LicenseRef-TOKEN-NC-Research-1.0 -->
@@ -51,6 +51,8 @@ status: "Skeleton (M0). Independent research manuscript draft, not peer reviewed
 # 10. Data and code availability
 
 # 11. Funding, competing interests and AI assistance
+
+The author is listed without affiliation. An AI system (Claude, Anthropic) was used as a research and development assistant for drafting protocols, code, tests and text under the author's direction; it is not an author. All decisions on the protocol, its freeze and any publication were taken by the author.
 
 # References
 

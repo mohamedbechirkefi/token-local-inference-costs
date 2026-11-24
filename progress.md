@@ -105,3 +105,31 @@ Real inference timing, memory (RSS versus Metal allocations, DL-007 A2) and dete
 - No ARC data: downloads are forbidden in M2.
 - No confirmatory run, no protocol hash: G-FREEZE.
 - Nothing pushed (G-PUBLIC).
+
+## 2026-11-24: freeze session (owner-approved amendments and protocol freeze v1.0)
+
+**Milestone:** M1 freeze (G-FREEZE, owner-approved 2026-11-24). **Next bounded task:** the real smoke run (F1) in the coordinator's exclusive Ollama window on mains power, then M3. EXP-002 needs a cold/warm runner mode and an owner-recorded config hash.
+
+### Starting state
+
+`git status`: clean at `c96bf0a`. Read: control files, all protocols, registry, DL-007, `_shared/FREEZE-brief.md`, `_shared/owner-approvals-2026-11-24.md` (TOKEN section and C1 to C4).
+
+### What was done
+
+- Amendments F1 to F9 applied to `research/protocol.md` and the three EXP protocols, each recorded in an "Amendments before freeze (owner-approved 2026-11-24)" section. None could not be applied.
+- ARC-Challenge test and validation downloaded with `scripts/fetch_arc.py` (JRN-0004); IDs only committed (`data/arc_challenge_test_subset_ids.json`, 300 IDs; `data/arc_challenge_validation_smoke_ids.json`, 10 IDs). `data/manifest.json` records URL, revision, licence and SHA-256.
+- Code: per-arm `/api/show` fingerprint (template, system, parameters, Modelfile SHA-256) in the run manifest, confirmatory abort if missing (F8); named memory metric `runtime_model_mib` in the analysis (F7); confirmatory configs must pin the item file SHA-256 and the subset IDs, checked before any request; freeze guard extended to `research/freeze.json` (main protocol hash, experiment protocol hash, canonical config hash). New config `experiments/EXP-003.json`; `smoke-ollama.json` now targets 10 ARC validation items.
+- Freeze record `research/freeze.json` (approval quotes, F1 to F9, C1 to C4 with the C4 disclosure, SHA-256 values, git revision `f99c4176c322d311aec93fd7a85b8f7fecfa7cb6`). Registry statuses "frozen (owner-approved 2026-11-24), not yet run". DL-008. CITATION.cff and manuscript metadata set to C3 authorship; `manuscript.tex` regenerated with pandoc.
+
+### Commands run and actual outputs
+
+- `/usr/local/bin/python3 -I scripts/fetch_arc.py --repo .` (twice): test parquet 203,808 bytes, SHA-256 62f03257...d1e9, JSONL 86ccaace...1f63, 1,172 rows; validation parquet 55,743 bytes, 395a5c88...9f05, JSONL 16b59737...151b, 299 rows. Identical on the second run.
+- `.venv/bin/python -m pytest -q`: before changes "90 passed"; after the amendment commit "98 passed"; final "105 passed in 7.41s", 0 failed.
+- `require_frozen_if_confirmatory` on the real repo: EXP-001 and EXP-003 accepted (returns the protocol hash). Tests show changed configs, an edited main or EXP protocol, and a missing freeze record are refused; `token-lab run` on the frozen EXP-001 config passes the guard and stops at "runtime unavailable" against a dead test port (Ollama was not contacted).
+
+### Not done, and why
+
+- No smoke or confirmatory run, no Ollama contact, no model pull (brief: the coordinator schedules M3 and the Q8_0 pull).
+- EXP-002 has no runnable config (no cold/warm runner mode yet); its protocol is frozen.
+- Protocol section 13 and EXP item 21 command texts left as drafted (not an approved amendment); correct commands are in `research/freeze.json`.
+- Nothing pushed (G-PUBLIC).
