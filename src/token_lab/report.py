@@ -10,14 +10,16 @@ from __future__ import annotations
 
 import csv
 import html
+import os
 import subprocess
 from pathlib import Path
 
 from .analysis import arm_summaries, contrasts, projection
 from .schema import import_result
 
-PANDOC = "/Users/bechir/research/labs/.tools/pandoc"
-TYPST_PY = "/Users/bechir/research/labs/.tools/py/bin/python"
+# Shared zero-cost toolchain (DL-002); override with TOKEN_PANDOC / TOKEN_TYPST_PYTHON on other machines.
+PANDOC = os.environ.get("TOKEN_PANDOC", "/Users/bechir/research/labs/.tools/pandoc")
+TYPST_PY = os.environ.get("TOKEN_TYPST_PYTHON", "/Users/bechir/research/labs/.tools/py/bin/python")
 
 METRIC_COLUMNS = [
     "arm", "model", "n_records", "n_items", "accuracy_strict", "accuracy_lenient", "chance", "errors",

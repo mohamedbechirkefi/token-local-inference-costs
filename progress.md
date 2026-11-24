@@ -55,3 +55,53 @@ Shared runtime interference; battery and thermal state; memory pressure for Q8_0
 - No dataset downloaded (brief: metadata only). Subset IDs and SHA-256 are therefore not yet fixed.
 - No tests: no implementation exists yet (M2).
 - No PDF committed: only the skeleton exists.
+
+## 2026-11-24: M2 session (core implementation while the freeze is pending)
+
+**Milestone:** M2. **Next bounded task:** the owner's decisions D1 to D6 plus DL-007; then an exploratory real-runtime smoke in an exclusive window before the freeze.
+
+### Starting state
+
+`git status`: "On branch main, nothing to commit, working tree clean" at `10af340`. Control files read in the order of the M2 brief. The existing `.venv` still pointed at the repository's former path (`token-research`); `uv sync --reinstall` rewrote its scripts in place (nothing deleted).
+
+### What was implemented
+
+`src/token_lab/`: `items` (hf-arc-jsonl ingestion, SHA-256, seeded subset), `prompts` (T1, T2, T3 with label map), `scoring` (strict and lenient extraction), `tokens` (runtime counters, throughput), `runtime` (Ollama stdlib streaming client with client-side TTFT; deterministic `SimulatedBackend` labelled simulated), `hardware` (host log, power state, git state, package versions, memory sampler), `stats` (paired bootstrap, exact McNemar, Holm), `schema` (result schema 1.0.0 validated at export and import), `config` (validation, canonical SHA-256, protocol-freeze guard), `runner`, `analysis`, `report` (Markdown, CSV, SVG, PDF via pandoc and Typst with `-V mainfont="Libertinus Serif"`), `cli` (`token-lab smoke|run|report|test`). Fixture `data/fixtures/synthetic_mc.jsonl` (10 items written here, not ARC). Configs `experiments/smoke-simulated.json`, `experiments/smoke-ollama.json`, `experiments/EXP-001.json`. Decisions DL-006 (taken) and DL-007 (proposed amendments).
+
+### Commands run and actual outputs (abridged)
+
+- `uv lock`: "Resolved 15 packages"; `uv sync`: token-lab 0.0.0 to 0.1.0. No new dependency.
+- `uv run pytest -q`: "90 passed" (10.40 s first run; 6 to 7 s later), 0 failed. Rerun after every change, last result "90 passed in 7.15s" via `uv run token-lab test -q`.
+- `uv run token-lab run --config experiments/EXP-001.json` (in tests): exit 2, "refused: EXP-001: protocol is not frozen".
+- `ollama ps` (16:00:54Z and again before the simulated runs): "Error: ollama server not responding - could not find ollama app". Nothing was started.
+- `uv run token-lab smoke --config experiments/smoke-ollama.json`: "runtime unavailable: http://127.0.0.1:11434/api/version: [Errno 61] Connection refused", exit 3, no file written (JRN-0002).
+- `uv run token-lab smoke --config experiments/smoke-simulated.json`, four times: RUN-SMOKE-0001 0.394 s; RUN-SMOKE-0002 0.165 s; RUN-SMOKE-0003 0.148 s; RUN-SMOKE-0004 0.167 s; each 150 requests, 0 failures (JRN-0003). `/usr/bin/time -l` on the first: 0.63 s real, 45,498,368 bytes maximum RSS.
+- Memory sampler cost: 7.843 ms per full process scan (660 processes) before the fix; 0.0028 ms per cached sample after it.
+- `uv run token-lab report --result ... --pdf`: RUN-SMOKE-0002 `report.pdf`, 3 pages (pypdf), visually inspected: banner, tables and figure render; first version had an overflowing table, fixed by splitting it.
+- Host during the runs: AC power, 100 %; load average 4.7 to 5.2 (other agents were running on the machine). **All timings in this session are noisy and exploratory.**
+
+### Smoke-run measurements (exploratory, simulated backend: not inference)
+
+- Harness overhead: 0.7 to 0.8 ms per request (2.2 ms before the sampler fix). This is the only timing measured; it bounds the harness cost, not model latency.
+- Runtime per real request, projected full-matrix time and seed spread of real latency: **not measured** (runtime down). The report's projection table for the simulated runs (EXP-001: 0.0010 h) is harness time only and must not be used for planning.
+- Determinism: scored content identical across all four runs and across repetitions within each run (expected for the simulated backend; says nothing about the models).
+- Degenerate cases found in the harness: none in the simulated runs beyond the intended format failures; persistent request errors, warm-up failures and runtime-down are handled and tested.
+
+### Changed files
+
+New: `src/token_lab/{items,prompts,scoring,tokens,runtime,hardware,stats,schema,config,runner,analysis,report,cli}.py`, `tests/{conftest,test_items_prompts_scoring,test_runtime_tokens,test_stats,test_pipeline}.py`, `data/fixtures/synthetic_mc.jsonl`, `experiments/{smoke-simulated,smoke-ollama,EXP-001}.json`, `results/exploratory/RUN-SMOKE-000{1..4}/`. Modified: `pyproject.toml` (version 0.1.0, `token-lab` script), `uv.lock`, `src/token_lab/__init__.py`, `CLAUDE.md` (section 4 commands), `roadmap.md`, `progress.md`, `data/manifest.json`, `research/decision_log.md`, `research/experiment_journal.jsonl`, `results/README.md`, `tests/README.md`, `experiments/README.md`. Registry statuses unchanged: no registered experiment was run, even exploratorily.
+
+### Noted inconsistency (not changed)
+
+`research/protocol.md` section 13 lists `token-lab run --exp EXP-001`; the implemented CLI takes `--config experiments/EXP-001.json`. The protocol is left untouched for the owner; align it at the freeze.
+
+### Outstanding risks
+
+Real inference timing, memory (RSS versus Metal allocations, DL-007 A2) and determinism remain unmeasured; chat templates applied by the runtime are not yet hashed (A5); the ARC loader has only been run on the fixture.
+
+### Not done, and why
+
+- No real-runtime smoke: Ollama was not running and the brief forbids starting it.
+- No ARC data: downloads are forbidden in M2.
+- No confirmatory run, no protocol hash: G-FREEZE.
+- Nothing pushed (G-PUBLIC).

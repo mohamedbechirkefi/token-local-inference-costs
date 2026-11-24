@@ -1,0 +1,77 @@
+{
+ "backend": {
+  "name": "simulated",
+  "runtime_version": "simulated-0",
+  "simulated": true
+ },
+ "config_sha256": "837ec4d2faeac9a74ee9ea5d45e75e9974a789c6eb0fed210804d659158ae1bf",
+ "end_utc": "2026-11-24T16:01:07Z",
+ "exp_id": "SMOKE",
+ "git": {
+  "dirty": false,
+  "revision": "f3a5b5412572b4d67430d74c5bd153c67a3b6010"
+ },
+ "harness_peak_rss_mib": 43.046875,
+ "host": {
+  "after": {
+   "cpu": "Apple M1 Pro",
+   "cpu_count_logical": 10,
+   "load_avg_1_5_15": [
+    5.1533203125,
+    3.759765625,
+    2.88232421875
+   ],
+   "machine": "arm64",
+   "memory_total_bytes": 17179869184,
+   "os": "macOS-15.3.1-arm64-arm-64bit",
+   "os_release": "15.3.1",
+   "power": {
+    "raw": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=7340131)\t100%; charged; 0:00 remaining present: true",
+    "source": "ac"
+   }
+  },
+  "before": {
+   "cpu": "Apple M1 Pro",
+   "cpu_count_logical": 10,
+   "load_avg_1_5_15": [
+    5.1533203125,
+    3.759765625,
+    2.88232421875
+   ],
+   "machine": "arm64",
+   "memory_total_bytes": 17179869184,
+   "os": "macOS-15.3.1-arm64-arm-64bit",
+   "os_release": "15.3.1",
+   "power": {
+    "raw": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=7340131)\t100%; charged; 0:00 remaining present: true",
+    "source": "ac"
+   }
+  }
+ },
+ "label": "exploratory",
+ "n_failures": 0,
+ "n_requests": 150,
+ "packages": {
+  "jsonschema": "4.25.1",
+  "numpy": "2.3.4",
+  "psutil": "7.1.0",
+  "python": "3.12.1",
+  "token-lab": "0.1.0"
+ },
+ "protocol_sha256": null,
+ "run_id": "RUN-SMOKE-0001",
+ "runtime_s": 0.39354474999890954,
+ "schema_version": "1.0.0",
+ "seeds": {
+  "order_seed_base": 1000,
+  "runtime": [
+   0,
+   1,
+   2,
+   3,
+   4
+  ],
+  "subset_seed": 20261124
+ },
+ "start_utc": "2026-11-24T16:01:06Z"
+}

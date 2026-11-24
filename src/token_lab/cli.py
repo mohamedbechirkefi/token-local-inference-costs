@@ -64,8 +64,9 @@ def main(argv: list[str] | None = None) -> int:
     rp.add_argument("--out")
     rp.add_argument("--pdf", action="store_true")
     t = sub.add_parser("test", help="run the test suite")
-    t.add_argument("pytest_args", nargs="*")
-    a = ap.parse_args(argv)
+    a, extra = ap.parse_known_args(argv)
+    if extra and a.cmd != "test":
+        ap.error(f"unrecognized arguments: {' '.join(extra)}")
 
     if a.cmd == "smoke":
         return _execute(a.config, require_exploratory=True)
@@ -82,7 +83,7 @@ def main(argv: list[str] | None = None) -> int:
         print(json.dumps(info))
         return 0 if (not a.pdf or info["pdf"]) else 2
     if a.cmd == "test":
-        return subprocess.call([sys.executable, "-m", "pytest", *a.pytest_args], cwd=REPO)
+        return subprocess.call([sys.executable, "-m", "pytest", *extra], cwd=REPO)
     return 2
 
 

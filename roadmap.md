@@ -9,7 +9,7 @@ Status values: not started, in progress, done (all acceptance criteria checked),
 |---|---|---|---|---|---|---|
 | M0 | Bootstrap and feasibility | none | P0 | 0.5 day | done (2026-11-24), pending owner review of the gate | none |
 | M1 | Research and preregistration | M0 | P0 | 0.5 day | in progress (drafts only) | owner freeze (G-FREEZE); owner decisions D1 to D6 in `progress.md` |
-| M2 | Core implementation | M1 drafts (implementation may start before the freeze) | P0 | 1.5 days | not started | none for implementation; ARC download is part of M2 |
+| M2 | Core implementation | M1 drafts (implementation may start before the freeze) | P0 | 1.5 days | in progress: core, tests, schema, manifests, report generator and CLI done (2026-11-24); real-runtime smoke not run | Ollama server not running this session; ARC download not permitted under the M2 brief (owner decision) |
 | M3 | Experiments | M1 freeze, M2 | P0 | 1 day | not started | owner freeze; exclusive Ollama window; AC power; EXP-003 needs download approval |
 | M4 | Interpretation | M3 | P0 | 0.5 day | not started | M3 |
 | M5 | Interactive experience | M4 (results), M2 (schema) | P1 (cut first) | 0.5 day | not started | M4 |
@@ -30,6 +30,14 @@ Status values: not started, in progress, done (all acceptance criteria checked),
 
 - Deliverables: `src/token_lab/` with ingestion (ARC loader with SHA-256 and licence record), prompt templates, answer extraction and scoring, Ollama client (stdlib HTTP, streaming TTFT), memory sampler, run manifest writer, JSON result schema (validated on export and import), analysis (paired bootstrap, exact McNemar, Holm), report generator, CLI `token-lab {smoke,run,report}`. Offline fixtures (small, licence-compliant).
 - Acceptance: unit tests for scoring with known answers, extraction edge cases, token-count handling, bootstrap and McNemar against hand-computed examples, schema rejection of malformed results, error handling (runtime down, timeout, malformed response), hardware log capture; tests run and actual counts recorded. Correctness before UI.
+- Status (2026-11-24, M2 session):
+  - [x] Package `src/token_lab/`: items (ingestion, SHA-256, seeded subset), prompts (T1 to T3), scoring (strict, lenient), tokens, runtime (Ollama stdlib client with streaming TTFT; labelled simulated backend), hardware (host log, power, git, memory sampler), stats (paired bootstrap, exact McNemar, Holm), schema (versioned 1.0.0, validated at export and import), config (canonical hash, freeze guard), runner, analysis, report (Markdown, CSV, SVG, PDF via pandoc and Typst), CLI `token-lab {smoke,run,report,test}`.
+  - [x] Tests: 90 passed, 0 failed (`uv run pytest -q`), covering every item of the acceptance line above, including a local stub of the Ollama API for error handling.
+  - [x] `run` refuses confirmatory configs while the protocol is unfrozen (tested on the real registry).
+  - [x] Exploratory harness smoke on the simulated backend (RUN-SMOKE-0001 to 0004, JRN-0003); one report PDF generated and inspected.
+  - [ ] Exploratory smoke on the real runtime (JRN-0002: server not running; brief forbids starting it). Planning values for the freeze are therefore still unmeasured (DL-007 A1).
+  - [ ] ARC loader run on the real file (format implemented and tested on the fixture; download is an owner decision).
+  - [ ] Per-arm chat template and system prompt hash in the manifest (DL-007 A5).
 
 ## M3: Experiments (11.6: individual reports as experiments finish; record all failures and deviations)
 

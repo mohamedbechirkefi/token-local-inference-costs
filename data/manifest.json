@@ -1,7 +1,7 @@
 {
   "schema_version": "0.1.0",
   "generated": "2026-11-24",
-  "status": "M0: candidate sources only; nothing downloaded",
+  "status": "M2: candidate sources only; no dataset downloaded (M2 brief forbids downloads); synthetic offline fixture added",
   "datasets": [
     {
       "id": "arc-challenge",
@@ -10,8 +10,15 @@
       "paper": "arXiv:1803.05457",
       "license": "CC-BY-SA-4.0 (per dataset card, accessed 2026-11-24)",
       "redistribution": "Allowed with attribution and ShareAlike; any bundled subset keeps CC BY-SA 4.0 and is not relicensed under the project licence. Owner decision pending: bundle a subset or commit item IDs only.",
-      "splits_used": {"test": "fixed 300-item subset (seed 20261124), proposed", "validation": "prompt development and smoke runs"},
-      "split_sizes": {"train": 1119, "validation": 299, "test": 1172},
+      "splits_used": {
+        "test": "fixed 300-item subset (seed 20261124), proposed",
+        "validation": "prompt development and smoke runs"
+      },
+      "split_sizes": {
+        "train": 1119,
+        "validation": 299,
+        "test": 1172
+      },
       "version": null,
       "sha256": null,
       "retrieved": null,
@@ -24,7 +31,10 @@
       "paper": "arXiv:2110.14168",
       "license": "MIT (per dataset card, accessed 2026-11-24)",
       "redistribution": "Allowed under MIT with notice.",
-      "split_sizes": {"train": 7473, "test": 1319},
+      "split_sizes": {
+        "train": 7473,
+        "test": 1319
+      },
       "version": null,
       "sha256": null,
       "retrieved": null,
@@ -32,11 +42,63 @@
     }
   ],
   "models": [
-    {"tag": "phi4-mini:3.8b", "format": "GGUF", "quantization": "Q4_K_M", "parameters": "3.8B", "size_bytes_manifest": 2491874624, "license": "MIT (local licence layer)", "redistributed": false, "role": "EXP-001 baseline A0"},
-    {"tag": "llama3.1:8b", "format": "GGUF", "quantization": "Q4_K_M", "parameters": "8.0B", "size_bytes_model_layer": 4920738944, "license": "Llama 3.1 Community License (local licence layer)", "redistributed": false, "role": "EXP-001 arm A1; EXP-003 baseline"},
-    {"tag": "ministral-3:8b", "format": "GGUF", "quantization": "Q4_K_M", "parameters": "8.9B", "size_bytes_model_layer": 6022221312, "license": "Apache-2.0 (local licence layer)", "redistributed": false, "role": "EXP-001 arm A2"},
-    {"tag": "qwen3.5:4b", "format": "safetensors", "quantization": "nvfp4", "parameters": null, "license": "Apache-2.0 (local licence layer)", "redistributed": false, "role": "excluded pending smoke check"},
-    {"tag": "llama3.1 8B Q8_0 (tag to be confirmed)", "format": "GGUF", "quantization": "Q8_0", "license": "Llama 3.1 Community License", "redistributed": false, "role": "EXP-003 arm; not installed; download requires owner approval"}
+    {
+      "tag": "phi4-mini:3.8b",
+      "format": "GGUF",
+      "quantization": "Q4_K_M",
+      "parameters": "3.8B",
+      "size_bytes_manifest": 2491874624,
+      "license": "MIT (local licence layer)",
+      "redistributed": false,
+      "role": "EXP-001 baseline A0"
+    },
+    {
+      "tag": "llama3.1:8b",
+      "format": "GGUF",
+      "quantization": "Q4_K_M",
+      "parameters": "8.0B",
+      "size_bytes_model_layer": 4920738944,
+      "license": "Llama 3.1 Community License (local licence layer)",
+      "redistributed": false,
+      "role": "EXP-001 arm A1; EXP-003 baseline"
+    },
+    {
+      "tag": "ministral-3:8b",
+      "format": "GGUF",
+      "quantization": "Q4_K_M",
+      "parameters": "8.9B",
+      "size_bytes_model_layer": 6022221312,
+      "license": "Apache-2.0 (local licence layer)",
+      "redistributed": false,
+      "role": "EXP-001 arm A2"
+    },
+    {
+      "tag": "qwen3.5:4b",
+      "format": "safetensors",
+      "quantization": "nvfp4",
+      "parameters": null,
+      "license": "Apache-2.0 (local licence layer)",
+      "redistributed": false,
+      "role": "excluded pending smoke check"
+    },
+    {
+      "tag": "llama3.1 8B Q8_0 (tag to be confirmed)",
+      "format": "GGUF",
+      "quantization": "Q8_0",
+      "license": "Llama 3.1 Community License",
+      "redistributed": false,
+      "role": "EXP-003 arm; not installed; download requires owner approval"
+    }
   ],
-  "synthetic": []
+  "synthetic": [
+    {
+      "id": "synthetic-mc-v1",
+      "path": "data/fixtures/synthetic_mc.jsonl",
+      "description": "10 elementary science multiple-choice items written in this repository during M2 (2026-11-24) to test the pipeline offline. Not drawn from ARC or any dataset; not a benchmark; never used for any claim.",
+      "generator": "hand-written, no generator, no seed",
+      "license": "LicenseRef-TOKEN-NC-Research-1.0 (covered by NOTICE.md)",
+      "sha256": "3f7a73ff0c3295d711d8b258ce83025d90e9ebd5ce1e23279d63d0c95bceb86f",
+      "n_items": 10
+    }
+  ]
 }

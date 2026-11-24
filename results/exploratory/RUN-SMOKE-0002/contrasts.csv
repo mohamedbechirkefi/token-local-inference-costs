@@ -1,0 +1,5 @@
+arm,baseline,extraction,n,delta_pp,ci_low_pp,ci_high_pp,b,c,mcnemar_p,holm_p
+A1,A0,strict,10,-30.0,-60.0,0.0,0,3,0.25,0.5
+A2,A0,strict,10,10.0,-30.0,50.0,3,2,1.0,1.0
+A1,A0,lenient,10,-30.0,-60.0,0.0,0,3,0.25,0.5
+A2,A0,lenient,10,10.0,-30.0,50.0,3,2,1.0,1.0

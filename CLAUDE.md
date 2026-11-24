@@ -59,8 +59,10 @@ Then run `git status` and inspect existing files. Never overwrite the owner's ch
 
 - Lock dependencies: `/Users/bechir/research/labs/.tools/py/bin/uv lock`
 - Create the environment: `/Users/bechir/research/labs/.tools/py/bin/uv sync`
-- Tests: `/Users/bechir/research/labs/.tools/py/bin/uv run pytest` (no tests exist at M0)
-- Smoke, full experiment and report CLI commands are defined in M2 (see `roadmap.md`).
+- Tests: `/Users/bechir/research/labs/.tools/py/bin/uv run pytest` (or `uv run token-lab test`)
+- Smoke (exploratory only): `uv run token-lab smoke --config experiments/smoke-simulated.json`; against a running, idle Ollama: `--config experiments/smoke-ollama.json`
+- Run: `uv run token-lab run --config experiments/EXP-001.json` (refused until the owner freezes the protocol)
+- Report: `uv run token-lab report --result results/<label>/<RUN-ID>/result.json [--pdf]`
 
 ## 5. Zero-cost publication toolchain (decision DL-002)
 
