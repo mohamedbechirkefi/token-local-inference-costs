@@ -125,20 +125,26 @@ def build_report(result_path: str | Path, out_dir: str | Path | None = None, pdf
         "## Per-arm metrics", "",
         "Accuracy: per-item mean over repetitions, then mean over items. Latency: per-item median "
         "over repetitions, then median [Q1, Q3] over items (ms).", "",
-        "| Arm | Model | n | Acc. strict | Acc. lenient | Chance | Errors | Format fail (strict) | "
-        "Latency median [Q1, Q3] ms | TTFT ms | Decode tok/s | Determinism | Peak RSS MiB |",
-        "|---|---|---|---|---|---|---|---|---|---|---|---|---|",
+        "| Arm | Model | n items | Acc. strict | Acc. lenient | Chance | Errors | Format fail strict | Format fail lenient |",
+        "|---|---|---|---|---|---|---|---|---|",
     ]
     for s in sums:
         if not s["n_records"]:
-            lines.append(f"| {s['arm']} | | 0 | | | | | | | | | | |")
+            lines.append(f"| {s['arm']} | | 0 | | | | | | |")
             continue
         lines.append(
             f"| {s['arm']} | {s['model']} | {s['n_items']} | {_fmt(s['accuracy_strict'])} | "
             f"{_fmt(s['accuracy_lenient'])} | {_fmt(s['chance'])} | {s['errors']} | {s['format_fail_strict']} | "
-            f"{_fmt(s['latency_ms_median'], 2)} [{_fmt(s['latency_ms_q1'], 2)}, {_fmt(s['latency_ms_q3'], 2)}] | "
-            f"{_fmt(s['ttft_ms_median'], 2)} | {_fmt(s['decode_tps_median'], 1)} | {_fmt(s['determinism'], 2)} | "
-            f"{_fmt(s['peak_rss_mib'], 1)} |")
+            f"{s['format_fail_lenient']} |")
+    lines += ["", "| Arm | Latency median [Q1, Q3] (ms) | TTFT median (ms) | Decode (tok/s) | Prefill (tok/s) | "
+              "Determinism | Peak RSS (MiB) | Max swap delta (MiB) |", "|---|---|---|---|---|---|---|---|"]
+    for s in sums:
+        if s["n_records"]:
+            lines.append(
+                f"| {s['arm']} | {_fmt(s['latency_ms_median'], 2)} [{_fmt(s['latency_ms_q1'], 2)}, "
+                f"{_fmt(s['latency_ms_q3'], 2)}] | {_fmt(s['ttft_ms_median'], 2)} | {_fmt(s['decode_tps_median'], 1)} | "
+                f"{_fmt(s['prefill_tps_median'], 1)} | {_fmt(s['determinism'], 2)} | {_fmt(s['peak_rss_mib'], 1)} | "
+                f"{_fmt(s['swap_delta_mib_max'], 1)} |")
     lines += ["", "## Spread between repetitions (seeds)", "",
               "| Arm | Accuracy per repetition | Median latency per repetition (ms) | CV of repetition medians |",
               "|---|---|---|---|"]

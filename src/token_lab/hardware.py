@@ -34,7 +34,7 @@ def _run(cmd: list[str], cwd: str | Path | None = None) -> str | None:
 
 def git_state(repo: str | Path) -> dict:
     rev = _run(["git", "rev-parse", "HEAD"], repo)
-    status = _run(["git", "status", "--porcelain"], repo)
+    status = _run(["git", "status", "--porcelain", "--untracked-files=no"], repo)  # tracked files only
     return {"revision": rev, "dirty": None if status is None else bool(status)}
 
 
