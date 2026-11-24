@@ -68,7 +68,7 @@ def _fake_repo(tmp_path, protocol_text="frozen protocol v1\n", recorded=None):
     return proto
 
 
-@pytest.mark.parametrize("exp", ["EXP-001", "EXP-003"])
+@pytest.mark.parametrize("exp", ["EXP-001", "EXP-002", "EXP-003"])
 def test_freeze_guard_real_repo_accepts_frozen_configs(repo, exp):
     cfg = parse_config(json.loads((repo / "experiments" / f"{exp}.json").read_text()))
     h = require_frozen_if_confirmatory(cfg, repo)
@@ -116,7 +116,7 @@ def test_freeze_guard_refuses_edited_protocols_and_missing_record(repo, tmp_path
         require_frozen_if_confirmatory(cfg, fake3)
 
 
-def test_freeze_guard_exp002_has_no_config(repo):
+def test_freeze_guard_exp002_refuses_other_configs(repo):
     raw = json.loads((repo / "experiments" / "EXP-001.json").read_text())
     raw["exp_id"] = "EXP-002"
     with pytest.raises(ProtocolNotFrozen, match="config differs"):

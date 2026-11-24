@@ -29,6 +29,23 @@ class Arm:
 
 
 @dataclass(frozen=True)
+class ColdWarm:
+    """EXP-002 cold/warm design (EXP-002 protocol items 9 to 12, 14, 17 and 18).
+
+    Per arm: ``trials_per_state`` pairs, each an unload confirmed by ``/api/ps``
+    followed by a cold request, then a warm request immediately after it (cold
+    first, strictly alternating). Arm order is a permutation from
+    ``default_rng(arm_order_seed)``. ``wall_cap_s`` is the stopping rule.
+    """
+
+    trials_per_state: int
+    arm_order_seed: int
+    unload_confirm_timeout_s: float
+    unload_poll_s: float
+    wall_cap_s: float
+
+
+@dataclass(frozen=True)
 class RunConfig:
     raw: dict
     exp_id: str
@@ -50,6 +67,8 @@ class RunConfig:
     process_match: str
     items_source_sha256: str | None = None
     subset_ids_path: str | None = None
+    design: str = "matrix"
+    cold_warm: ColdWarm | None = None
 
     @property
     def sha256(self) -> str:
@@ -130,6 +149,12 @@ def parse_config(raw: dict) -> RunConfig:
     hz = raw.get("memory_sample_hz", 10)
     if not isinstance(hz, (int, float)) or hz <= 0:
         raise ConfigError("memory_sample_hz must be positive")
+    design = raw.get("design", "matrix")
+    if design not in ("matrix", "cold_warm"):
+        raise ConfigError("design must be matrix or cold_warm")
+    cold_warm = _parse_cold_warm(raw, subset, reps, retries) if design == "cold_warm" else None
+    if design == "matrix" and "cold_warm" in raw:
+        raise ConfigError("a cold_warm block needs design cold_warm")
     return RunConfig(
         raw=raw,
         exp_id=exp_id,
@@ -151,6 +176,40 @@ def parse_config(raw: dict) -> RunConfig:
         process_match=str(raw.get("process_match", "ollama")),
         items_source_sha256=src_sha,
         subset_ids_path=ids_path,
+        design=design,
+        cold_warm=cold_warm,
+    )
+
+
+def _pos_num(d: dict, key: str) -> float:
+    v = d.get(key)
+    if isinstance(v, bool) or not isinstance(v, (int, float)) or v <= 0:
+        raise ConfigError(f"cold_warm.{key} must be a positive number")
+    return float(v)
+
+
+def _parse_cold_warm(raw: dict, subset, reps: int, retries: int) -> ColdWarm:
+    """Validate the cold/warm design against the frozen EXP-002 constraints:
+    one fixed prompt (subset of 1), one runtime seed, no discarded warm-up and
+    no retries (a retried cold request would no longer be cold)."""
+    cw = _req(raw, "cold_warm", dict)
+    if subset != 1:
+        raise ConfigError("cold_warm needs exactly one fixed prompt (items.subset_size = 1)")
+    if reps != 1:
+        raise ConfigError("cold_warm needs repetitions = 1 (one runtime seed)")
+    if raw.get("warmup", True) is not False:
+        raise ConfigError("cold_warm needs warmup = false (the trial sequence defines every request)")
+    if retries != 0:
+        raise ConfigError("cold_warm needs max_retries = 0 (a retry changes the start state)")
+    n = _req(cw, "trials_per_state", int, "cold_warm")
+    if n < 1:
+        raise ConfigError("cold_warm.trials_per_state must be >= 1")
+    return ColdWarm(
+        trials_per_state=n,
+        arm_order_seed=_req(cw, "arm_order_seed", int, "cold_warm"),
+        unload_confirm_timeout_s=_pos_num(cw, "unload_confirm_timeout_s"),
+        unload_poll_s=_pos_num(cw, "unload_poll_s"),
+        wall_cap_s=_pos_num(cw, "wall_cap_s"),
     )
 
 

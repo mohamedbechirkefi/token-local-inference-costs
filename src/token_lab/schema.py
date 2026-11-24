@@ -49,7 +49,13 @@ RECORD_SCHEMA = {
         "eval_duration_ns": _int_or_null,
         "load_duration_ns": _int_or_null,
         "total_duration_ns": _int_or_null,
+        # EXP-002 cold/warm design only (optional, additive; matrix records omit them)
+        "start_state": {"enum": ["cold", "warm"]},
+        "trial_index": {"type": "integer", "minimum": 0},
+        "state_valid": {"type": "boolean"},
+        "state_check": {"type": "object"},
     },
+    "dependentRequired": {"start_state": ["trial_index", "state_valid", "state_check"]},
 }
 
 BLOCK_SCHEMA = {

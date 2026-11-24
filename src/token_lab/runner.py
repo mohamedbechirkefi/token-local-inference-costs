@@ -5,6 +5,8 @@ Order design (protocol section 6): in repetition r, arm order and item order
 are permutations drawn from ``default_rng(order_seed_base + r)``; the item
 order is identical for every arm in that repetition (common random numbers).
 One discarded warm-up request precedes each arm block when ``warmup`` is set.
+
+EXP-002 uses the ``cold_warm`` design instead (``run_cold_warm``).
 """
 
 from __future__ import annotations
@@ -94,6 +96,178 @@ def arm_fingerprints(cfg: RunConfig, backend: Backend) -> dict:
     return out
 
 
+def _record(cfg: RunConfig, arm, item: Item, rp, rep: int, pos: int, seed: int, gen, err, attempts) -> dict:
+    text = gen.text if gen else None
+    ex = extract(text, rp.display_to_source) if text is not None else None
+    s = ex.strict if ex else None
+    l = ex.lenient if ex else None  # noqa: E741
+    c = gen.counters if gen else None
+    return {
+        "arm": arm.arm_id, "model": arm.model, "item_id": item.item_id,
+        "repetition": rep, "order_index": pos, "runtime_seed": seed,
+        "template": cfg.template, "response": text,
+        "extracted_strict": s, "extracted_lenient": l,
+        "answer_key": item.answer_key, "n_choices": len(item.labels),
+        "correct_strict": is_correct(s, item.answer_key),
+        "correct_lenient": is_correct(l, item.answer_key),
+        "error": err, "attempts": attempts,
+        "latency_ms": gen.latency_ms if gen else None,
+        "ttft_ms": gen.ttft_ms if gen else None,
+        "stream_chunks": gen.stream_chunks if gen else None,
+        "prompt_eval_count": c.prompt_eval_count if c else None,
+        "eval_count": c.eval_count if c else None,
+        "prompt_eval_duration_ns": c.prompt_eval_duration_ns if c else None,
+        "eval_duration_ns": c.eval_duration_ns if c else None,
+        "load_duration_ns": c.load_duration_ns if c else None,
+        "total_duration_ns": c.total_duration_ns if c else None,
+    }
+
+
+def run_matrix(cfg: RunConfig, backend: Backend, items: list[Item]) -> tuple[list, list, list]:
+    """EXP-001/EXP-003 matrix: repetitions x arms x items (module docstring)."""
+    records: list[dict] = []
+    blocks: list[dict] = []
+    failures: list[dict] = []
+    for rep in range(cfg.repetitions):
+        seed = cfg.runtime_seeds[rep]
+        arm_order, item_order = schedule(len(cfg.arms), len(items), rep, cfg.order_seed_base)
+        for ai in arm_order:
+            arm = cfg.arms[ai]
+            loaded_before = _safe_loaded(backend)
+            block_start = now_utc()
+            tb = time.perf_counter()
+            with MemorySampler(name_matcher(cfg.process_match), cfg.memory_sample_hz) as mem:
+                if cfg.warmup:
+                    _gen, err, _ = _request(backend, arm.model, render(items[item_order[0]], cfg.template).text, cfg, seed)
+                    if err:
+                        failures.append({"arm": arm.arm_id, "repetition": rep, "item_id": None,
+                                         "stage": "warmup", "error": err})
+                for pos, ii in enumerate(item_order):
+                    item = items[ii]
+                    rp = render(item, cfg.template)
+                    gen, err, attempts = _request(backend, arm.model, rp.text, cfg, seed)
+                    records.append(_record(cfg, arm, item, rp, rep, pos, seed, gen, err, attempts))
+                    if err:
+                        failures.append({"arm": arm.arm_id, "repetition": rep, "item_id": item.item_id,
+                                         "stage": "request", "error": err})
+            blocks.append({
+                "arm": arm.arm_id, "repetition": rep, "start_utc": block_start,
+                "wall_s": time.perf_counter() - tb, "memory": mem.summary(),
+                "loaded_before": loaded_before, "loaded_after": _safe_loaded(backend),
+            })
+    return records, blocks, failures
+
+
+def cold_warm_sequence(n_arms: int, trials_per_state: int, arm_order_seed: int) -> tuple[list[int], list[str]]:
+    """Arm order (permutation from ``default_rng(arm_order_seed)``) and the fixed
+    per-arm trial order: cold, warm, cold, warm, ... (EXP-002 protocol item 12)."""
+    if n_arms < 1 or trials_per_state < 1:
+        raise ValueError("need at least one arm and one trial per state")
+    arm_order = [int(i) for i in np.random.default_rng(arm_order_seed).permutation(n_arms)]
+    return arm_order, ["cold", "warm"] * trials_per_state
+
+
+def confirm_unloaded(backend: Backend, timeout_s: float, poll_s: float) -> tuple[list | None, int]:
+    """Poll ``/api/ps`` until no model is loaded or ``timeout_s`` passes.
+    Returns (last loaded list or None if unreadable, number of polls)."""
+    deadline = time.perf_counter() + timeout_s
+    polls = 0
+    while True:
+        loaded = _safe_loaded(backend)
+        polls += 1
+        if loaded == [] or time.perf_counter() >= deadline:
+            return loaded, polls
+        time.sleep(poll_s)
+
+
+def run_cold_warm(cfg: RunConfig, backend: Backend, item: Item, t_start: float) -> tuple[list, list, list, dict]:
+    """EXP-002 cold/warm mode, exactly as the frozen EXP-002 protocol defines it.
+
+    One fixed prompt (``item`` rendered with ``cfg.template``), decoding and
+    runtime seed from the config. Per arm, in the seeded arm order, the trials
+    alternate cold, warm, starting cold. A cold trial unloads the arm's model,
+    and any other model ``/api/ps`` lists, with ``keep_alive: 0``, confirms with ``/api/ps`` that no model is loaded,
+    then sends the request; it is marked invalid (``state_valid`` false, kept
+    in the records) if ``/api/ps`` still lists any model or cannot be read just
+    before the request (items 10 and 17). A warm trial is sent immediately
+    after the preceding request to the same arm completed; it is marked
+    invalid if that request failed. No retries and no discarded warm-up.
+    Stopping rule (item 18): no new trial starts once ``wall_cap_s`` has
+    elapsed since the run started; the stop is recorded as a failure.
+    """
+    cw = cfg.cold_warm
+    assert cw is not None
+    seed = cfg.runtime_seeds[0]
+    rp = render(item, cfg.template)
+    arm_order, states = cold_warm_sequence(len(cfg.arms), cw.trials_per_state, cw.arm_order_seed)
+    records: list[dict] = []
+    blocks: list[dict] = []
+    failures: list[dict] = []
+    stopped = False
+    for ai in arm_order:
+        if stopped:
+            break
+        arm = cfg.arms[ai]
+        loaded_before = _safe_loaded(backend)
+        block_start = now_utc()
+        tb = time.perf_counter()
+        prev_ok = False
+        with MemorySampler(name_matcher(cfg.process_match), cfg.memory_sample_hz) as mem:
+            for pos, state in enumerate(states):
+                if time.perf_counter() - t_start >= cw.wall_cap_s:
+                    stopped = True
+                    failures.append({"arm": arm.arm_id, "repetition": 0, "item_id": item.item_id,
+                                     "stage": "stopping_rule",
+                                     "error": f"wall-clock cap {cw.wall_cap_s} s reached; remaining trials not run"})
+                    break
+                check: dict
+                if state == "cold":
+                    unload_error = None
+                    # unload this arm's model and any other listed model (the protocol
+                    # requires that no model is loaded, not only this arm's)
+                    targets = [arm.model] + [m["name"] for m in (_safe_loaded(backend) or [])
+                                             if isinstance(m.get("name"), str) and m["name"] != arm.model]
+                    for name in targets:
+                        try:
+                            backend.unload(name)
+                        except RuntimeUnavailable:
+                            raise
+                        except BackendError as exc:
+                            unload_error = f"{type(exc).__name__}: {exc}"
+                    confirmed, polls = confirm_unloaded(backend, cw.unload_confirm_timeout_s, cw.unload_poll_s)
+                    loaded_now = _safe_loaded(backend)  # immediately before the request
+                    valid = unload_error is None and loaded_now == []
+                    check = {"unload_error": unload_error, "unloaded": targets, "confirm_polls": polls,
+                             "loaded_at_confirm": confirmed, "loaded_before_request": loaded_now}
+                    if not valid:
+                        failures.append({"arm": arm.arm_id, "repetition": 0, "item_id": item.item_id,
+                                         "stage": "cold_check", "trial_index": pos,
+                                         "error": unload_error or f"models loaded before the cold request: {loaded_now}"})
+                else:
+                    valid = prev_ok
+                    check = {"previous_request_completed": prev_ok}
+                gen, err, attempts = _request(backend, arm.model, rp.text, cfg, seed)
+                prev_ok = err is None
+                rec = _record(cfg, arm, item, rp, 0, pos, seed, gen, err, attempts)
+                rec.update({"start_state": state, "trial_index": pos // 2,
+                            "state_valid": bool(valid), "state_check": check})
+                records.append(rec)
+                if err:
+                    failures.append({"arm": arm.arm_id, "repetition": 0, "item_id": item.item_id,
+                                     "stage": "request", "trial_index": pos, "error": err})
+        blocks.append({
+            "arm": arm.arm_id, "repetition": 0, "start_utc": block_start,
+            "wall_s": time.perf_counter() - tb, "memory": mem.summary(),
+            "loaded_before": loaded_before, "loaded_after": _safe_loaded(backend),
+        })
+    extra = {"cold_warm": {"arm_order": [cfg.arms[i].arm_id for i in arm_order],
+                           "trial_states": states, "fixed_item_id": item.item_id,
+                           "trials_per_state": cw.trials_per_state, "arm_order_seed": cw.arm_order_seed,
+                           "wall_cap_s": cw.wall_cap_s, "stopped_by_wall_cap": stopped,
+                           "n_invalid_state": sum(1 for r in records if not r["state_valid"])}}
+    return records, blocks, failures, extra
+
+
 def execute(cfg: RunConfig, repo: Path, backend: Backend | None = None, out_root: Path | None = None) -> tuple[dict, Path]:
     """Run ``cfg`` and export a validated result. Raises before any request if
     a confirmatory config is not frozen, or if the runtime is unreachable."""
@@ -115,61 +289,11 @@ def execute(cfg: RunConfig, repo: Path, backend: Backend | None = None, out_root
     start_utc = now_utc()
     t_start = time.perf_counter()
     host_before = host_info()
-    records: list[dict] = []
-    blocks: list[dict] = []
-    failures: list[dict] = []
-
-    for rep in range(cfg.repetitions):
-        seed = cfg.runtime_seeds[rep]
-        arm_order, item_order = schedule(len(cfg.arms), len(items), rep, cfg.order_seed_base)
-        for ai in arm_order:
-            arm = cfg.arms[ai]
-            loaded_before = _safe_loaded(backend)
-            block_start = now_utc()
-            tb = time.perf_counter()
-            with MemorySampler(name_matcher(cfg.process_match), cfg.memory_sample_hz) as mem:
-                if cfg.warmup:
-                    _gen, err, _ = _request(backend, arm.model, render(items[item_order[0]], cfg.template).text, cfg, seed)
-                    if err:
-                        failures.append({"arm": arm.arm_id, "repetition": rep, "item_id": None,
-                                         "stage": "warmup", "error": err})
-                for pos, ii in enumerate(item_order):
-                    item = items[ii]
-                    rp = render(item, cfg.template)
-                    gen, err, attempts = _request(backend, arm.model, rp.text, cfg, seed)
-                    text = gen.text if gen else None
-                    ex = extract(text, rp.display_to_source) if text is not None else None
-                    s = ex.strict if ex else None
-                    l = ex.lenient if ex else None
-                    c = gen.counters if gen else None
-                    rec = {
-                        "arm": arm.arm_id, "model": arm.model, "item_id": item.item_id,
-                        "repetition": rep, "order_index": pos, "runtime_seed": seed,
-                        "template": cfg.template, "response": text,
-                        "extracted_strict": s, "extracted_lenient": l,
-                        "answer_key": item.answer_key, "n_choices": len(item.labels),
-                        "correct_strict": is_correct(s, item.answer_key),
-                        "correct_lenient": is_correct(l, item.answer_key),
-                        "error": err, "attempts": attempts,
-                        "latency_ms": gen.latency_ms if gen else None,
-                        "ttft_ms": gen.ttft_ms if gen else None,
-                        "stream_chunks": gen.stream_chunks if gen else None,
-                        "prompt_eval_count": c.prompt_eval_count if c else None,
-                        "eval_count": c.eval_count if c else None,
-                        "prompt_eval_duration_ns": c.prompt_eval_duration_ns if c else None,
-                        "eval_duration_ns": c.eval_duration_ns if c else None,
-                        "load_duration_ns": c.load_duration_ns if c else None,
-                        "total_duration_ns": c.total_duration_ns if c else None,
-                    }
-                    records.append(rec)
-                    if err:
-                        failures.append({"arm": arm.arm_id, "repetition": rep, "item_id": item.item_id,
-                                         "stage": "request", "error": err})
-            blocks.append({
-                "arm": arm.arm_id, "repetition": rep, "start_utc": block_start,
-                "wall_s": time.perf_counter() - tb, "memory": mem.summary(),
-                "loaded_before": loaded_before, "loaded_after": _safe_loaded(backend),
-            })
+    extra: dict = {}
+    if cfg.design == "cold_warm":
+        records, blocks, failures, extra = run_cold_warm(cfg, backend, items[0], t_start)
+    else:
+        records, blocks, failures = run_matrix(cfg, backend, items)
 
     runtime_s = time.perf_counter() - t_start
     manifest = {
@@ -184,7 +308,7 @@ def execute(cfg: RunConfig, repo: Path, backend: Backend | None = None, out_root
         "harness_peak_rss_mib": harness_peak_rss_bytes() / 2**20,
         "arm_runtime": fingerprints,
         "n_requests": len(records), "n_failures": len(failures),
-        "schema_version": SCHEMA_VERSION,
+        "schema_version": SCHEMA_VERSION, "design": cfg.design, **extra,
     }
     doc = {
         "schema_version": SCHEMA_VERSION, "kind": "token-lab-result", "label": label,

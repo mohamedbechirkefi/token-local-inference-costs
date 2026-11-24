@@ -3,9 +3,9 @@
 
 ``OllamaBackend`` talks to an already running local Ollama server with the
 standard library only (streaming ``/api/generate``; time to first token is
-measured on the client). It never starts, stops, pulls or unloads models;
-unloading for EXP-002 is a separate, explicit call that the runner only makes
-in an owner-scheduled window.
+measured on the client). It never starts, stops or pulls models. Unloading
+(``unload``, the documented ``keep_alive: 0`` request) is a separate, explicit
+call that only the EXP-002 cold/warm mode makes, in an owner-scheduled window.
 
 ``SimulatedBackend`` is a deterministic stand-in for testing the harness. Its
 outputs are SIMULATED: they contain no model output and no inference timing.
@@ -79,6 +79,8 @@ class Backend(Protocol):
     def loaded_models(self) -> list[dict]: ...
 
     def show(self, model: str) -> dict: ...
+
+    def unload(self, model: str) -> None: ...
 
 
 def _sha(value) -> str | None:
@@ -170,6 +172,19 @@ class OllamaBackend:
             raise MalformedResponse("/api/show: not a JSON object")
         return obj
 
+    def unload(self, model: str) -> None:
+        """Ask the runtime to unload ``model`` now (``/api/generate`` with no prompt
+        and ``keep_alive: 0``, as documented by the Ollama API). Used only by the
+        EXP-002 cold/warm mode; the caller confirms the unload with ``/api/ps``."""
+        with self._open("/api/generate", {"model": model, "keep_alive": 0, "stream": False}) as resp:
+            raw = resp.read()
+        try:
+            obj = json.loads(raw) if raw.strip() else {}
+        except json.JSONDecodeError:
+            raise MalformedResponse("unload reply is not JSON") from None
+        if isinstance(obj, dict) and "error" in obj:
+            raise RuntimeReportedError(str(obj["error"])[:200])
+
     def generate(self, model: str, prompt: str, decoding: Decoding, seed: int) -> Generation:
         body = {
             "model": model,
@@ -240,19 +255,35 @@ class SimulatedBackend:
     10, an unparseable sentence (to exercise format-failure handling). The
     seed is ignored, mimicking greedy decoding. Counters are synthetic and the
     reported latency is the harness's own wall-clock for this call.
+
+    With ``track_loading`` the stand-in keeps a SIMULATED set of loaded models
+    (a request loads its model, ``unload`` removes it, ``loaded_models`` lists
+    them), so the cold/warm mode can be tested without a runtime;
+    ``ignore_unload`` simulates a runtime that does not honour the unload.
+    Without it, ``loaded_models`` is always empty, as before.
     """
 
     name = "simulated"
     simulated = True
 
-    def __init__(self, fail_models: tuple[str, ...] = ()):
+    def __init__(self, fail_models: tuple[str, ...] = (), track_loading: bool = False,
+                 ignore_unload: bool = False):
         self.fail_models = fail_models
+        self.track_loading = track_loading
+        self.ignore_unload = ignore_unload
+        self._loaded: list[str] = []
+        self.unload_calls: list[str] = []
 
     def version(self) -> str | None:
         return "simulated-0"
 
     def loaded_models(self) -> list[dict]:
-        return []
+        return [{"name": m, "size": None, "size_vram": None} for m in self._loaded]
+
+    def unload(self, model: str) -> None:
+        self.unload_calls.append(model)
+        if not self.ignore_unload and model in self._loaded:
+            self._loaded.remove(model)
 
     def show(self, model: str) -> dict:
         return {"template": f"SIMULATED template for {model}", "system": None,
@@ -262,6 +293,8 @@ class SimulatedBackend:
         t0 = time.perf_counter_ns()
         if model in self.fail_models:
             raise RuntimeReportedError(f"simulated failure for {model}")
+        if self.track_loading and model not in self._loaded:
+            self._loaded.append(model)
         digest = hashlib.sha256(f"{model}\x00{prompt}".encode()).digest()
         last = prompt.rstrip().splitlines()[-1]
         inside = last[last.find("(") + 1 : last.find(")")] if "(" in last else ""
@@ -290,5 +323,5 @@ def make_backend(spec: dict) -> Backend:
     if name == "ollama":
         return OllamaBackend(spec.get("base_url", "http://127.0.0.1:11434"), float(spec.get("timeout_s", 120)))
     if name == "simulated":
-        return SimulatedBackend(tuple(spec.get("fail_models", ())))
+        return SimulatedBackend(tuple(spec.get("fail_models", ())), bool(spec.get("track_loading", False)))
     raise ValueError(f"unknown backend {name!r}")

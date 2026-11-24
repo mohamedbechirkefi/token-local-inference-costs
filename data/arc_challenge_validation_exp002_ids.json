@@ -1,0 +1,19 @@
+{
+ "dataset": "ARC-Challenge (allenai/ai2_arc)",
+ "license": "CC-BY-SA-4.0",
+ "split": "validation",
+ "source_url": "https://huggingface.co/datasets/allenai/ai2_arc/resolve/210d026faf9955653af8916fad021475a3f00453/ARC-Challenge/validation-00000-of-00001.parquet",
+ "revision": "210d026faf9955653af8916fad021475a3f00453",
+ "parquet_sha256": "395a5c88d1580d69855fbaee9450270578df1ad5af6259771cd0a42c20e99f05",
+ "jsonl_path": "results/raw/arc/ARC-Challenge-validation.jsonl",
+ "jsonl_sha256": "16b59737cb520f748020546b5e3fa76f0893d1a1237bb350dd81dd43a09f151b",
+ "n_source_items": 299,
+ "subset_size": 1,
+ "subset_seed": 20261124,
+ "sampling": "token_lab.items.seeded_subset: ids sorted, numpy default_rng(seed).choice without replacement",
+ "use": "EXP-002 fixed validation-split prompt (EXP-002 protocol item 9), rendered with template T1; drawn 2026-11-24 by the cold/warm implementation, before any model request",
+ "note": "Item ID only; the question text is not committed (regenerate with scripts/fetch_arc.py).",
+ "item_ids": [
+  "Mercury_192290"
+ ]
+}

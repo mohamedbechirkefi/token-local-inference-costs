@@ -1,0 +1,55 @@
+{
+ "exp_id": "EXP-002",
+ "mode": "confirmatory",
+ "design": "cold_warm",
+ "description": "EXP-002 confirmatory cold/warm trials per research/experiments/EXP-002/protocol.md (v1.0, frozen by the owner 2026-11-24), items 9 to 12: arms A0, A1, A2; one fixed ARC-Challenge validation prompt (template T1, item ID in data/arc_challenge_validation_exp002_ids.json); per arm 10 cold and 10 warm trials alternating cold then warm; a cold trial follows an unload with keep_alive 0 confirmed by /api/ps; arm order from seed 2002; runtime seed 0; temperature 0, num_predict 8, num_ctx 2048; 1-hour cap. Runs only in the coordinator's exclusive Ollama window (it unloads models from the shared runtime).",
+ "backend": {
+  "name": "ollama",
+  "base_url": "http://127.0.0.1:11434",
+  "timeout_s": 120
+ },
+ "arms": [
+  {
+   "arm_id": "A0",
+   "model": "phi4-mini:3.8b"
+  },
+  {
+   "arm_id": "A1",
+   "model": "llama3.1:8b"
+  },
+  {
+   "arm_id": "A2",
+   "model": "ministral-3:8b"
+  }
+ ],
+ "baseline_arm": "A0",
+ "items": {
+  "path": "results/raw/arc/ARC-Challenge-validation.jsonl",
+  "synthetic": false,
+  "subset_size": 1,
+  "subset_seed": 20261124,
+  "source_sha256": "16b59737cb520f748020546b5e3fa76f0893d1a1237bb350dd81dd43a09f151b",
+  "subset_ids_path": "data/arc_challenge_validation_exp002_ids.json"
+ },
+ "template": "T1",
+ "repetitions": 1,
+ "runtime_seeds": [
+  0
+ ],
+ "decoding": {
+  "temperature": 0,
+  "num_predict": 8,
+  "num_ctx": 2048
+ },
+ "max_retries": 0,
+ "warmup": false,
+ "cold_warm": {
+  "trials_per_state": 10,
+  "arm_order_seed": 2002,
+  "unload_confirm_timeout_s": 30,
+  "unload_poll_s": 0.25,
+  "wall_cap_s": 3600
+ },
+ "memory_sample_hz": 10,
+ "process_match": "ollama"
+}

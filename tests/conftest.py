@@ -34,6 +34,7 @@ class StubState:
         self.sleep_s = 2.0
         self.show_calls = 0
         self.show_mode = "ok"  # ok | error
+        self.bodies = []  # every POST /api/generate body, in order
 
 
 @pytest.fixture
@@ -70,6 +71,11 @@ def stub_ollama():
                                        "parameters": "stop <eot>", "modelfile": f"FROM {body.get('model')}",
                                        "details": {"format": "gguf", "quantization_level": "Q4_K_M",
                                                    "parameter_size": "8.0B"}}).encode())
+                return
+            state.bodies.append(body)
+            if body.get("keep_alive") == 0 and "prompt" not in body:  # unload request
+                self._send(json.dumps({"model": body.get("model"), "done": True,
+                                       "done_reason": "unload"}).encode())
                 return
             state.calls += 1
             m = state.mode

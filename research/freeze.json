@@ -56,10 +56,13 @@
    "protocol_path": "research/experiments/EXP-002/protocol.md",
    "protocol_version": "1.0",
    "protocol_sha256": "54d46696e6b479c83235c789839ae3acaaaeeac1f38eccc6ef7c399d191c011e",
-   "config_path": null,
-   "config_file_sha256": null,
-   "config_canonical_sha256": null,
-   "note": "No runnable config: the runner has no cold/warm mode yet. run refuses EXP-002 until a config is added and the owner records its hash here."
+   "config_path": "experiments/EXP-002.json",
+   "config_file_sha256": "cd78f2ed26697da586df68beba230750cd7ed76e2630aabee7c4a2dbbb49eac7",
+   "config_canonical_sha256": "6885e5f527df271897d6d2ba8f324fc73fd5135d250e92c8bd8dc94f4c3081cf",
+   "fixed_item_ids_path": "data/arc_challenge_validation_exp002_ids.json",
+   "fixed_item_ids_sha256": "c1fea51fcf4a868ba547ed0c33456362344d5fcd2ff28c4fcdfc6834b37ea7ae",
+   "config_added": "2026-11-24, second round",
+   "config_note": "Implements the frozen EXP-002 protocol (v1.0, unchanged, same SHA-256) items 9 to 12, 14, 17 and 18 with the runner's cold_warm design (token_lab.runner.run_cold_warm). Recorded under the owner's \"Approve all\" (2026-11-24, labs/_shared/owner-approvals-2026-11-24b.md, via labs/_shared/RATIFY-brief.md), which approved implementing this mode exactly as the frozen protocol defines it and recording the config hash here. Implementation choices inside the protocol's text: the fixed validation prompt is seeded_subset(validation, 1, seed 20261124) = Mercury_192290 rendered with T1; trials alternate starting cold; each cold trial unloads its arm's model and any other model /api/ps lists; no retries and no discarded warm-up (either would change the start state); unload confirmation polls /api/ps every 0.25 s for up to 30 s; a cold trial is kept but marked invalid if any model is listed just before the request. Not implemented: the item-20 page-cache sensitivity check (exploratory, not part of this config). Tested only with the simulated backend and the local HTTP stub; Ollama was not contacted."
   },
   "EXP-003": {
    "protocol_path": "research/experiments/EXP-003/protocol.md",
@@ -85,5 +88,13 @@
   "run": "uv run token-lab run --config experiments/EXP-00N.json",
   "report": "uv run token-lab report --result <result.json>"
  },
- "guard": "token_lab.config.require_frozen_if_confirmatory: registry hash = protocol SHA-256, main protocol SHA-256, experiment entry, canonical config SHA-256 must all match."
+ "guard": "token_lab.config.require_frozen_if_confirmatory: registry hash = protocol SHA-256, main protocol SHA-256, experiment entry, canonical config SHA-256 must all match.",
+ "amendments_after_freeze": [
+  {
+   "date": "2026-11-24",
+   "source": "labs/_shared/owner-approvals-2026-11-24b.md (\"Approve all\")",
+   "change": "EXP-002 runnable config added (experiments/EXP-002.json) implementing the frozen EXP-002 protocol; no protocol text or earlier config changed, so no frozen hash changes.",
+   "config_canonical_sha256": "6885e5f527df271897d6d2ba8f324fc73fd5135d250e92c8bd8dc94f4c3081cf"
+  }
+ ]
 }

@@ -133,3 +133,23 @@ Real inference timing, memory (RSS versus Metal allocations, DL-007 A2) and dete
 - EXP-002 has no runnable config (no cold/warm runner mode yet); its protocol is frozen.
 - Protocol section 13 and EXP item 21 command texts left as drafted (not an approved amendment); correct commands are in `research/freeze.json`.
 - Nothing pushed (G-PUBLIC).
+
+## 2026-11-24: ratification session (owner's second round, "Approve all")
+
+**Milestone:** M2 close-out before M3. **Task (RATIFY brief, TOKEN item):** implement the EXP-002 cold/warm runner mode exactly as the frozen protocol defines it, add a runnable config, record its hash in the freeze record.
+
+### What was done
+
+- Runner design `cold_warm` (`token_lab.runner.run_cold_warm`), `OllamaBackend.unload` (`keep_alive: 0`), simulated load tracking for tests, optional cold/warm record fields in the schema (1.0.0, additive), config validation (`design`, `cold_warm` block; one prompt, one seed, no warm-up, no retries).
+- `experiments/EXP-002.json` (canonical SHA-256 6885e5f527df271897d6d2ba8f324fc73fd5135d250e92c8bd8dc94f4c3081cf) and `data/arc_challenge_validation_exp002_ids.json` (fixed item `Mercury_192290`), recorded in `research/freeze.json` with an `amendments_after_freeze` entry; DL-009. No protocol or earlier config changed; all frozen protocol hashes unchanged.
+- Bug caught by the tests during implementation: unloading only the current arm's model left the previous arm's model loaded at each arm switch, so the "no model loaded" check would have failed every first cold trial after A0. Fixed before commit: a cold trial unloads every listed model.
+
+### Commands run and actual outputs
+
+- `.venv/bin/python -m pytest -q`: "128 passed in 8.30s", 0 failed (105 before; 22 new in `tests/test_cold_warm.py`, 1 new EXP-002 case in the freeze-guard parametrisation).
+- `token-lab run --config experiments/EXP-002.json` passes the freeze guard and stops at "runtime unavailable" against a dead test port (test). Ollama was not contacted.
+
+### Not done, and why
+
+- No smoke or confirmatory run (coordinator schedules M3). The EXP-002 penalty analysis (protocol items 6 and 16) and the item-20 exploratory page-cache check are not implemented yet (M4 and an exploratory config respectively).
+- Nothing pushed (G-PUBLIC).

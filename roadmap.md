@@ -9,7 +9,7 @@ Status values: not started, in progress, done (all acceptance criteria checked),
 |---|---|---|---|---|---|---|
 | M0 | Bootstrap and feasibility | none | P0 | 0.5 day | done (2026-11-24), pending owner review of the gate | none |
 | M1 | Research and preregistration | M0 | P0 | 0.5 day | done (2026-11-24): M1 gate passed, owner freeze v1.0 with amendments F1 to F9 (DL-008, `research/freeze.json`) | none |
-| M2 | Core implementation | M1 drafts (implementation may start before the freeze) | P0 | 1.5 days | in progress: core, freeze amendments and ARC loader on the real file done (2026-11-24); real-runtime smoke and EXP-002 cold/warm mode not done | real smoke in the coordinator's exclusive window (F1); EXP-002 runner mode |
+| M2 | Core implementation | M1 drafts (implementation may start before the freeze) | P0 | 1.5 days | in progress: core, freeze amendments and ARC loader on the real file done (2026-11-24); EXP-002 cold/warm mode done (2026-11-24, DL-009); real-runtime smoke not done | real smoke in the coordinator's exclusive window (F1) |
 | M3 | Experiments | M1 freeze, M2 | P0 | 1 day | not started | exclusive Ollama window scheduled by the coordinator; AC power; Q8_0 pull for EXP-003 in that window |
 | M4 | Interpretation | M3 | P0 | 0.5 day | not started | M3 |
 | M5 | Interactive experience | M4 (results), M2 (schema) | P1 (cut first) | 0.5 day | not started | M4 |
@@ -38,7 +38,7 @@ Status values: not started, in progress, done (all acceptance criteria checked),
   - [ ] Exploratory smoke on the real runtime (JRN-0002: server not running; brief forbids starting it). Planning values for the freeze are therefore still unmeasured (DL-007 A1).
   - [x] ARC loader run on the real file (2026-11-24, freeze session): test 1,172 and validation 299 items load; 300-item subset IDs committed.
   - [x] Per-arm chat template, system prompt, parameters and Modelfile hashes in the manifest (F8, freeze session).
-  - [ ] EXP-002 cold/warm runner mode and config (needs an owner-recorded config hash before it runs).
+  - [x] EXP-002 cold/warm runner mode and config (2026-11-24, DL-009; config hash recorded in `research/freeze.json` under the owner's second-round approval).
 
 ## M3: Experiments (11.6: individual reports as experiments finish; record all failures and deviations)
 
