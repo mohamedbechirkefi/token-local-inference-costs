@@ -1,0 +1,22 @@
+{
+ "exp_id": "EXP-001",
+ "mode": "confirmatory",
+ "description": "EXP-001 confirmatory matrix per research/experiments/EXP-001/protocol.md (draft v0.1). The runner refuses this config until the owner freezes the protocol and its SHA-256 is in the registry. items.path is a placeholder until the ARC-Challenge test file is obtained with owner approval.",
+ "backend": {"name": "ollama", "base_url": "http://127.0.0.1:11434", "timeout_s": 120},
+ "arms": [
+  {"arm_id": "A0", "model": "phi4-mini:3.8b"},
+  {"arm_id": "A1", "model": "llama3.1:8b"},
+  {"arm_id": "A2", "model": "ministral-3:8b"}
+ ],
+ "baseline_arm": "A0",
+ "items": {"path": "results/raw/arc/ARC-Challenge-test.jsonl", "synthetic": false, "subset_size": 300, "subset_seed": 20261124},
+ "template": "T1",
+ "repetitions": 5,
+ "runtime_seeds": [0, 1, 2, 3, 4],
+ "order_seed_base": 1000,
+ "decoding": {"temperature": 0, "num_predict": 8, "num_ctx": 2048},
+ "max_retries": 2,
+ "warmup": true,
+ "memory_sample_hz": 10,
+ "process_match": "ollama"
+}

@@ -1,0 +1,22 @@
+{
+ "exp_id": "SMOKE",
+ "mode": "exploratory",
+ "description": "Exploratory harness smoke run on the SIMULATED backend and the synthetic fixture. No model runs; measures harness overhead and pipeline correctness only.",
+ "backend": {"name": "simulated"},
+ "arms": [
+  {"arm_id": "A0", "model": "phi4-mini:3.8b"},
+  {"arm_id": "A1", "model": "llama3.1:8b"},
+  {"arm_id": "A2", "model": "ministral-3:8b"}
+ ],
+ "baseline_arm": "A0",
+ "items": {"path": "data/fixtures/synthetic_mc.jsonl", "synthetic": true, "subset_size": null, "subset_seed": 20261124},
+ "template": "T1",
+ "repetitions": 5,
+ "runtime_seeds": [0, 1, 2, 3, 4],
+ "order_seed_base": 1000,
+ "decoding": {"temperature": 0, "num_predict": 8, "num_ctx": 2048},
+ "max_retries": 2,
+ "warmup": true,
+ "memory_sample_hz": 10,
+ "process_match": "ollama"
+}

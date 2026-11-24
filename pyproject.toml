@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: LicenseRef-TOKEN-NC-Research-1.0
 [project]
 name = "token-lab"
-version = "0.0.0"
+version = "0.1.0"
 description = "TOKEN: local inference economics (quality, latency and resource use of local model configurations)."
 requires-python = ">=3.12,<3.13"
 license = { file = "LICENSE" }
@@ -11,6 +11,9 @@ dependencies = [
     "psutil==7.1.0",
     "jsonschema==4.25.1",
 ]
+
+[project.scripts]
+token-lab = "token_lab.cli:main"
 
 [dependency-groups]
 dev = ["pytest==8.4.2"]

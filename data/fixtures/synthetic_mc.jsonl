@@ -1,0 +1,10 @@
+{"id": "SYN-001", "question": "Which state of matter has a fixed shape and a fixed volume?", "choices": {"text": ["gas", "liquid", "solid", "plasma"], "label": ["A", "B", "C", "D"]}, "answerKey": "C"}
+{"id": "SYN-002", "question": "What force pulls a dropped ball toward the ground?", "choices": {"text": ["magnetism", "gravity", "friction", "buoyancy"], "label": ["A", "B", "C", "D"]}, "answerKey": "B"}
+{"id": "SYN-003", "question": "Which part of a plant takes in most of the water it uses?", "choices": {"text": ["roots", "flowers", "leaves", "seeds"], "label": ["A", "B", "C", "D"]}, "answerKey": "A"}
+{"id": "SYN-004", "question": "At sea level, water boils at about which temperature?", "choices": {"text": ["0 degrees Celsius", "37 degrees Celsius", "50 degrees Celsius", "100 degrees Celsius"], "label": ["A", "B", "C", "D"]}, "answerKey": "D"}
+{"id": "SYN-005", "question": "Which object is the main source of light for Earth during the day?", "choices": {"text": ["the Moon", "the Sun", "Venus"], "label": ["A", "B", "C"]}, "answerKey": "B"}
+{"id": "SYN-006", "question": "Which gas do plants release during photosynthesis?", "choices": {"text": ["oxygen", "carbon dioxide", "nitrogen", "helium"], "label": ["1", "2", "3", "4"]}, "answerKey": "1"}
+{"id": "SYN-007", "question": "A magnet is most strongly attracted to which material?", "choices": {"text": ["wood", "glass", "iron", "plastic", "paper"], "label": ["A", "B", "C", "D", "E"]}, "answerKey": "C"}
+{"id": "SYN-008", "question": "What is the main job of the heart?", "choices": {"text": ["digest food", "pump blood", "store memories", "make bones"], "label": ["A", "B", "C", "D"]}, "answerKey": "B"}
+{"id": "SYN-009", "question": "Which change is a physical change rather than a chemical change?", "choices": {"text": ["burning paper", "rusting iron", "melting ice", "baking bread"], "label": ["A", "B", "C", "D"]}, "answerKey": "C"}
+{"id": "SYN-010", "question": "How long does Earth take to complete one orbit of the Sun?", "choices": {"text": ["one day", "one week", "one month", "one year"], "label": ["A", "B", "C", "D"]}, "answerKey": "D"}

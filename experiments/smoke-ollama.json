@@ -1,0 +1,22 @@
+{
+ "exp_id": "SMOKE",
+ "mode": "exploratory",
+ "description": "Exploratory smoke run against an already running, idle Ollama server (protocol section 10 smoke matrix, scaled to the synthetic fixture because no dataset may be downloaded in M2). Run only when 'ollama ps' shows the server idle; the harness never starts or stops it.",
+ "backend": {"name": "ollama", "base_url": "http://127.0.0.1:11434", "timeout_s": 120},
+ "arms": [
+  {"arm_id": "A0", "model": "phi4-mini:3.8b"},
+  {"arm_id": "A1", "model": "llama3.1:8b"},
+  {"arm_id": "A2", "model": "ministral-3:8b"}
+ ],
+ "baseline_arm": "A0",
+ "items": {"path": "data/fixtures/synthetic_mc.jsonl", "synthetic": true, "subset_size": null, "subset_seed": 20261124},
+ "template": "T1",
+ "repetitions": 2,
+ "runtime_seeds": [0, 1],
+ "order_seed_base": 1000,
+ "decoding": {"temperature": 0, "num_predict": 8, "num_ctx": 2048},
+ "max_retries": 2,
+ "warmup": true,
+ "memory_sample_hz": 10,
+ "process_match": "ollama"
+}
