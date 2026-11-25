@@ -62,3 +62,13 @@ No conclusion. The owner should choose one of:
 ## 12. Reproduction appendix
 
 To reproduce the failure: start Ollama 0.9.6, then run `.venv/bin/token-lab run --config experiments/EXP-001.json`. Expected result: exit 3 with the error above. Records: `research/experiment_journal.jsonl` (JRN-0006, JRN-0007), `research/decision_log.md` (DL-011), smoke evidence `results/exploratory/RUN-SMOKE-0005/`.
+
+## Addendum (M4, 2026-11-25)
+
+The status is unchanged: **failed before any request, no results.** M4 ran no inference and did not contact the runtime. This experiment is reported in the manuscript (Sections 5.1, 5.2, Tables 1 and 5) with the same prominence as EXP-003, and no statement about its hypotheses is made anywhere. The owner's choice remains pending and is not decided by the M4 instruction (owner, 2026-11-25, "Next"):
+
+- (a) upgrade Ollama (a download, and a runtime change for the owner's other projects), then run the frozen matrix unchanged with the new runtime version recorded as a deviation;
+- (b) a new freeze that drops or replaces A2 ministral-3:8b, which is a new protocol version;
+- (c) keep the experiment recorded as failed.
+
+Records: DL-011, DL-012, JRN-0007; claims CLM-004 and CLM-005.

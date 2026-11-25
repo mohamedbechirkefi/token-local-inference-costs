@@ -100,3 +100,14 @@ On this laptop, the frozen design detected no accuracy difference between Llama 
 - Report and figures: `.venv/bin/token-lab report --result results/confirmatory/RUN-EXP-003-0001/result.json`.
 - Raw outputs: `results/confirmatory/RUN-EXP-003-0001/` (result.json SHA-256 3a5b2e60f24444cbdd282bb2dcb43bc61feff836ce9c4257ec241f6c92255064; all hashes in `sha256_manifest.json`). Copies are in this folder: `config.json`, `run_manifest.json`, `metrics.csv`, `contrasts.csv`.
 - Schema: result schema 1.0.0. The bootstrap is deterministic with seed 7, so a rerun should reproduce accuracy exactly and timing within run-to-run noise.
+
+## Addendum (M4, 2026-11-25): exploratory re-analysis and evidence audit
+
+This addendum adds no confirmatory result and changes no verdict. Source: `results/exploratory/M4-EXPL-0001/exploratory_exp003.json` (JRN-0009, DL-012), generated from the committed `result.json` without any new inference.
+
+- **Latency ratio (DL-011 gap 1), exploratory.** Ratio of medians 0.917 [0.916, 0.918]; median of per-item ratios 0.916 [0.916, 0.917]; Q8_0 faster on 296 of 300 items. Both readings are shown because the frozen text does not choose; the choice is the owner's.
+- **Warm-up prompt reuse.** The discarded warm-up request of each block uses the block's first item, so the first measured request repeats it. Those 10 records (one per block) took 102 to 135 ms against at least 325 ms for every other record. Removing them leaves both medians of per-item medians unchanged (477.5 and 437.7 ms). Recorded, not fixed (DL-012).
+- **Prefill by prompt length.** Prefill time rises in steps across 32-token prompt-length bins in both arms and is lower for Q8_0 in every bin; the median prefill rate in section 8 summarises this mix of prompt lengths.
+- **Format failures.** The strict failures are on 3 items for Q4 and 4 items for Q8; one of them is discordant. Excluding the 5 items with any failure gives +1.36 pp (post hoc, not a valid confirmatory analysis).
+- **Equivalence.** The frozen protocols define no equivalence margin, so the interval in section 8 is not an equivalence result.
+- **Summary levels.** In the results table, latency is summarised over the 300 per-item medians; TTFT and throughputs are medians over the 1,500 records of each arm.

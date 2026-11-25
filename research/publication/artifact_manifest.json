@@ -1,5 +1,557 @@
 {
-  "schema_version": "0.1.0",
-  "status": "M0: no artifacts yet",
-  "artifacts": []
+ "schema_version": "1.0.0",
+ "status": "M4 evidence audit, 2026-11-25",
+ "note": "Maps every number in research/paper/manuscript.md, supplementary.md, README.md, the experiment reports and the claims register to its source. Derived values (ratios, differences, unit conversions) name the inputs they come from. Exploratory entries never replace a frozen verdict.",
+ "figures": [
+  {
+   "id": "FIG-001",
+   "path": "research/experiments/EXP-003/figures/FIG-001-exp003-latency.svg",
+   "sha256": "73883986a550ae3be3960739bc68873f453b078b868f9ab1924a6e4ed094b2b0",
+   "source": "results/confirmatory/RUN-EXP-003-0001/latency.svg (identical)",
+   "generator": "token-lab report",
+   "exp_id": "EXP-003",
+   "run_ids": [
+    "RUN-EXP-003-0001"
+   ],
+   "config_sha256": "3ebe5b2a60e4ddb6ae1c8e1e35f3d316f35f0fd56272f90299b992e702065560",
+   "code_revision": "57f6187e7b450fea05eedbbee8c663943596a699",
+   "used_in": [
+    "manuscript 5.3",
+    "EXP-003 report 8"
+   ]
+  }
+ ],
+ "tables": {
+  "Table 1": [
+   "N-019",
+   "N-009"
+  ],
+  "Table 2": [
+   "N-001",
+   "N-003",
+   "N-004",
+   "N-005",
+   "N-006",
+   "N-007",
+   "N-008"
+  ],
+  "Table 3": [
+   "N-002"
+  ],
+  "Table 4": [
+   "N-002",
+   "N-003",
+   "N-008",
+   "N-011",
+   "N-012",
+   "N-013",
+   "N-014",
+   "N-015",
+   "N-016",
+   "N-018"
+  ],
+  "Table 5": [
+   "N-002",
+   "N-005",
+   "N-006",
+   "N-011",
+   "N-019"
+  ]
+ },
+ "artifacts": [
+  {
+   "id": "N-001",
+   "values": "accuracy strict 0.717 (Q4), 0.733 (Q8); lenient 0.720, 0.737; chance 0.251",
+   "label": "confirmatory",
+   "exp_id": "EXP-003",
+   "run_ids": [
+    "RUN-EXP-003-0001"
+   ],
+   "metric_definition": "per-item mean correctness over 5 repetitions, then mean over 300 items (protocol section 4)",
+   "result_path": "results/confirmatory/RUN-EXP-003-0001/metrics.csv",
+   "generator": "token-lab report (src/token_lab/report.py, analysis.py)",
+   "config_sha256": "3ebe5b2a60e4ddb6ae1c8e1e35f3d316f35f0fd56272f90299b992e702065560",
+   "protocol_sha256": "8196740a07ce6b0d0e254a23729aa18e5866e0b72b7ac3dd97b779e23a024068",
+   "code_revision": "57f6187e7b450fea05eedbbee8c663943596a699",
+   "used_in": [
+    "manuscript Abstract, 4.2, 5.3 Table 2",
+    "EXP-003 report 2, 8",
+    "README"
+   ],
+   "claims": [
+    "CLM-001"
+   ]
+  },
+  {
+   "id": "N-002",
+   "values": "Delta +1.67 pp, 95 % CI [-1.00, +4.33], b 11, c 6, exact McNemar p 0.332 (strict and lenient)",
+   "label": "confirmatory",
+   "exp_id": "EXP-003",
+   "run_ids": [
+    "RUN-EXP-003-0001"
+   ],
+   "metric_definition": "paired bootstrap over items, 10,000 resamples, seed 7, percentile; exact McNemar on majority correctness",
+   "result_path": "results/confirmatory/RUN-EXP-003-0001/contrasts.csv",
+   "generator": "token-lab report (src/token_lab/report.py, analysis.py)",
+   "config_sha256": "3ebe5b2a60e4ddb6ae1c8e1e35f3d316f35f0fd56272f90299b992e702065560",
+   "protocol_sha256": "8196740a07ce6b0d0e254a23729aa18e5866e0b72b7ac3dd97b779e23a024068",
+   "code_revision": "57f6187e7b450fea05eedbbee8c663943596a699",
+   "used_in": [
+    "manuscript Abstract, 5.3 Table 3, 5.4 Table 5, 6, 9",
+    "EXP-003 report",
+    "README",
+    "claims register"
+   ],
+   "claims": [
+    "CLM-001",
+    "CLM-010"
+   ]
+  },
+  {
+   "id": "N-003",
+   "values": "format failures strict 15 (Q4), 20 (Q8) records of 1,500; lenient 0",
+   "label": "confirmatory",
+   "exp_id": "EXP-003",
+   "run_ids": [
+    "RUN-EXP-003-0001"
+   ],
+   "metric_definition": "records with no strict-extractable label, request errors excluded",
+   "result_path": "results/confirmatory/RUN-EXP-003-0001/metrics.csv",
+   "generator": "token-lab report (src/token_lab/report.py, analysis.py)",
+   "config_sha256": "3ebe5b2a60e4ddb6ae1c8e1e35f3d316f35f0fd56272f90299b992e702065560",
+   "protocol_sha256": "8196740a07ce6b0d0e254a23729aa18e5866e0b72b7ac3dd97b779e23a024068",
+   "code_revision": "57f6187e7b450fea05eedbbee8c663943596a699",
+   "used_in": [
+    "manuscript 5.3 Table 2, 5.4 Table 4"
+   ],
+   "claims": [
+    "CLM-010"
+   ]
+  },
+  {
+   "id": "N-004",
+   "values": "median of per-item median latency 477.5 [472.9, 603.2] ms (Q4), 437.7 [434.3, 547.2] ms (Q8)",
+   "label": "confirmatory",
+   "exp_id": "EXP-003",
+   "run_ids": [
+    "RUN-EXP-003-0001"
+   ],
+   "metric_definition": "per-item median over 5 repetitions, then median and quartiles over 300 items; client wall-clock",
+   "result_path": "results/confirmatory/RUN-EXP-003-0001/metrics.csv",
+   "generator": "token-lab report (src/token_lab/report.py, analysis.py)",
+   "config_sha256": "3ebe5b2a60e4ddb6ae1c8e1e35f3d316f35f0fd56272f90299b992e702065560",
+   "protocol_sha256": "8196740a07ce6b0d0e254a23729aa18e5866e0b72b7ac3dd97b779e23a024068",
+   "code_revision": "57f6187e7b450fea05eedbbee8c663943596a699",
+   "used_in": [
+    "manuscript Abstract, 5.3 Table 2, 9",
+    "README"
+   ],
+   "claims": [
+    "CLM-003"
+   ]
+  },
+  {
+   "id": "N-005",
+   "values": "TTFT median 440.9 / 388.7 ms; decode 53.9 / 40.1 tokens/s; prefill 214.4 / 245.3 tokens/s; decode ratio 0.744",
+   "label": "confirmatory",
+   "exp_id": "EXP-003",
+   "run_ids": [
+    "RUN-EXP-003-0001"
+   ],
+   "metric_definition": "median over 1,500 records per arm; decode = eval_count / eval_duration x 1e9; prefill = prompt_eval_count / prompt_eval_duration x 1e9; ratio derived from the two medians",
+   "result_path": "results/confirmatory/RUN-EXP-003-0001/metrics.csv",
+   "generator": "token-lab report (src/token_lab/report.py, analysis.py)",
+   "config_sha256": "3ebe5b2a60e4ddb6ae1c8e1e35f3d316f35f0fd56272f90299b992e702065560",
+   "protocol_sha256": "8196740a07ce6b0d0e254a23729aa18e5866e0b72b7ac3dd97b779e23a024068",
+   "code_revision": "57f6187e7b450fea05eedbbee8c663943596a699",
+   "used_in": [
+    "manuscript Abstract, 5.3 Table 2, 6, 9"
+   ],
+   "claims": [
+    "CLM-003"
+   ]
+  },
+  {
+   "id": "N-006",
+   "values": "runtime-reported model memory 5,872.0 / 9,162.4 MiB; ratio 1.56; difference 3,290.4 MiB (about 3.2 GiB); 56 % more",
+   "label": "confirmatory",
+   "exp_id": "EXP-003",
+   "run_ids": [
+    "RUN-EXP-003-0001"
+   ],
+   "metric_definition": "max over blocks of /api/ps size for the arm's model, bytes / 2^20 (F7); ratio and difference derived",
+   "result_path": "results/confirmatory/RUN-EXP-003-0001/result.json (blocks[].loaded_after[].size)",
+   "generator": "token-lab report (runtime_model_mib); derived values by scripts/m4_exploratory_exp003.py E2",
+   "config_sha256": "3ebe5b2a60e4ddb6ae1c8e1e35f3d316f35f0fd56272f90299b992e702065560",
+   "protocol_sha256": "8196740a07ce6b0d0e254a23729aa18e5866e0b72b7ac3dd97b779e23a024068",
+   "code_revision": "57f6187e7b450fea05eedbbee8c663943596a699",
+   "used_in": [
+    "manuscript Abstract, 5.3 Table 2, 6, 9"
+   ],
+   "claims": [
+    "CLM-002",
+    "CLM-015"
+   ]
+  },
+  {
+   "id": "N-007",
+   "values": "peak RSS 965.0 / 932.3 MiB; largest block swap growth 61.1 MiB",
+   "label": "confirmatory",
+   "exp_id": "EXP-003",
+   "run_ids": [
+    "RUN-EXP-003-0001"
+   ],
+   "metric_definition": "max over blocks of summed RSS of processes matching 'ollama' (10 Hz); max block swap delta",
+   "result_path": "results/confirmatory/RUN-EXP-003-0001/metrics.csv",
+   "generator": "token-lab report (src/token_lab/report.py, analysis.py)",
+   "config_sha256": "3ebe5b2a60e4ddb6ae1c8e1e35f3d316f35f0fd56272f90299b992e702065560",
+   "protocol_sha256": "8196740a07ce6b0d0e254a23729aa18e5866e0b72b7ac3dd97b779e23a024068",
+   "code_revision": "57f6187e7b450fea05eedbbee8c663943596a699",
+   "used_in": [
+    "manuscript 5.3 Table 2, 7",
+    "limitations 22"
+   ],
+   "claims": [
+    "CLM-002"
+   ]
+  },
+  {
+   "id": "N-008",
+   "values": "determinism 1.00 both arms; per-repetition accuracy and median latency; CV 0.002; S3 478.1 to 477.4 ms and 440.0 to 437.8 ms",
+   "label": "confirmatory",
+   "exp_id": "EXP-003",
+   "run_ids": [
+    "RUN-EXP-003-0001"
+   ],
+   "metric_definition": "share of items with identical response text over 5 repetitions; per-repetition median over records",
+   "result_path": "results/confirmatory/RUN-EXP-003-0001/metrics.csv; results/confirmatory/RUN-EXP-003-0001/report.md",
+   "generator": "token-lab report (src/token_lab/report.py, analysis.py)",
+   "config_sha256": "3ebe5b2a60e4ddb6ae1c8e1e35f3d316f35f0fd56272f90299b992e702065560",
+   "protocol_sha256": "8196740a07ce6b0d0e254a23729aa18e5866e0b72b7ac3dd97b779e23a024068",
+   "code_revision": "57f6187e7b450fea05eedbbee8c663943596a699",
+   "used_in": [
+    "manuscript 5.3, 5.4 Table 4, supplementary S3"
+   ],
+   "claims": [
+    "CLM-006",
+    "CLM-011"
+   ]
+  },
+  {
+   "id": "N-009",
+   "values": "run 1,509.8 s, 2026-11-25 12:30:58Z to 12:56:08Z, 3,000 requests, 0 failures, load average 2.29 at start; block wall times 140.4 to 160.8 s; block order",
+   "label": "confirmatory",
+   "exp_id": "EXP-003",
+   "run_ids": [
+    "RUN-EXP-003-0001"
+   ],
+   "metric_definition": "run manifest timing and host log; block records",
+   "result_path": "results/confirmatory/RUN-EXP-003-0001/run_manifest.json; results/confirmatory/RUN-EXP-003-0001/result.json (blocks)",
+   "generator": "token-lab report (src/token_lab/report.py, analysis.py)",
+   "config_sha256": "3ebe5b2a60e4ddb6ae1c8e1e35f3d316f35f0fd56272f90299b992e702065560",
+   "protocol_sha256": "8196740a07ce6b0d0e254a23729aa18e5866e0b72b7ac3dd97b779e23a024068",
+   "code_revision": "57f6187e7b450fea05eedbbee8c663943596a699",
+   "used_in": [
+    "manuscript 5.3, 6, supplementary S3"
+   ],
+   "claims": []
+  },
+  {
+   "id": "N-010",
+   "values": "eval_count 2 in 1,485 (Q4) and 1,480 (Q8) records",
+   "label": "confirmatory",
+   "exp_id": "EXP-003",
+   "run_ids": [
+    "RUN-EXP-003-0001"
+   ],
+   "metric_definition": "runtime eval_count per record",
+   "result_path": "results/confirmatory/RUN-EXP-003-0001/result.json (records); also results/exploratory/M4-EXPL-0001/exploratory_exp003.json E8",
+   "generator": "token-lab report (src/token_lab/report.py, analysis.py)",
+   "config_sha256": "3ebe5b2a60e4ddb6ae1c8e1e35f3d316f35f0fd56272f90299b992e702065560",
+   "protocol_sha256": "8196740a07ce6b0d0e254a23729aa18e5866e0b72b7ac3dd97b779e23a024068",
+   "code_revision": "57f6187e7b450fea05eedbbee8c663943596a699",
+   "used_in": [
+    "manuscript 5.3"
+   ],
+   "claims": [
+    "CLM-003"
+   ]
+  },
+  {
+   "id": "N-011",
+   "values": "latency ratio 0.917 [0.916, 0.918] (ratio of medians), 0.916 [0.916, 0.917] (median of per-item ratios); 296 of 300 items faster",
+   "label": "exploratory",
+   "exp_id": "EXP-003",
+   "run_ids": [
+    "RUN-EXP-003-0001 (input)",
+    "M4-EXPL-0001"
+   ],
+   "metric_definition": "per-item median latency; bootstrap over items, 10,000 resamples, seed 7; both readings of protocol section 8 (DL-011 gap 1)",
+   "result_path": "results/exploratory/M4-EXPL-0001/exploratory_exp003.json",
+   "generator": "scripts/m4_exploratory_exp003.py",
+   "config_sha256": "3ebe5b2a60e4ddb6ae1c8e1e35f3d316f35f0fd56272f90299b992e702065560",
+   "protocol_sha256": "8196740a07ce6b0d0e254a23729aa18e5866e0b72b7ac3dd97b779e23a024068",
+   "code_revision": "script committed at M4 (see git log); input produced at 57f6187e7b450fea05eedbbee8c663943596a699",
+   "used_in": [
+    "manuscript 5.4 Table 4, 5.4 Table 5, supplementary S4"
+   ],
+   "claims": [
+    "CLM-007"
+   ]
+  },
+  {
+   "id": "N-012",
+   "values": "decode ratio over item medians 0.744 [0.743, 0.744]",
+   "label": "exploratory",
+   "exp_id": "EXP-003",
+   "run_ids": [
+    "RUN-EXP-003-0001 (input)",
+    "M4-EXPL-0001"
+   ],
+   "metric_definition": "per-item median decode throughput; bootstrap over items",
+   "result_path": "results/exploratory/M4-EXPL-0001/exploratory_exp003.json",
+   "generator": "scripts/m4_exploratory_exp003.py",
+   "config_sha256": "3ebe5b2a60e4ddb6ae1c8e1e35f3d316f35f0fd56272f90299b992e702065560",
+   "protocol_sha256": "8196740a07ce6b0d0e254a23729aa18e5866e0b72b7ac3dd97b779e23a024068",
+   "code_revision": "script committed at M4 (see git log); input produced at 57f6187e7b450fea05eedbbee8c663943596a699",
+   "used_in": [
+    "manuscript 5.4 Table 4, supplementary S4"
+   ],
+   "claims": [
+    "CLM-007"
+   ]
+  },
+  {
+   "id": "N-013",
+   "values": "warm-up reuse: 10 first-in-block records 102.1 to 106.9 ms (Q4), 126.6 to 134.8 ms (Q8); other records at least 347.2 / 325.3 ms; medians unchanged",
+   "label": "exploratory",
+   "exp_id": "EXP-003",
+   "run_ids": [
+    "RUN-EXP-003-0001 (input)",
+    "M4-EXPL-0001"
+   ],
+   "metric_definition": "records with order_index 0 versus the rest",
+   "result_path": "results/exploratory/M4-EXPL-0001/exploratory_exp003.json",
+   "generator": "scripts/m4_exploratory_exp003.py",
+   "config_sha256": "3ebe5b2a60e4ddb6ae1c8e1e35f3d316f35f0fd56272f90299b992e702065560",
+   "protocol_sha256": "8196740a07ce6b0d0e254a23729aa18e5866e0b72b7ac3dd97b779e23a024068",
+   "code_revision": "script committed at M4 (see git log); input produced at 57f6187e7b450fea05eedbbee8c663943596a699",
+   "used_in": [
+    "manuscript 4.4, 5.4 Table 4, 7",
+    "limitations 20",
+    "supplementary S4"
+   ],
+   "claims": [
+    "CLM-009"
+   ]
+  },
+  {
+   "id": "N-014",
+   "values": "prefill duration by 32-token bin, Q4 287.1 to 799.4 ms, Q8 250.8 to 696.8 ms; bin counts 75, 806, 489, 110, 15 (1,295 of 1,495 records in 65 to 128 tokens)",
+   "label": "exploratory",
+   "exp_id": "EXP-003",
+   "run_ids": [
+    "RUN-EXP-003-0001 (input)",
+    "M4-EXPL-0001"
+   ],
+   "metric_definition": "median prompt_eval_duration per prompt_eval_count bin, first-in-block records removed",
+   "result_path": "results/exploratory/M4-EXPL-0001/exploratory_exp003.json",
+   "generator": "scripts/m4_exploratory_exp003.py",
+   "config_sha256": "3ebe5b2a60e4ddb6ae1c8e1e35f3d316f35f0fd56272f90299b992e702065560",
+   "protocol_sha256": "8196740a07ce6b0d0e254a23729aa18e5866e0b72b7ac3dd97b779e23a024068",
+   "code_revision": "script committed at M4 (see git log); input produced at 57f6187e7b450fea05eedbbee8c663943596a699",
+   "used_in": [
+    "manuscript 5.4 Table 4, 6",
+    "supplementary S3",
+    "claims register CLM-003 scope"
+   ],
+   "claims": [
+    "CLM-003",
+    "CLM-008"
+   ]
+  },
+  {
+   "id": "N-015",
+   "values": "format-failure items (3 Q4, 4 Q8), 1 discordant; Delta +1.36 pp on 295 items (post hoc)",
+   "label": "exploratory",
+   "exp_id": "EXP-003",
+   "run_ids": [
+    "RUN-EXP-003-0001 (input)",
+    "M4-EXPL-0001"
+   ],
+   "metric_definition": "strict extraction failures per item; mean paired difference without items with any failure",
+   "result_path": "results/exploratory/M4-EXPL-0001/exploratory_exp003.json",
+   "generator": "scripts/m4_exploratory_exp003.py",
+   "config_sha256": "3ebe5b2a60e4ddb6ae1c8e1e35f3d316f35f0fd56272f90299b992e702065560",
+   "protocol_sha256": "8196740a07ce6b0d0e254a23729aa18e5866e0b72b7ac3dd97b779e23a024068",
+   "code_revision": "script committed at M4 (see git log); input produced at 57f6187e7b450fea05eedbbee8c663943596a699",
+   "used_in": [
+    "manuscript 5.4 Table 4, 6",
+    "supplementary S4"
+   ],
+   "claims": [
+    "CLM-010"
+   ]
+  },
+  {
+   "id": "N-016",
+   "values": "arm position: 477.4 / 478.0 ms (Q4), 437.8 / 438.6 ms (Q8)",
+   "label": "exploratory",
+   "exp_id": "EXP-003",
+   "run_ids": [
+    "RUN-EXP-003-0001 (input)",
+    "M4-EXPL-0001"
+   ],
+   "metric_definition": "median record latency by block position within a repetition, first-in-block removed",
+   "result_path": "results/exploratory/M4-EXPL-0001/exploratory_exp003.json",
+   "generator": "scripts/m4_exploratory_exp003.py",
+   "config_sha256": "3ebe5b2a60e4ddb6ae1c8e1e35f3d316f35f0fd56272f90299b992e702065560",
+   "protocol_sha256": "8196740a07ce6b0d0e254a23729aa18e5866e0b72b7ac3dd97b779e23a024068",
+   "code_revision": "script committed at M4 (see git log); input produced at 57f6187e7b450fea05eedbbee8c663943596a699",
+   "used_in": [
+    "manuscript 5.4 Table 4, supplementary S4"
+   ],
+   "claims": [
+    "CLM-011"
+   ]
+  },
+  {
+   "id": "N-017",
+   "values": "observed discordance 0.057; observed half-width 2.67 pp; planned 5.66 pp",
+   "label": "exploratory",
+   "exp_id": "EXP-003",
+   "run_ids": [
+    "RUN-EXP-003-0001 (input)",
+    "M4-EXPL-0001"
+   ],
+   "metric_definition": "(b + c) / n; half of the committed CI width; 1.96 x sqrt(0.25 / 300)",
+   "result_path": "results/exploratory/M4-EXPL-0001/exploratory_exp003.json",
+   "generator": "scripts/m4_exploratory_exp003.py",
+   "config_sha256": "3ebe5b2a60e4ddb6ae1c8e1e35f3d316f35f0fd56272f90299b992e702065560",
+   "protocol_sha256": "8196740a07ce6b0d0e254a23729aa18e5866e0b72b7ac3dd97b779e23a024068",
+   "code_revision": "script committed at M4 (see git log); input produced at 57f6187e7b450fea05eedbbee8c663943596a699",
+   "used_in": [
+    "manuscript 7, supplementary S4"
+   ],
+   "claims": [
+    "CLM-014"
+   ]
+  },
+  {
+   "id": "N-018",
+   "values": "prompt token counts equal for 1,500 of 1,500 item-repetition pairs",
+   "label": "exploratory",
+   "exp_id": "EXP-003",
+   "run_ids": [
+    "RUN-EXP-003-0001 (input)",
+    "M4-EXPL-0001"
+   ],
+   "metric_definition": "prompt_eval_count per item and repetition, compared between arms",
+   "result_path": "results/exploratory/M4-EXPL-0001/exploratory_exp003.json",
+   "generator": "scripts/m4_exploratory_exp003.py",
+   "config_sha256": "3ebe5b2a60e4ddb6ae1c8e1e35f3d316f35f0fd56272f90299b992e702065560",
+   "protocol_sha256": "8196740a07ce6b0d0e254a23729aa18e5866e0b72b7ac3dd97b779e23a024068",
+   "code_revision": "script committed at M4 (see git log); input produced at 57f6187e7b450fea05eedbbee8c663943596a699",
+   "used_in": [
+    "manuscript 6, supplementary S4"
+   ],
+   "claims": [
+    "CLM-013"
+   ]
+  },
+  {
+   "id": "N-019",
+   "values": "EXP-001 0 of 4,500 requests; EXP-002 0 of 60; HTTP 500 currentDate",
+   "label": "confirmatory (failed)",
+   "exp_id": "EXP-001, EXP-002",
+   "run_ids": [],
+   "metric_definition": "requests sent before abort",
+   "result_path": "research/experiment_journal.jsonl JRN-0007; results/exploratory/RUN-SMOKE-0005 (exploratory evidence of the error)",
+   "generator": "token-lab run (abort at F8 fingerprint)",
+   "config_sha256": "EXP-001 355d86f1cd3bc28373bef6e3e36c32828337583b0893d2b87d4c33fa48c7913e; EXP-002 6885e5f527df271897d6d2ba8f324fc73fd5135d250e92c8bd8dc94f4c3081cf",
+   "protocol_sha256": "EXP-001 1997317c931cf95d04c271ab2414aef82306f5976f1eea7262eb1e4d54fee8e4; EXP-002 54d46696e6b479c83235c789839ae3acaaaeeac1f38eccc6ef7c399d191c011e",
+   "code_revision": "57f6187e7b450fea05eedbbee8c663943596a699",
+   "used_in": [
+    "manuscript Abstract, 5.1, 5.2, Table 1, Table 5",
+    "EXP-001 and EXP-002 reports",
+    "README"
+   ],
+   "claims": [
+    "CLM-004",
+    "CLM-005"
+   ]
+  },
+  {
+   "id": "N-020",
+   "values": "model files 2.49, 4.92, 6.02 GB (Q4_K_M arms); Q8_0 layers 8,540,789,934 bytes, digest b158ded7...; file-size ratio about 1.74 (derived)",
+   "label": "measured on disk (setup)",
+   "exp_id": "all",
+   "run_ids": [],
+   "metric_definition": "sum of manifest layer sizes",
+   "result_path": "research/feasibility.md (M0); research/experiment_journal.jsonl JRN-0005",
+   "generator": "manual parse of Ollama manifests (read-only), recorded in progress.md",
+   "config_sha256": null,
+   "protocol_sha256": null,
+   "code_revision": null,
+   "used_in": [
+    "manuscript 4.3, 6"
+   ],
+   "claims": [
+    "CLM-015"
+   ]
+  },
+  {
+   "id": "N-021",
+   "values": "ARC-Challenge test 1,172 items; subset 300, seed 20261124",
+   "label": "data",
+   "exp_id": "all",
+   "run_ids": [],
+   "metric_definition": "item counts",
+   "result_path": "data/manifest.json; data/arc_challenge_test_subset_ids.json; research/experiment_journal.jsonl JRN-0004",
+   "generator": "scripts/fetch_arc.py; src/token_lab/items.py",
+   "config_sha256": null,
+   "protocol_sha256": "ea86d0bb2d1864f69ac545bde1c8dd263276c8dbd9d1b3fee5b7a49b8dd4d2c3",
+   "code_revision": null,
+   "used_in": [
+    "manuscript Abstract, 4.2"
+   ],
+   "claims": []
+  },
+  {
+   "id": "N-022",
+   "values": "planned MDD about 9 pp, half-width about 5.7 pp, assumed discordance 0.25",
+   "label": "planning value (protocol), not a result",
+   "exp_id": "all",
+   "run_ids": [],
+   "metric_definition": "protocol section 7",
+   "result_path": "research/protocol.md section 7",
+   "generator": null,
+   "config_sha256": null,
+   "protocol_sha256": "ea86d0bb2d1864f69ac545bde1c8dd263276c8dbd9d1b3fee5b7a49b8dd4d2c3",
+   "code_revision": null,
+   "used_in": [
+    "manuscript 4.5, 7"
+   ],
+   "claims": []
+  },
+  {
+   "id": "N-023",
+   "values": "external: 35,000 experiments, 19M to 176B; 4.58 / 7.95 GiB, 71.93 / 50.93 t/s (ratio about 0.708, derived); up to 76 points",
+   "label": "external (sources opened 2026-11-24)",
+   "exp_id": null,
+   "run_ids": [],
+   "metric_definition": "as stated by the source",
+   "result_path": "research/literature_review.md",
+   "generator": null,
+   "config_sha256": null,
+   "protocol_sha256": null,
+   "code_revision": null,
+   "used_in": [
+    "manuscript 2, 6"
+   ],
+   "claims": [
+    "CLM-012"
+   ]
+  }
+ ]
 }

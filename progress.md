@@ -181,3 +181,50 @@ Real inference timing, memory (RSS versus Metal allocations, DL-007 A2) and dete
 ## 2026-11-25: M3 done with documented failures (coordinator, quiet window)
 
 The owner approved the experiment reports (owner, 2026-11-25, "approve all recommendations, RIGGED A", item 4). Subagents may not write report files, so the reports were composed by the M3 session from committed results only and written by the coordinator: 3 report(s). The coordinator checked that every decimal number in them appears in a committed file. Four numbers in the EXP-003 report are derived, not copied, and were traced by hand: 5,872.0 and 9,162.4 MiB are the `/api/ps` byte sizes in `result.json` divided by 2^20; 0.744 is the ratio of the two committed decode medians; 3,073.6 MiB is the swap reading in the experiment journal. EXP-003 ran in full in an exclusive quiet-machine window (3,000 of 3,000 requests). EXP-001 and EXP-002 failed before any request: the installed Ollama 0.9.6 cannot render the chat template of arm A2 (ministral-3:8b), and the frozen F8 rule aborts the run (DL-011). Both failures are documented, so the M3 gate holds. M3 is **done** with these failures. Next: the owner chooses for EXP-001 and EXP-002 between upgrading Ollama, a new freeze without A2, or keeping them as failed; then M4.
+
+## 2026-11-25: M4 session (interpretation, evidence audit, manuscript, review pass 2)
+
+**Milestone:** M4, started by the owner's instruction (owner, 2026-11-25, "Next"; `labs/_shared/owner-approvals-2026-11-25d.md`). The owner-approval files of 2026-11-25, -25b and -25c have no TOKEN section. **Next bounded task:** the owner's choice for EXP-001 and EXP-002; then M5.
+
+### Starting state
+
+`git status`: clean at `3b6b8bf`. All four frozen protocol hashes matched. `.venv/bin/python -m pytest -q`: "144 passed in 8.37s".
+
+### What was done
+
+- **No new measurement.** No inference, timing measurement or runtime contact. Ollama was not started, stopped or touched.
+- **Exploratory re-analysis** (JRN-0009, DL-012): `scripts/m4_exploratory_exp003.py` reads the committed `RUN-EXP-003-0001/result.json` and writes `results/exploratory/M4-EXPL-0001/exploratory_exp003.json` (run twice, identical SHA-256 65c421c4...6f). Checks E1 to E8: latency ratio under both readings of protocol section 8, decode and memory ratios, warm-up prompt reuse, prefill by prompt length, discordance and format failures, arm position, interval width, tokenizer. One worker.
+- **Confounder inspection** for EXP-003 against the competing explanations named in the protocols (manuscript section 6): template and parameter hashes equal, weight provenance unaudited (partly addressed); format compliance (addressed by S2 and E5); tokenizer (addressed by E8); scheduling and caching (partly addressed by E3 and E6); background load (partly addressed); contamination (not tested, does not bias the paired contrast). **No conclusion changed.**
+- **Equivalence check:** neither the main protocol nor the EXP-003 protocol defines an equivalence margin, so the EXP-003 interval is reported as no detected difference, not equivalence.
+- **Evidence audit** (`research/publication/evidence_audit.md`), manifest (`artifact_manifest.json`, N-001 to N-023 and FIG-001), claims register with result id, config hash, table or figure and section columns (CLM-001 to CLM-015), claims audit checklist. Findings A1 to A11, all fixed or disclosed; among them a warm-up artefact in the runner (A4), unlabelled mixing of item-level and record-level summaries (A3), a wrong prompt-length scope in CLM-003 (A2) and stale M0 text in README, CITATION.cff and limitations (A8).
+- **Manuscript** synthesised to section 11.4 (`research/paper/manuscript.md`, about 4,800 words with tables and references; `supplementary.md`); `manuscript.tex` regenerated with pandoc 3.6.3 (not compiled, DL-002). No PDF generated or committed. EXP-001 and EXP-002 are reported as failed with the same prominence as EXP-003.
+- **Second review pass** (`research/publication/review_pass_2.md`): six passages rewritten to remove overreach (a non-inferiority reading of the CI lower bound, "no detected difference" drifting toward "Q4_K_M is as accurate", an unsupported claim about the literature, an unsourced motivation sentence, a replication-like comparison with the llama.cpp table, "exclusive window"), one table relabelled, one claim scope corrected, one failed attempt (JRN-0002) added. No verdict changed.
+- **Records:** limitations 16 to 22, DL-012, JRN-0009, M4 addenda to the three experiment reports, references.bib completed for every cited key, README and roadmap updated.
+
+### Commands run and actual outputs
+
+- `shasum -a 256 research/protocol.md research/experiments/EXP-00*/protocol.md`: ea86d0bb..., 1997317c..., 54d46696..., 8196740a... (unchanged, before and after).
+- `.venv/bin/python -I scripts/m4_exploratory_exp003.py --repo .` (three runs after the last edit gave the same output hash 65c421c4...6f).
+- Number trace (scratch script, not committed): every unmatched number in the audited documents was traced by hand (evidence audit section 2).
+- `cmp` of the four copied EXP-003 files and `shasum` of FIG-001 against the run folder: identical.
+- `pandoc research/paper/manuscript.md -s -t latex`: success.
+- `.venv/bin/python -m pytest -q`: "144 passed in 8.52s" after all changes (no code under `src/` changed).
+
+### Owner placeholders for M5
+
+- Repository URL (manuscript section 10): `[OWNER PLACEHOLDER: repository URL, not published]`.
+- Funding statement (manuscript section 11): `[OWNER PLACEHOLDER: funding statement]`.
+- Competing interests (manuscript section 11): `[OWNER PLACEHOLDER: competing interests statement]`.
+- Author line (manuscript front matter): `[OWNER PLACEHOLDER: author line ...]`; the freeze decision C3 recorded a name and no affiliation, and the owner confirms the final line. Affiliation: none recorded; owner to confirm.
+
+### Pending owner decisions (not decided by "Next")
+
+- EXP-001 and EXP-002: (a) upgrade Ollama and run the frozen matrices unchanged, recording the new runtime version; (b) a new freeze without A2 or with another arm; (c) keep both recorded as failed (DL-011).
+- The definition of the frozen latency-ratio interval (ratio of medians or median of per-item ratios; DL-011 gap 1).
+- An S4 power range and an S1 config, if the owner wants them run.
+
+### Not done, and why
+
+- S1 (template sensitivity) and S4 (modelled energy): no frozen config or power range, and M4 allows no new inference.
+- The warm-up artefact is disclosed, not fixed (changing the runner would alter the code used by the frozen configs).
+- No PDF (M6). Nothing pushed (G-PUBLIC).

@@ -1,0 +1,273 @@
+{
+ "E1_latency_ratio": {
+  "items_where_q8_faster": 296,
+  "median_of_item_ratios": 0.9162922168413172,
+  "median_of_item_ratios_ci": [
+   0.9157942941791513,
+   0.9168403225494941
+  ],
+  "n_items": 300,
+  "note": "Both readings of protocol section 8 computed because the frozen text does not choose (DL-011 gap 1). Same bootstrap draws for both. Exploratory, descriptive.",
+  "ratio_of_medians": 0.9167511259019291,
+  "ratio_of_medians_ci": [
+   0.9158094250088139,
+   0.9175680705772786
+  ]
+ },
+ "E2_decode_and_memory": {
+  "decode_ratio_item_medians": 0.7435202929424043,
+  "decode_ratio_item_medians_ci": [
+   0.7430522817977211,
+   0.7443537972704816
+  ],
+  "decode_ratio_record_medians": 0.7435976361358883,
+  "memory_difference_mib": 3290.3671875,
+  "memory_ratio": 1.560349194617858,
+  "note": "The committed metrics.csv decode value is a median over records (1,500 per arm); the item-median version is shown for comparison. Memory is the runtime-reported /api/ps size, deterministic per model, no interval.",
+  "runtime_model_mib": {
+   "llama3.1:8b": 5871.994140625,
+   "llama3.1:8b-instruct-q8_0": 9162.361328125
+  }
+ },
+ "E3_warmup_prompt_reuse": {
+  "Q4_median_of_item_medians_all": 477.4921875,
+  "Q4_median_of_item_medians_without_first": 477.4921875,
+  "Q8_median_of_item_medians_all": 437.74150050000003,
+  "Q8_median_of_item_medians_without_first": 437.74150050000003,
+  "first_item_same_across_arms_within_rep": true,
+  "first_record_latency_ms": {
+   "Q4": [
+    102.1,
+    103.7,
+    103.8,
+    106.4,
+    106.9
+   ],
+   "Q8": [
+    126.6,
+    127.6,
+    129.2,
+    130.5,
+    134.8
+   ]
+  },
+  "note": "runner.run_matrix sends the discarded warm-up with the block's first item, so the first measured request repeats a prompt the runtime has just processed; its prefill is much faster. One of five repetitions of one item per block, same item in both arms of a repetition.",
+  "other_records_latency_ms_min": {
+   "Q4": 347.2,
+   "Q8": 325.3
+  },
+  "records_at_order_index_0": 10
+ },
+ "E4_prefill_by_prompt_length": {
+  "note": "Records with order_index 0 removed (E3). Prefill time rises in steps across 32-token prompt-length bins in both arms; the mechanism is not verified here. Prefill tokens/s is therefore a function of prompt length, not a constant of the arm.",
+  "rows": [
+   {
+    "arm": "Q4",
+    "n_records": 75,
+    "prefill_ms_median": 287.142875,
+    "prompt_tokens": "1-64"
+   },
+   {
+    "arm": "Q4",
+    "n_records": 806,
+    "prefill_ms_median": 409.316875,
+    "prompt_tokens": "65-96"
+   },
+   {
+    "arm": "Q4",
+    "n_records": 489,
+    "prefill_ms_median": 538.03525,
+    "prompt_tokens": "97-128"
+   },
+   {
+    "arm": "Q4",
+    "n_records": 110,
+    "prefill_ms_median": 667.7863125,
+    "prompt_tokens": "129-160"
+   },
+   {
+    "arm": "Q4",
+    "n_records": 15,
+    "prefill_ms_median": 799.41925,
+    "prompt_tokens": "161-192"
+   },
+   {
+    "arm": "Q8",
+    "n_records": 75,
+    "prefill_ms_median": 250.757083,
+    "prompt_tokens": "1-64"
+   },
+   {
+    "arm": "Q8",
+    "n_records": 806,
+    "prefill_ms_median": 357.721771,
+    "prompt_tokens": "65-96"
+   },
+   {
+    "arm": "Q8",
+    "n_records": 489,
+    "prefill_ms_median": 469.589041,
+    "prompt_tokens": "97-128"
+   },
+   {
+    "arm": "Q8",
+    "n_records": 110,
+    "prefill_ms_median": 582.8511255000001,
+    "prompt_tokens": "129-160"
+   },
+   {
+    "arm": "Q8",
+    "n_records": 15,
+    "prefill_ms_median": 696.844667,
+    "prompt_tokens": "161-192"
+   }
+  ]
+ },
+ "E5_discordance_and_format": {
+  "b_items": [
+   "CSZ30169",
+   "Mercury_405778",
+   "Mercury_416404",
+   "Mercury_7011130",
+   "Mercury_7064680",
+   "Mercury_7136028",
+   "Mercury_7214008",
+   "Mercury_7268328",
+   "Mercury_SC_400582",
+   "Mercury_SC_407696",
+   "NAEP_2000_8_S11+10"
+  ],
+  "b_q8_right_q4_wrong": 11,
+  "c_items": [
+   "FCAT_2008_5_2",
+   "Mercury_179025",
+   "Mercury_400803",
+   "Mercury_7230388",
+   "Mercury_SC_400182",
+   "Mercury_SC_414041"
+  ],
+  "c_q8_wrong_q4_right": 6,
+  "delta_pp_excluding_items_with_any_strict_format_failure": 1.3559322033898304,
+  "format_failure_items_in_discordant_set": [
+   "Mercury_SC_407696"
+  ],
+  "n_items_kept": 295,
+  "non_majority_items": 0,
+  "note": "Post hoc exclusion is exploratory and is not a valid confirmatory analysis (protocol section 9 forbids excluding items after outputs).",
+  "strict_format_failure_items": {
+   "Q4": [
+    "Mercury_SC_407696",
+    "NYSEDREGENTS_2008_8_27",
+    "NYSEDREGENTS_2008_8_5"
+   ],
+   "Q8": [
+    "Mercury_7037555",
+    "Mercury_7223143",
+    "NYSEDREGENTS_2008_8_27",
+    "NYSEDREGENTS_2008_8_5"
+   ]
+  }
+ },
+ "E6_arm_position": {
+  "block_order": {
+   "0": [
+    "Q4",
+    "Q8"
+   ],
+   "1": [
+    "Q8",
+    "Q4"
+   ],
+   "2": [
+    "Q4",
+    "Q8"
+   ],
+   "3": [
+    "Q4",
+    "Q8"
+   ],
+   "4": [
+    "Q8",
+    "Q4"
+   ]
+  },
+  "rows": [
+   {
+    "arm": "Q4",
+    "median_record_latency_ms": 477.425417,
+    "position": 1,
+    "repetitions": [
+     0,
+     2,
+     3
+    ]
+   },
+   {
+    "arm": "Q4",
+    "median_record_latency_ms": 478.02137500000003,
+    "position": 2,
+    "repetitions": [
+     1,
+     4
+    ]
+   },
+   {
+    "arm": "Q8",
+    "median_record_latency_ms": 437.8346665,
+    "position": 1,
+    "repetitions": [
+     1,
+     4
+    ]
+   },
+   {
+    "arm": "Q8",
+    "median_record_latency_ms": 438.579625,
+    "position": 2,
+    "repetitions": [
+     0,
+     2,
+     3
+    ]
+   }
+  ]
+ },
+ "E7_precision": {
+  "assumed_discordant_proportion": 0.25,
+  "note": "Observed strict interval read from the committed contrasts.csv. The frozen protocols define no equivalence margin, so the interval is not an equivalence test.",
+  "observed_ci_half_width_pp": 2.666666666666667,
+  "observed_ci_pp": [
+   -1.0,
+   4.333333333333334
+  ],
+  "observed_discordant_proportion": 0.056666666666666664,
+  "planned_ci_half_width_pp": 5.658032638058333
+ },
+ "E8_prompt_tokens": {
+  "eval_count_values": {
+   "Q4": {
+    "2": 1485,
+    "7": 5,
+    "8": 10
+   },
+   "Q8": {
+    "2": 1480,
+    "7": 10,
+    "8": 10
+   }
+  },
+  "pairs": 1500,
+  "pairs_with_equal_prompt_tokens": 1500
+ },
+ "bootstrap": {
+  "interval": "percentile 95 %",
+  "n_boot": 10000,
+  "seed": 7,
+  "unit": "item"
+ },
+ "generator": "scripts/m4_exploratory_exp003.py",
+ "label": "exploratory",
+ "note": "Re-analysis of committed records only; no inference and no timing measurement were run. Does not change the frozen EXP-003 verdict.",
+ "source": "results/confirmatory/RUN-EXP-003-0001/result.json",
+ "source_sha256": "3a5b2e60f24444cbdd282bb2dcb43bc61feff836ce9c4257ec241f6c92255064"
+}
