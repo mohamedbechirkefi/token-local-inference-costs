@@ -317,3 +317,10 @@ Listed in `research/publication/author_review.md` ("Prepared for the owner (M6, 
 ### Not done, and why
 
 - No release, tag or push (G-PUBLIC). No confirmatory or timing run. `manuscript.tex` not compiled (DL-002).
+
+### Second and third fresh clones (M6 session, after commit)
+
+- Second clone at e08b037: `pytest -q` "1 failed, 161 passed in 10.91s": `test_committed_results_json_is_reproduced_exactly` failed because `demo/public/data/results.json` was exported before the commit and named the previous source revision (bfaa36b) as `code_revision`. Report regeneration: 29 files, 0 differing. `scripts/build_pdfs.py` (tool paths set by environment variables): same page counts; `manuscript.tex` identical; PDFs differ only by creation date (extracted text equal). Links: 14 checked, 0 broken.
+- Fix: re-exported after the commit (one line), commit e5d0801.
+- Third clone at e5d0801: "162 passed in 10.81s"; export re-run leaves `git status` empty; demo `npm ci` "added 53 packages in 635ms", "Tests 21 passed (21)", build "built in 270ms", "A11Y-CHECK PASS". Clone deleted.
+- Note for future sessions: after any change to the export sources (manuscript, claims register, results, registry, freeze record, artifact manifest), commit first, then re-export and commit `results.json`.

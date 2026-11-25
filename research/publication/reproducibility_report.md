@@ -90,3 +90,7 @@ Scope: the 168 tracked or new files (`git ls-files` plus untracked, not ignored)
 | `scripts/check_links.py .` | `relative links checked: 14; broken: 0` |
 
 7. **Finding: demo export revision.** `demo/public/data/results.json` records `code_revision`, the last commit that touched its sources. The M6 commit changed two sources (manuscript and claims register), so the file exported before the commit named the previous revision (bfaa36b) instead of e08b037, and the exact re-export test failed in the fresh clone. Fixed by re-exporting after the commit (one line changed) in a follow-up commit; re-checked in a third fresh clone (`progress.md`, M6 session).
+
+## 6. Third fresh clone (after the fix, commit e5d0801)
+
+`uv sync --frozen --all-groups --all-extras`: success. `.venv/bin/python -m pytest -q`: `162 passed in 10.81s`. Export re-run (`export_demo_data.py`, `export_sandbox_fixture.py`) then `git status --short`: 0 lines. Demo: `npm ci --prefer-offline`: `added 53 packages in 635ms`; `npm test`: `Test Files 2 passed (2)`, `Tests 21 passed (21)`; `npm run build`: `built in 270ms`; `node tools/a11y_check.mjs dist`: `A11Y-CHECK PASS`. The clone was then deleted.
