@@ -10,5 +10,4 @@ authors:
     given-names: Mohamed Bechir
 # No affiliation. An AI system was used as a research and development assistant; it is not an author.
 version: 0.1.0
-date-released: 2026-11-24
-abstract: "Research project in progress. Protocol frozen by the owner on 2026-11-24. One confirmatory experiment complete (EXP-003); two failed before any request (EXP-001, EXP-002)."
+abstract: "Independent research manuscript / preprint draft, not peer-reviewed. Protocol frozen by the owner on 2026-11-24. One confirmatory experiment complete (EXP-003: Llama 3.1 8B Q8_0 minus Q4_K_M strict accuracy +1.67 pp, 95 % CI [-1.00, +4.33], exact McNemar p = 0.332; no detected difference, not equivalence); two failed before any request (EXP-001, EXP-002). Repository URL: [OWNER PLACEHOLDER: repository URL, not published]."

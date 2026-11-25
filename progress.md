@@ -228,3 +228,61 @@ The owner approved the experiment reports (owner, 2026-11-25, "approve all recom
 - S1 (template sensitivity) and S4 (modelled energy): no frozen config or power range, and M4 allows no new inference.
 - The warm-up artefact is disclosed, not fixed (changing the runner would alter the code used by the frozen configs).
 - No PDF (M6). Nothing pushed (G-PUBLIC).
+
+## 2026-11-25: M5 session (interactive experience)
+
+**Milestone:** M5, started by the owner's instruction (owner, 2026-11-25, "Next" (second); `labs/_shared/owner-approvals-2026-11-25e.md`), under the M5 brief and its timing addendum. **Next bounded task:** M6 (release candidate), only on the owner's word; the owner decisions below stay pending.
+
+### Starting state
+
+`git status`: clean at `bfaa36b`. Frozen protocol hashes ea86d0bb..., 1997317c..., 54d46696..., 8196740a... (unchanged at the end). `.venv/bin/python -m pytest -q` after `uv sync --frozen --all-groups --all-extras`: "144 passed in 9.05s".
+
+### What was done
+
+- **No measurement, no inference.** Ollama was not contacted, started or stopped. No benchmark, load test or model run.
+- `demo/`: copy of the shared template (pinned versions, lockfile, `.npmrc` unchanged; no dependency added). Sections: overview with status label and a labels legend (measured, exploratory, no result, modelled, sandbox); published results for EXP-001, EXP-002 (failed, same visual weight) and EXP-003 with a contrast chart and every estimate's interval or spread; resource frontier explorer (strict accuracy against memory, latency with IQR, or decode throughput; EXP-001 arms listed as "no result"); per-item latency strip chart (as FIG-001); assumptions; method, Table 4 sensitivity checks and section 7 limitations; pending owner decisions with every reading; modelled energy from a visitor-entered power only; sandbox (statistics port in a Web Worker, illustrative).
+- `scripts/export_demo_data.py` (fail-closed export, DL-013 decision 2), `scripts/export_sandbox_fixture.py` (Python engine fixture), `tests/test_demo_export.py` (7 tests: exact re-export, every display string verbatim in the manuscript, exceptions absent, registry coverage, pending decisions, no timestamp, fixture re-generation).
+- README (status, screenshot `docs/demo.png` with alt text, pending decisions, demo quick start), `CITATION.cff` (`date-released` removed per the coordinator default; abstract updated), `demo/README.md`, new drafts `articles/medium.md` and `articles/linkedin.md`. A script checked that every decimal number and interval in these files is printed in the manuscript (only `cff-version: 1.2.0` is not, as expected).
+- No sentence of the form "the owner has not reviewed" existed; `author_review.md` has no ticked box (nothing to untick).
+
+### Commands run and actual outputs
+
+- `npm ci --prefer-offline` (Node 22.23.3 from helix, npm cache in the scratchpad): "added 53 packages".
+- `.venv/bin/python scripts/export_demo_data.py`: "wrote demo/public/data/results.json (87092 bytes)". `.venv/bin/python scripts/export_sandbox_fixture.py`: "wrote demo/src/engine.fixture.json" (0.2 s).
+- `npm test`: "Test Files 2 passed (2)", "Tests 21 passed (21)".
+- `npm run build`: "built in 76ms" (index 251.51 kB, worker 2.02 kB, CSS about 6 kB).
+- `node tools/a11y_check.mjs dist --screenshots <scratchpad>/token-local-inference-costs/shots` (final run):
+
+```
+PASS results render (no fail-closed panel): 3 experiment panels
+PASS text contrast, light scheme (WCAG AA)
+PASS text contrast, dark scheme (WCAG AA)
+PASS keyboard reaches every focusable element: 24 reached of 24
+PASS visible focus indicator
+PASS no horizontal page scroll at 360 px: overflow 0px
+PASS reduced motion: no running animations: 0 running
+PASS no request leaves the local origin
+PASS offline after first load: results stay, sandbox runs: Sandbox output (illustrative, not a measurement; seed 1, 10,000 resamples, stric
+A11Y-CHECK PASS
+```
+
+  (The last line is truncated by the checker at 80 characters.) Earlier runs failed on two items and were fixed: keyboard keys collided for identical table regions and unnamed inputs (ids added), and a select overflowed at 360 px (label shortened, width capped). A run on a copy of `dist/` with one item value set to 2 printed "FAIL results render (no fail-closed panel): 0 experiment panels" and "A11Y-CHECK FAIL (2)": the page fails closed.
+- Screenshots inspected (desktop light, desktop dark, mobile): fixed clipped failed-experiment tables (now plain lines), an overlapping contrast-chart label, small chart text and clipped tables on mobile (stacked rows below 36rem). The mobile full-page capture repeats the page top after the pending-decisions section; this is a capture artefact of the checker's beyond-viewport screenshot, and the energy and sandbox sections render on desktop.
+- `.venv/bin/python -m pytest -q`: "151 passed in 8.65s".
+- `shasum -a 256` of the four frozen protocols: unchanged.
+
+### Owner placeholders that remain
+
+- Repository and demo URL: `[OWNER PLACEHOLDER: repository URL, not published]` (manuscript section 10, README, CITATION.cff abstract, page footer, articles).
+- Funding statement and competing interests: `[OWNER PLACEHOLDER: funding statement]`, `[OWNER PLACEHOLDER: competing interests statement]` (manuscript section 11).
+- Author line: `[OWNER PLACEHOLDER: author line ...]` (manuscript front matter, page footer, Medium draft). Affiliation: none recorded; owner to confirm.
+
+### Pending owner decisions (shown on the page and in the README as pending)
+
+- EXP-001 and EXP-002: (a), (b) or (c) (DL-011).
+- Reading of the frozen latency-ratio interval (DL-011 gap 1).
+- Not decided by any approval so far: the TOKEN manuscript title and its funding, competing-interest and AI-use wording (the post-M4 approval predates this manuscript; DL-013); the article draft titles.
+
+### Not done, and why
+
+- No PDF (M6). Nothing pushed (G-PUBLIC). S1 and S4 stay not run.

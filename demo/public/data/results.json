@@ -1,0 +1,3661 @@
+{
+ "schema": "lab-demo-results",
+ "schema_version": "1.0.0",
+ "project": "TOKEN",
+ "question": "How do local model configurations trade off quality, latency and resource use?",
+ "status_label": "Independent research manuscript / preprint draft, not peer-reviewed. One confirmatory experiment complete (EXP-003, null result); two failed before any request (EXP-001, EXP-002). Owner decisions pending.",
+ "code_revision": "bfaa36b189868fcc743d2448e71a1be28c34af9d",
+ "run_code_revision": "57f6187e7b450fea05eedbbee8c663943596a699",
+ "run_wall_s": 1509.7494062910118,
+ "sources": [
+  {
+   "path": "results/confirmatory/RUN-EXP-003-0001/result.json",
+   "sha256": "3a5b2e60f24444cbdd282bb2dcb43bc61feff836ce9c4257ec241f6c92255064"
+  },
+  {
+   "path": "results/confirmatory/RUN-EXP-003-0001/metrics.csv",
+   "sha256": "c2233bb0b5fc9b7b99e79f6984f98c5cc3ae6694faac944263207fdcf3f2f315"
+  },
+  {
+   "path": "results/confirmatory/RUN-EXP-003-0001/contrasts.csv",
+   "sha256": "0e61f05d48d14d6530441ba8a5cb3914eccc841961bd735954bfadf3752760ff"
+  },
+  {
+   "path": "results/exploratory/M4-EXPL-0001/exploratory_exp003.json",
+   "sha256": "65c421c4c26618020f01392da50e3a751611a164175ecd43ef6a8182cd111e6f"
+  },
+  {
+   "path": "research/freeze.json",
+   "sha256": "13e567875cb1c3d7d3af75cc03b685a7b82847df9830237cdea037ee3c421574"
+  },
+  {
+   "path": "research/experiment_registry.csv",
+   "sha256": "2ab21e09ab3761ce00d0fb62b4fbf47694893b7f0d84f3a4b5c5fb30128aa839"
+  },
+  {
+   "path": "research/claims_register.csv",
+   "sha256": "b1dc4bd5773ebdf8449232d4abdf5d2882ed5fd686474ad090338da9316da0e8"
+  },
+  {
+   "path": "research/publication/artifact_manifest.json",
+   "sha256": "ba934c8cc09ad5b43867a2a6d77571e29da089655b7f7ecb6477f0487c61edaa"
+  },
+  {
+   "path": "research/paper/manuscript.md",
+   "sha256": "0c62fecdc2dd9505bccec6bcd6f5c4fa4a58ea42db873b11d456a96a280f9215"
+  }
+ ],
+ "experiments": [
+  {
+   "id": "EXP-001",
+   "title": "Accuracy and cost of installed local models of different sizes",
+   "report_path": "research/experiments/EXP-001/report.md",
+   "status": "confirmatory, failed before any request",
+   "outcome": "failed",
+   "verdict": "not testable; experiment failed",
+   "estimates": [
+    {
+     "label": "Requests sent of planned",
+     "kind": "confirmatory attempt, failed",
+     "estimate": 0,
+     "ci_low": null,
+     "ci_high": null,
+     "ci_level": null,
+     "interval_kind": "no result exists",
+     "unit": "requests",
+     "display": "0 of 4,500 requests",
+     "interval_display": null,
+     "manifest_ids": [
+      "N-019"
+     ]
+    }
+   ],
+   "claim_ids": [
+    "CLM-004",
+    "CLM-005"
+   ],
+   "notes": [
+    "The run aborted at the per-arm /api/show fingerprint (F8): Ollama 0.9.6 cannot render the chat template of ministral-3:8b (HTTP 500, function currentDate not defined). No generation request was sent. The study has no evidence on the primary question.",
+    "Pending owner decision (DL-011): (a) upgrade Ollama and run the frozen matrices unchanged, recording the new runtime version; (b) a new freeze without A2 or with another arm; (c) keep both recorded as failed. This page chooses none of them."
+   ]
+  },
+  {
+   "id": "EXP-002",
+   "title": "Cold-start versus warm latency",
+   "report_path": "research/experiments/EXP-002/report.md",
+   "status": "confirmatory, failed before any request",
+   "outcome": "failed",
+   "verdict": "not testable; experiment failed",
+   "estimates": [
+    {
+     "label": "Requests sent of planned",
+     "kind": "confirmatory attempt, failed",
+     "estimate": 0,
+     "ci_low": null,
+     "ci_high": null,
+     "ci_level": null,
+     "interval_kind": "no result exists",
+     "unit": "requests",
+     "display": "0 of 60 requests",
+     "interval_display": null,
+     "manifest_ids": [
+      "N-019"
+     ]
+    }
+   ],
+   "claim_ids": [
+    "CLM-004",
+    "CLM-005"
+   ],
+   "notes": [
+    "EXP-002 aborted at the same step for the same reason. No cold-start penalty was measured and its ordering hypothesis is untested.",
+    "Pending owner decision (DL-011): (a) upgrade Ollama and run the frozen matrices unchanged, recording the new runtime version; (b) a new freeze without A2 or with another arm; (c) keep both recorded as failed. This page chooses none of them."
+   ]
+  },
+  {
+   "id": "EXP-003",
+   "title": "Quantization at fixed model (Q4_K_M vs Q8_0)",
+   "report_path": "research/experiments/EXP-003/report.md",
+   "status": "confirmatory, complete (3,000 of 3,000 requests)",
+   "outcome": "null",
+   "verdict": "H0 not rejected: no detected difference, not equivalence",
+   "estimates": [
+    {
+     "label": "Strict accuracy difference, Q8_0 minus Q4_K_M (primary)",
+     "kind": "confirmatory, measured",
+     "estimate": 1.6666666666666667,
+     "ci_low": -1.0,
+     "ci_high": 4.333333333333334,
+     "ci_level": 0.95,
+     "interval_kind": "95 % paired bootstrap interval over items (10,000 resamples, seed 7)",
+     "unit": "percentage points",
+     "display": "+1.67",
+     "interval_display": "[-1.00, +4.33]",
+     "manifest_ids": [
+      "N-002"
+     ]
+    },
+    {
+     "label": "Exact McNemar p (strict), discordant b = 11, c = 6",
+     "kind": "confirmatory, measured",
+     "estimate": 0.332305908203125,
+     "ci_low": null,
+     "ci_high": null,
+     "ci_level": null,
+     "interval_kind": "test statistic, no interval",
+     "unit": "p-value",
+     "display": "0.332",
+     "interval_display": null,
+     "manifest_ids": [
+      "N-002"
+     ]
+    },
+    {
+     "label": "Lenient accuracy difference (S2)",
+     "kind": "confirmatory, measured",
+     "estimate": 1.6666666666666667,
+     "ci_low": -1.0,
+     "ci_high": 4.333333333333334,
+     "ci_level": 0.95,
+     "interval_kind": "95 % paired bootstrap interval over items",
+     "unit": "percentage points",
+     "display": "+1.67",
+     "interval_display": "[-1.00, +4.33]",
+     "manifest_ids": [
+      "N-002"
+     ]
+    },
+    {
+     "label": "Strict accuracy, Q4_K_M (baseline)",
+     "kind": "confirmatory, measured",
+     "estimate": 0.7166666666666667,
+     "ci_low": null,
+     "ci_high": null,
+     "ci_level": null,
+     "interval_kind": "none published per arm (the paired difference carries the interval)",
+     "unit": "proportion of 300 items",
+     "display": "0.717",
+     "interval_display": null,
+     "manifest_ids": [
+      "N-001"
+     ]
+    },
+    {
+     "label": "Strict accuracy, Q8_0",
+     "kind": "confirmatory, measured",
+     "estimate": 0.7333333333333333,
+     "ci_low": null,
+     "ci_high": null,
+     "ci_level": null,
+     "interval_kind": "none published per arm (the paired difference carries the interval)",
+     "unit": "proportion of 300 items",
+     "display": "0.733",
+     "interval_display": null,
+     "manifest_ids": [
+      "N-001"
+     ]
+    },
+    {
+     "label": "Lenient accuracy, Q4_K_M",
+     "kind": "confirmatory, measured",
+     "estimate": 0.72,
+     "ci_low": null,
+     "ci_high": null,
+     "ci_level": null,
+     "interval_kind": "none published per arm (the paired difference carries the interval)",
+     "unit": "proportion of 300 items",
+     "display": "0.720",
+     "interval_display": null,
+     "manifest_ids": [
+      "N-001"
+     ]
+    },
+    {
+     "label": "Lenient accuracy, Q8_0",
+     "kind": "confirmatory, measured",
+     "estimate": 0.7366666666666667,
+     "ci_low": null,
+     "ci_high": null,
+     "ci_level": null,
+     "interval_kind": "none published per arm (the paired difference carries the interval)",
+     "unit": "proportion of 300 items",
+     "display": "0.737",
+     "interval_display": null,
+     "manifest_ids": [
+      "N-001"
+     ]
+    },
+    {
+     "label": "Median of per-item median end-to-end latency, Q4_K_M",
+     "kind": "confirmatory, measured, descriptive",
+     "estimate": 477.4921875,
+     "ci_low": 472.93136475,
+     "ci_high": 603.15989575,
+     "ci_level": null,
+     "interval_kind": "interquartile range over the 300 items, not a confidence interval",
+     "unit": "ms",
+     "display": "477.5",
+     "interval_display": "[472.9, 603.2]",
+     "manifest_ids": [
+      "N-004"
+     ]
+    },
+    {
+     "label": "Median of per-item median end-to-end latency, Q8_0",
+     "kind": "confirmatory, measured, descriptive",
+     "estimate": 437.74150050000003,
+     "ci_low": 434.26208325,
+     "ci_high": 547.160094,
+     "ci_level": null,
+     "interval_kind": "interquartile range over the 300 items, not a confidence interval",
+     "unit": "ms",
+     "display": "437.7",
+     "interval_display": "[434.3, 547.2]",
+     "manifest_ids": [
+      "N-004"
+     ]
+    },
+    {
+     "label": "Median time to first token over records, Q4_K_M",
+     "kind": "confirmatory, measured, descriptive",
+     "estimate": 440.936333,
+     "ci_low": null,
+     "ci_high": null,
+     "ci_level": null,
+     "interval_kind": "no interval published (descriptive median)",
+     "unit": "ms",
+     "display": "440.9",
+     "interval_display": null,
+     "manifest_ids": [
+      "N-005"
+     ]
+    },
+    {
+     "label": "Median time to first token over records, Q8_0",
+     "kind": "confirmatory, measured, descriptive",
+     "estimate": 388.679708,
+     "ci_low": null,
+     "ci_high": null,
+     "ci_level": null,
+     "interval_kind": "no interval published (descriptive median)",
+     "unit": "ms",
+     "display": "388.7",
+     "interval_display": null,
+     "manifest_ids": [
+      "N-005"
+     ]
+    },
+    {
+     "label": "Median decode throughput over records, Q4_K_M",
+     "kind": "confirmatory, measured, descriptive",
+     "estimate": 53.89216562988093,
+     "ci_low": null,
+     "ci_high": null,
+     "ci_level": null,
+     "interval_kind": "no interval published (descriptive median)",
+     "unit": "tokens/s",
+     "display": "53.9",
+     "interval_display": null,
+     "manifest_ids": [
+      "N-005"
+     ]
+    },
+    {
+     "label": "Median decode throughput over records, Q8_0",
+     "kind": "confirmatory, measured, descriptive",
+     "estimate": 40.07408696862322,
+     "ci_low": null,
+     "ci_high": null,
+     "ci_level": null,
+     "interval_kind": "no interval published (descriptive median)",
+     "unit": "tokens/s",
+     "display": "40.1",
+     "interval_display": null,
+     "manifest_ids": [
+      "N-005"
+     ]
+    },
+    {
+     "label": "Median prefill throughput over records, Q4_K_M",
+     "kind": "confirmatory, measured, descriptive",
+     "estimate": 214.35360807840524,
+     "ci_low": null,
+     "ci_high": null,
+     "ci_level": null,
+     "interval_kind": "no interval published (descriptive median)",
+     "unit": "tokens/s",
+     "display": "214.4",
+     "interval_display": null,
+     "manifest_ids": [
+      "N-005"
+     ]
+    },
+    {
+     "label": "Median prefill throughput over records, Q8_0",
+     "kind": "confirmatory, measured, descriptive",
+     "estimate": 245.2733635294934,
+     "ci_low": null,
+     "ci_high": null,
+     "ci_level": null,
+     "interval_kind": "no interval published (descriptive median)",
+     "unit": "tokens/s",
+     "display": "245.3",
+     "interval_display": null,
+     "manifest_ids": [
+      "N-005"
+     ]
+    },
+    {
+     "label": "Runtime-reported model memory, Q4_K_M",
+     "kind": "confirmatory, measured (runtime-reported)",
+     "estimate": 5871.994140625,
+     "ci_low": null,
+     "ci_high": null,
+     "ci_level": null,
+     "interval_kind": "deterministic runtime report, no interval",
+     "unit": "MiB",
+     "display": "5,872.0",
+     "interval_display": null,
+     "manifest_ids": [
+      "N-006"
+     ]
+    },
+    {
+     "label": "Runtime-reported model memory, Q8_0",
+     "kind": "confirmatory, measured (runtime-reported)",
+     "estimate": 9162.361328125,
+     "ci_low": null,
+     "ci_high": null,
+     "ci_level": null,
+     "interval_kind": "deterministic runtime report, no interval",
+     "unit": "MiB",
+     "display": "9,162.4",
+     "interval_display": null,
+     "manifest_ids": [
+      "N-006"
+     ]
+    },
+    {
+     "label": "Latency ratio Q8_0 / Q4_K_M, ratio of medians (exploratory, pending owner reading)",
+     "kind": "exploratory re-analysis",
+     "estimate": 0.9167511259019291,
+     "ci_low": 0.9158094250088139,
+     "ci_high": 0.9175680705772786,
+     "ci_level": 0.95,
+     "interval_kind": "95 % bootstrap interval over items within one session (exploratory)",
+     "unit": "ratio",
+     "display": "0.917",
+     "interval_display": "[0.916, 0.918]",
+     "manifest_ids": []
+    },
+    {
+     "label": "Latency ratio Q8_0 / Q4_K_M, median of per-item ratios (exploratory, pending owner reading)",
+     "kind": "exploratory re-analysis",
+     "estimate": 0.9162922168413172,
+     "ci_low": 0.9157942941791513,
+     "ci_high": 0.9168403225494941,
+     "ci_level": 0.95,
+     "interval_kind": "95 % bootstrap interval over items within one session (exploratory)",
+     "unit": "ratio",
+     "display": "0.916",
+     "interval_display": "[0.916, 0.917]",
+     "manifest_ids": []
+    },
+    {
+     "label": "Decode ratio Q8_0 / Q4_K_M over item medians (exploratory)",
+     "kind": "exploratory re-analysis",
+     "estimate": 0.7435202929424043,
+     "ci_low": 0.7430522817977211,
+     "ci_high": 0.7443537972704816,
+     "ci_level": 0.95,
+     "interval_kind": "95 % bootstrap interval over items within one session (exploratory)",
+     "unit": "ratio",
+     "display": "0.744",
+     "interval_display": "[0.743, 0.744]",
+     "manifest_ids": [
+      "N-005"
+     ]
+    },
+    {
+     "label": "Strict difference excluding the 5 items with any strict format failure (exploratory, post hoc)",
+     "kind": "exploratory re-analysis",
+     "estimate": 1.3559322033898304,
+     "ci_low": null,
+     "ci_high": null,
+     "ci_level": null,
+     "interval_kind": "no interval (post hoc, not a valid confirmatory analysis)",
+     "unit": "percentage points on 295 items",
+     "display": "+1.36",
+     "interval_display": null,
+     "manifest_ids": []
+    }
+   ],
+   "claim_ids": [
+    "CLM-001",
+    "CLM-002",
+    "CLM-003",
+    "CLM-006",
+    "CLM-007",
+    "CLM-008",
+    "CLM-009",
+    "CLM-010",
+    "CLM-011",
+    "CLM-013",
+    "CLM-014",
+    "CLM-015"
+   ],
+   "notes": [
+    "No equivalence margin was frozen, so the interval is not evidence of equivalence. Per-arm accuracies carry no published interval; the paired difference does.",
+    "Latency, throughput and memory are secondary and descriptive. Rows labelled exploratory come from a re-analysis of committed records (JRN-0009) and carry no confirmatory weight."
+   ]
+  }
+ ],
+ "assumptions": [
+  {
+   "name": "Runtime and machine",
+   "value": "Ollama 0.9.6 on one Apple M1 Pro laptop (16 GB), AC power",
+   "source": "measured setting, RUN-EXP-003-0001 run manifest"
+  },
+  {
+   "name": "Decoding",
+   "value": "template T1, temperature 0, num_predict 8, num_ctx 2048, runtime seeds 0 to 4",
+   "source": "frozen EXP-003 config"
+  },
+  {
+   "name": "Benchmark subset",
+   "value": "300 ARC-Challenge test items drawn once with seed 20261124",
+   "source": "frozen protocol; data/arc_challenge_test_subset_ids.json"
+  },
+  {
+   "name": "Planning discordant proportion",
+   "value": "0.25 (planning value, not a measurement)",
+   "source": "main protocol section 7"
+  },
+  {
+   "name": "Minimum detectable difference",
+   "value": "about 9 points at 80 % power (planning value)",
+   "source": "main protocol section 7"
+  },
+  {
+   "name": "Equivalence margin",
+   "value": "none frozen, so no equivalence test is possible",
+   "source": "main protocol section 2; DL-012"
+  },
+  {
+   "name": "Power draw for modelled energy",
+   "value": "none stated in the frozen protocol; S4 was not run",
+   "source": "DL-012 decision 4; the modelled-energy panel uses only a value the visitor enters"
+  }
+ ],
+ "limitations": [
+  "No result on the primary question. EXP-001 and EXP-002 failed; the only confirmatory result concerns two quantizations of one model, an experiment the plan called optional.",
+  "Not equivalence. No equivalence margin was frozen, so the EXP-003 interval is only an interval. Differences of a few points are compatible with the data.",
+  "Power and its assumption. The design assumed a discordant proportion of 0.25 and a minimum detectable difference of about 9 points. The observed discordance was much lower (17 of 300) and the interval correspondingly narrower (half-width 2.67 against a planned 5.66 points), but that does not create an equivalence test after the fact.",
+  "One template. S1 was not run; prompt format can change accuracy substantially (sclar2023format).",
+  "One machine, one runtime version, one benchmark, short answers. Nothing generalises to other hardware, runtimes, tasks or generation lengths.",
+  "Latency is prefill-dominated and descriptive. The frozen latency-ratio interval is not implemented; the exploratory intervals cover within-session item variation only. Prefill rates depend on prompt length (E4).",
+  "Memory metrics. The named metric is the runtime's own accounting, not an independent measurement. Peak RSS was lower for Q8_0 than for Q4_K_M and does not capture the model's Metal allocations; it is secondary only.",
+  "Warm-up artefact. Ten of 3,000 records were measured right after an identical warm-up prompt (E3).",
+  "Energy. No energy figure is reported; S4 lacks a frozen power range.",
+  "Construct. ARC-Challenge multiple-choice accuracy is a narrow proxy for quality; contamination is untested."
+ ],
+ "frontier": {
+  "note": "Measured values from RUN-EXP-003-0001 only. Accuracy is strict accuracy on 300 items. Memory is the runtime-reported /api/ps size. Latency is the median of per-item medians with the interquartile range over items.",
+  "arms": [
+   {
+    "arm": "Q4",
+    "model": "llama3.1:8b",
+    "quantization": "Q4_K_M",
+    "accuracy_strict": 0.7166666666666667,
+    "accuracy_display": "0.717",
+    "memory_mib": 5871.994140625,
+    "memory_display": "5,872.0",
+    "latency_ms": 477.4921875,
+    "latency_q1_ms": 472.93136475,
+    "latency_q3_ms": 603.15989575,
+    "latency_display": "477.5",
+    "latency_iqr_display": "[472.9, 603.2]",
+    "decode_tps": 53.89216562988093,
+    "decode_display": "53.9"
+   },
+   {
+    "arm": "Q8",
+    "model": "llama3.1:8b-instruct-q8_0",
+    "quantization": "Q8_0",
+    "accuracy_strict": 0.7333333333333333,
+    "accuracy_display": "0.733",
+    "memory_mib": 9162.361328125,
+    "memory_display": "9,162.4",
+    "latency_ms": 437.74150050000003,
+    "latency_q1_ms": 434.26208325,
+    "latency_q3_ms": 547.160094,
+    "latency_display": "437.7",
+    "latency_iqr_display": "[434.3, 547.2]",
+    "decode_tps": 40.07408696862322,
+    "decode_display": "40.1"
+   }
+  ],
+  "not_measured": [
+   {
+    "arm": "A0",
+    "model": "phi4-mini:3.8b (Q4_K_M)",
+    "experiment": "EXP-001, EXP-002",
+    "reason": "experiment failed before any request"
+   },
+   {
+    "arm": "A1",
+    "model": "llama3.1:8b (Q4_K_M)",
+    "experiment": "EXP-001, EXP-002",
+    "reason": "experiment failed before any request (the same model is the EXP-003 baseline, but EXP-001 results do not exist)"
+   },
+   {
+    "arm": "A2",
+    "model": "ministral-3:8b (Q4_K_M)",
+    "experiment": "EXP-001, EXP-002",
+    "reason": "Ollama 0.9.6 cannot render its chat template"
+   }
+  ]
+ },
+ "items": [
+  {
+   "id": "ACTAAP_2008_5_10",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 478.631708,
+   "q8_latency_ms": 438.418167,
+   "strict_miss_any": false
+  },
+  {
+   "id": "ACTAAP_2008_7_4",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 480.074833,
+   "q8_latency_ms": 439.218958,
+   "strict_miss_any": false
+  },
+  {
+   "id": "ACTAAP_2010_5_7",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 473.256708,
+   "q8_latency_ms": 433.898375,
+   "strict_miss_any": false
+  },
+  {
+   "id": "ACTAAP_2010_7_12",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 736.945667,
+   "q8_latency_ms": 662.0425,
+   "strict_miss_any": false
+  },
+  {
+   "id": "ACTAAP_2013_5_8",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 350.302166,
+   "q8_latency_ms": 327.299833,
+   "strict_miss_any": false
+  },
+  {
+   "id": "ACTAAP_2014_7_13",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 602.587291,
+   "q8_latency_ms": 546.815541,
+   "strict_miss_any": false
+  },
+  {
+   "id": "AIMS_2008_4_5",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 601.050083,
+   "q8_latency_ms": 546.911334,
+   "strict_miss_any": false
+  },
+  {
+   "id": "AIMS_2008_8_13",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 477.584041,
+   "q8_latency_ms": 437.646792,
+   "strict_miss_any": false
+  },
+  {
+   "id": "AIMS_2009_4_4",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 481.176,
+   "q8_latency_ms": 439.711666,
+   "strict_miss_any": false
+  },
+  {
+   "id": "AKDE&ED_2008_8_36",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 475.347875,
+   "q8_latency_ms": 437.203334,
+   "strict_miss_any": false
+  },
+  {
+   "id": "AKDE&ED_2008_8_40",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 603.020459,
+   "q8_latency_ms": 548.971375,
+   "strict_miss_any": false
+  },
+  {
+   "id": "AKDE&ED_2008_8_48",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 472.922583,
+   "q8_latency_ms": 435.257333,
+   "strict_miss_any": false
+  },
+  {
+   "id": "CSZ30169",
+   "q4_strict": 0.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 476.811958,
+   "q8_latency_ms": 438.204292,
+   "strict_miss_any": false
+  },
+  {
+   "id": "CSZ_2005_5_CSZ10021",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 482.160542,
+   "q8_latency_ms": 439.910333,
+   "strict_miss_any": false
+  },
+  {
+   "id": "CSZ_2009_8_CSZ20740",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 473.621541,
+   "q8_latency_ms": 436.2085,
+   "strict_miss_any": false
+  },
+  {
+   "id": "FCAT_2008_5_2",
+   "q4_strict": 1.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 601.863458,
+   "q8_latency_ms": 547.049166,
+   "strict_miss_any": false
+  },
+  {
+   "id": "LEAP_2000_8_2",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 608.291625,
+   "q8_latency_ms": 551.054083,
+   "strict_miss_any": false
+  },
+  {
+   "id": "LEAP_2007_8_10417",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 614.067,
+   "q8_latency_ms": 555.318541,
+   "strict_miss_any": false
+  },
+  {
+   "id": "LEAP__4_10225",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 479.669209,
+   "q8_latency_ms": 439.941584,
+   "strict_miss_any": false
+  },
+  {
+   "id": "LEAP__8_10365",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 605.1915,
+   "q8_latency_ms": 550.362292,
+   "strict_miss_any": false
+  },
+  {
+   "id": "MCAS_1998_4_12",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 478.298875,
+   "q8_latency_ms": 438.39375,
+   "strict_miss_any": false
+  },
+  {
+   "id": "MCAS_1998_8_24",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 736.52525,
+   "q8_latency_ms": 661.339834,
+   "strict_miss_any": false
+  },
+  {
+   "id": "MCAS_1998_8_26",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 476.441459,
+   "q8_latency_ms": 437.936583,
+   "strict_miss_any": false
+  },
+  {
+   "id": "MCAS_1999_4_26",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 470.497375,
+   "q8_latency_ms": 432.802708,
+   "strict_miss_any": false
+  },
+  {
+   "id": "MCAS_1999_8_16",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 601.992542,
+   "q8_latency_ms": 546.752041,
+   "strict_miss_any": false
+  },
+  {
+   "id": "MCAS_1999_8_5",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 473.472,
+   "q8_latency_ms": 433.290875,
+   "strict_miss_any": false
+  },
+  {
+   "id": "MCAS_2000_4_10",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 354.664667,
+   "q8_latency_ms": 330.929417,
+   "strict_miss_any": false
+  },
+  {
+   "id": "MCAS_2000_4_36",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 351.892708,
+   "q8_latency_ms": 328.25875,
+   "strict_miss_any": false
+  },
+  {
+   "id": "MCAS_2001_5_2",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 480.540375,
+   "q8_latency_ms": 439.482,
+   "strict_miss_any": false
+  },
+  {
+   "id": "MCAS_2001_5_3",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 353.06625,
+   "q8_latency_ms": 329.535,
+   "strict_miss_any": false
+  },
+  {
+   "id": "MCAS_2001_8_4",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 607.910542,
+   "q8_latency_ms": 551.5595,
+   "strict_miss_any": false
+  },
+  {
+   "id": "MCAS_2003_5_14",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 479.264834,
+   "q8_latency_ms": 439.536041,
+   "strict_miss_any": false
+  },
+  {
+   "id": "MCAS_2003_8_21",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 479.837,
+   "q8_latency_ms": 437.751209,
+   "strict_miss_any": false
+  },
+  {
+   "id": "MCAS_2003_8_31",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 609.106416,
+   "q8_latency_ms": 550.853625,
+   "strict_miss_any": false
+  },
+  {
+   "id": "MCAS_2003_8_7",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 354.100458,
+   "q8_latency_ms": 332.845333,
+   "strict_miss_any": false
+  },
+  {
+   "id": "MCAS_2004_8_14",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 353.700125,
+   "q8_latency_ms": 330.244917,
+   "strict_miss_any": false
+  },
+  {
+   "id": "MCAS_2004_8_23",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 601.773791,
+   "q8_latency_ms": 546.893959,
+   "strict_miss_any": false
+  },
+  {
+   "id": "MCAS_2004_8_7",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 739.226125,
+   "q8_latency_ms": 664.263916,
+   "strict_miss_any": false
+  },
+  {
+   "id": "MCAS_2004_9_15-v1",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 603.724791,
+   "q8_latency_ms": 547.544959,
+   "strict_miss_any": false
+  },
+  {
+   "id": "MCAS_2005_5_25",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 470.803916,
+   "q8_latency_ms": 432.478292,
+   "strict_miss_any": false
+  },
+  {
+   "id": "MCAS_2005_8_6",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 610.619459,
+   "q8_latency_ms": 553.236625,
+   "strict_miss_any": false
+  },
+  {
+   "id": "MCAS_2005_8_7",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 480.598458,
+   "q8_latency_ms": 439.808584,
+   "strict_miss_any": false
+  },
+  {
+   "id": "MCAS_2005_9_6",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 476.294959,
+   "q8_latency_ms": 437.163291,
+   "strict_miss_any": false
+  },
+  {
+   "id": "MCAS_2006_8_1",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 472.340959,
+   "q8_latency_ms": 434.359709,
+   "strict_miss_any": false
+  },
+  {
+   "id": "MCAS_2006_9_12",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 479.209208,
+   "q8_latency_ms": 438.130375,
+   "strict_miss_any": false
+  },
+  {
+   "id": "MCAS_2006_9_28-v1",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 612.313167,
+   "q8_latency_ms": 555.591416,
+   "strict_miss_any": false
+  },
+  {
+   "id": "MCAS_2006_9_43",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 604.098083,
+   "q8_latency_ms": 548.336791,
+   "strict_miss_any": false
+  },
+  {
+   "id": "MCAS_2009_5_6518",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 471.836166,
+   "q8_latency_ms": 434.66125,
+   "strict_miss_any": false
+  },
+  {
+   "id": "MCAS_2010_5_11984",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 472.75725,
+   "q8_latency_ms": 434.843208,
+   "strict_miss_any": false
+  },
+  {
+   "id": "MCAS_2013_8_29416",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 477.395167,
+   "q8_latency_ms": 437.0495,
+   "strict_miss_any": false
+  },
+  {
+   "id": "MCAS_2014_5_15",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 603.655791,
+   "q8_latency_ms": 547.572417,
+   "strict_miss_any": false
+  },
+  {
+   "id": "MCAS_2016_8_15",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 867.752792,
+   "q8_latency_ms": 778.050708,
+   "strict_miss_any": false
+  },
+  {
+   "id": "MDSA_2010_4_20",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 475.825458,
+   "q8_latency_ms": 435.760625,
+   "strict_miss_any": false
+  },
+  {
+   "id": "MDSA_2010_5_29",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 732.089,
+   "q8_latency_ms": 660.109834,
+   "strict_miss_any": false
+  },
+  {
+   "id": "MDSA_2013_8_23",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 605.570875,
+   "q8_latency_ms": 548.681416,
+   "strict_miss_any": false
+  },
+  {
+   "id": "MEAP_2005_8_21",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 477.846875,
+   "q8_latency_ms": 438.290417,
+   "strict_miss_any": false
+  },
+  {
+   "id": "MEAP_2005_8_39",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 476.39175,
+   "q8_latency_ms": 435.162,
+   "strict_miss_any": false
+  },
+  {
+   "id": "MEA_2010_8_18",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 477.906541,
+   "q8_latency_ms": 438.735,
+   "strict_miss_any": false
+  },
+  {
+   "id": "MEA_2013_5_12",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 608.844375,
+   "q8_latency_ms": 553.585542,
+   "strict_miss_any": false
+  },
+  {
+   "id": "MEA_2013_5_15",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 600.476166,
+   "q8_latency_ms": 546.206875,
+   "strict_miss_any": false
+  },
+  {
+   "id": "MEA_2013_8_18",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 473.373667,
+   "q8_latency_ms": 433.409125,
+   "strict_miss_any": false
+  },
+  {
+   "id": "MEA_2014_5_11",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 482.89225,
+   "q8_latency_ms": 439.992583,
+   "strict_miss_any": false
+  },
+  {
+   "id": "MSA_2012_5_12",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 606.742584,
+   "q8_latency_ms": 550.2405,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_175840",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 472.401208,
+   "q8_latency_ms": 434.378708,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_176855",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 352.336709,
+   "q8_latency_ms": 328.674042,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_178255",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 608.474875,
+   "q8_latency_ms": 553.559667,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_179025",
+   "q4_strict": 1.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 472.878583,
+   "q8_latency_ms": 434.820709,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_180373",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 472.171166,
+   "q8_latency_ms": 433.628416,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_183033",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 474.991083,
+   "q8_latency_ms": 435.855542,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_188528",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 472.934292,
+   "q8_latency_ms": 433.127542,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_189053",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 478.331042,
+   "q8_latency_ms": 438.660042,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_400084",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 605.529666,
+   "q8_latency_ms": 549.590833,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_400443",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 733.995,
+   "q8_latency_ms": 660.426542,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_400803",
+   "q4_strict": 1.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 478.090875,
+   "q8_latency_ms": 434.861125,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_401014",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 605.892125,
+   "q8_latency_ms": 548.220375,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_401684",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 470.604375,
+   "q8_latency_ms": 432.325042,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_402501",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 477.052334,
+   "q8_latency_ms": 436.810667,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_403234",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 600.997417,
+   "q8_latency_ms": 546.291291,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_405778",
+   "q4_strict": 0.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 473.029458,
+   "q8_latency_ms": 434.511792,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_406136",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 602.922125,
+   "q8_latency_ms": 547.019542,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_406550",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 603.396583,
+   "q8_latency_ms": 548.557209,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_406777",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 474.203334,
+   "q8_latency_ms": 435.305583,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_407019",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 480.187,
+   "q8_latency_ms": 438.806125,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_407262",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 475.406,
+   "q8_latency_ms": 435.585375,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_409295",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 603.583709,
+   "q8_latency_ms": 547.909667,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_409647",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 616.034084,
+   "q8_latency_ms": 554.711542,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_410026",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 610.876833,
+   "q8_latency_ms": 549.852584,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_410602",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 476.911667,
+   "q8_latency_ms": 436.775958,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_411732",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 474.092167,
+   "q8_latency_ms": 435.1065,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_412774",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 735.049042,
+   "q8_latency_ms": 661.660042,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_414099",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 607.18025,
+   "q8_latency_ms": 550.610375,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_414365",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 600.806958,
+   "q8_latency_ms": 545.246334,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_415081",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 478.303542,
+   "q8_latency_ms": 438.863708,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_415082",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 477.761208,
+   "q8_latency_ms": 438.377917,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_415083",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 471.879875,
+   "q8_latency_ms": 434.162833,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_415084",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 602.491375,
+   "q8_latency_ms": 546.807459,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_415272",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 475.990625,
+   "q8_latency_ms": 436.322667,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_416376",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 475.133834,
+   "q8_latency_ms": 434.167417,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_416380",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 602.768208,
+   "q8_latency_ms": 546.536917,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_416404",
+   "q4_strict": 0.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 474.016208,
+   "q8_latency_ms": 435.295833,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_416593",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 614.098709,
+   "q8_latency_ms": 555.112708,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_416638",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 474.556875,
+   "q8_latency_ms": 433.98975,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_416650",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 473.65275,
+   "q8_latency_ms": 434.946,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_417117",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 738.459292,
+   "q8_latency_ms": 662.831375,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_417137",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 352.296375,
+   "q8_latency_ms": 329.051083,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_417150",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 478.832042,
+   "q8_latency_ms": 438.970959,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7004953",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 604.732375,
+   "q8_latency_ms": 548.130375,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7005005",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 478.71375,
+   "q8_latency_ms": 437.439375,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7007420",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 605.442833,
+   "q8_latency_ms": 548.623542,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7009555",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 474.688209,
+   "q8_latency_ms": 434.446417,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7011130",
+   "q4_strict": 0.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 603.784292,
+   "q8_latency_ms": 547.716458,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7011323",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 357.641334,
+   "q8_latency_ms": 331.072875,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7016258",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 477.082958,
+   "q8_latency_ms": 437.043333,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7027405",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 476.287375,
+   "q8_latency_ms": 434.665208,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7029803",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 479.583041,
+   "q8_latency_ms": 439.760292,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7030555",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 605.376458,
+   "q8_latency_ms": 548.385583,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7032428",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 864.629,
+   "q8_latency_ms": 774.706416,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7037555",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 473.720958,
+   "q8_latency_ms": 679.734333,
+   "strict_miss_any": true
+  },
+  {
+   "id": "Mercury_7038518",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 475.229208,
+   "q8_latency_ms": 434.252334,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7040793",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 472.080292,
+   "q8_latency_ms": 434.265333,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7041668",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 474.487334,
+   "q8_latency_ms": 433.736625,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7058135",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 478.273792,
+   "q8_latency_ms": 439.041833,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7058415",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 478.901583,
+   "q8_latency_ms": 437.862166,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7064680",
+   "q4_strict": 0.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 474.411542,
+   "q8_latency_ms": 435.13525,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7068583",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 350.646959,
+   "q8_latency_ms": 329.142917,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7071523",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 475.22125,
+   "q8_latency_ms": 435.097583,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7072380",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 473.418334,
+   "q8_latency_ms": 435.24775,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7074848",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 472.135209,
+   "q8_latency_ms": 433.839083,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7081603",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 609.811292,
+   "q8_latency_ms": 554.096584,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7081743",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 481.394541,
+   "q8_latency_ms": 439.896834,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7086660",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 601.685417,
+   "q8_latency_ms": 546.898875,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7093153",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 476.768167,
+   "q8_latency_ms": 437.714791,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7093958",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 473.935417,
+   "q8_latency_ms": 434.184625,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7094290",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 482.345083,
+   "q8_latency_ms": 440.262917,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7094308",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 606.394375,
+   "q8_latency_ms": 550.245667,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7102323",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 601.728,
+   "q8_latency_ms": 546.79325,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7106750",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 606.589833,
+   "q8_latency_ms": 551.362084,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7107170",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 471.337833,
+   "q8_latency_ms": 433.53125,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7107240",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 604.362125,
+   "q8_latency_ms": 547.860916,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7109603",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 606.432875,
+   "q8_latency_ms": 548.047583,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7123358",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 473.82625,
+   "q8_latency_ms": 434.97175,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7126263",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 472.259709,
+   "q8_latency_ms": 432.816292,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7127943",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 738.600791,
+   "q8_latency_ms": 664.366541,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7128923",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 351.602459,
+   "q8_latency_ms": 328.900834,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7129640",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 478.139,
+   "q8_latency_ms": 439.362208,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7130620",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 479.310458,
+   "q8_latency_ms": 439.646167,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7130655",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 734.226917,
+   "q8_latency_ms": 661.739083,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7131845",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 479.095042,
+   "q8_latency_ms": 438.732333,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7132405",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 471.99175,
+   "q8_latency_ms": 434.582583,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7136028",
+   "q4_strict": 0.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 477.137625,
+   "q8_latency_ms": 436.875666,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7137165",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 353.198,
+   "q8_latency_ms": 330.953041,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7138915",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 612.757584,
+   "q8_latency_ms": 555.54025,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7139878",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 480.728541,
+   "q8_latency_ms": 439.770792,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7140333",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 608.071958,
+   "q8_latency_ms": 551.903416,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7142800",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 606.146,
+   "q8_latency_ms": 548.293625,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7143010",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 605.419917,
+   "q8_latency_ms": 548.642375,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7154315",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 604.403625,
+   "q8_latency_ms": 548.567125,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7158935",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 732.9075,
+   "q8_latency_ms": 662.116167,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7159075",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 606.877333,
+   "q8_latency_ms": 550.62925,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7159215",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 480.614542,
+   "q8_latency_ms": 440.811208,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7159250",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 481.443041,
+   "q8_latency_ms": 440.729166,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7168053",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 472.529875,
+   "q8_latency_ms": 435.484542,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7168805",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 614.189125,
+   "q8_latency_ms": 554.232916,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7171570",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 477.281875,
+   "q8_latency_ms": 437.089625,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7172708",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 478.1835,
+   "q8_latency_ms": 437.378292,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7174738",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 862.832375,
+   "q8_latency_ms": 774.898292,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7187373",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 479.779,
+   "q8_latency_ms": 440.472833,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7188580",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 605.656916,
+   "q8_latency_ms": 548.334042,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7190120",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 606.34725,
+   "q8_latency_ms": 549.052709,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7198468",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 611.244416,
+   "q8_latency_ms": 551.8335,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7201740",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 603.532208,
+   "q8_latency_ms": 547.312875,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7206938",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 479.899917,
+   "q8_latency_ms": 439.079791,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7207550",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 610.934,
+   "q8_latency_ms": 554.381584,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7210123",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 475.157333,
+   "q8_latency_ms": 436.713584,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7210210",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 355.101459,
+   "q8_latency_ms": 331.372459,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7210455",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 477.515708,
+   "q8_latency_ms": 438.567333,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7212818",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 478.282167,
+   "q8_latency_ms": 437.200375,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7213325",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 471.155959,
+   "q8_latency_ms": 433.375166,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7213430",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 477.502625,
+   "q8_latency_ms": 438.286875,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7214008",
+   "q4_strict": 0.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 604.984,
+   "q8_latency_ms": 548.57575,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7216300",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 473.371916,
+   "q8_latency_ms": 433.648666,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7221078",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 606.024417,
+   "q8_latency_ms": 546.07625,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7221655",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 607.027542,
+   "q8_latency_ms": 550.240541,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7222600",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 481.575834,
+   "q8_latency_ms": 442.42175,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7222793",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 605.34125,
+   "q8_latency_ms": 548.110167,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7223143",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 602.759791,
+   "q8_latency_ms": 793.559917,
+   "strict_miss_any": true
+  },
+  {
+   "id": "Mercury_7227710",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 474.869916,
+   "q8_latency_ms": 436.0045,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7230388",
+   "q4_strict": 1.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 604.75275,
+   "q8_latency_ms": 546.485583,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7234378",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 482.268167,
+   "q8_latency_ms": 440.925125,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7238945",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 608.688541,
+   "q8_latency_ms": 550.817792,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7247013",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 481.927125,
+   "q8_latency_ms": 441.6625,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7247678",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 606.088375,
+   "q8_latency_ms": 550.724208,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7263060",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 477.304292,
+   "q8_latency_ms": 437.164958,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7268240",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 477.815417,
+   "q8_latency_ms": 436.625208,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7268258",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 350.235959,
+   "q8_latency_ms": 327.052916,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7268328",
+   "q4_strict": 0.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 476.736417,
+   "q8_latency_ms": 438.035625,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7270113",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 477.046042,
+   "q8_latency_ms": 437.361583,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7282083",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 476.37375,
+   "q8_latency_ms": 437.772167,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_7283833",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 354.931833,
+   "q8_latency_ms": 330.508,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_LBS10933",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 604.781,
+   "q8_latency_ms": 550.437458,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_LBS11018",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 602.912375,
+   "q8_latency_ms": 546.572667,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_400012",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 604.4875,
+   "q8_latency_ms": 547.324167,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_400057",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 478.781625,
+   "q8_latency_ms": 439.255042,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_400063",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 354.127958,
+   "q8_latency_ms": 329.943333,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_400134",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 474.468042,
+   "q8_latency_ms": 436.1415,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_400182",
+   "q4_strict": 1.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 351.741709,
+   "q8_latency_ms": 327.765958,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_400400",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 353.407542,
+   "q8_latency_ms": 330.521791,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_400402",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 351.997709,
+   "q8_latency_ms": 329.398708,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_400582",
+   "q4_strict": 0.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 355.078708,
+   "q8_latency_ms": 330.329041,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_400594",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 475.207417,
+   "q8_latency_ms": 435.606583,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_400661",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 474.822375,
+   "q8_latency_ms": 435.101458,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_400701",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 476.800042,
+   "q8_latency_ms": 437.139458,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_400985",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 479.111792,
+   "q8_latency_ms": 438.889125,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_401006",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 349.683125,
+   "q8_latency_ms": 326.936792,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_401116",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 478.465458,
+   "q8_latency_ms": 437.512291,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_401147",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 472.788291,
+   "q8_latency_ms": 435.266959,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_401262",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 471.040458,
+   "q8_latency_ms": 434.277666,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_401278",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 353.1365,
+   "q8_latency_ms": 330.78,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_401309",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 355.468083,
+   "q8_latency_ms": 330.91675,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_401357",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 354.234542,
+   "q8_latency_ms": 330.237625,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_401372",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 471.971958,
+   "q8_latency_ms": 432.329167,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_401585",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 351.857,
+   "q8_latency_ms": 328.711416,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_401668",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 476.445084,
+   "q8_latency_ms": 437.518667,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_402029",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 474.789625,
+   "q8_latency_ms": 435.255,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_402171",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 475.404625,
+   "q8_latency_ms": 436.827375,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_402276",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 477.48175,
+   "q8_latency_ms": 437.063916,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_402282",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 355.271167,
+   "q8_latency_ms": 330.389792,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_402638",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 472.997916,
+   "q8_latency_ms": 432.543209,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_402981",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 472.664833,
+   "q8_latency_ms": 433.797542,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_405130",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 605.636333,
+   "q8_latency_ms": 548.621958,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_405533",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 476.291959,
+   "q8_latency_ms": 437.496125,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_405885",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 478.792167,
+   "q8_latency_ms": 438.020375,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_406451",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 608.29,
+   "q8_latency_ms": 550.634375,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_406623",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 479.097208,
+   "q8_latency_ms": 440.051542,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_406710",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 473.142625,
+   "q8_latency_ms": 434.078041,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_406720",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 471.461333,
+   "q8_latency_ms": 433.678833,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_407080",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 355.856625,
+   "q8_latency_ms": 330.198459,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_407138",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 472.4715,
+   "q8_latency_ms": 433.710417,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_407592",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 472.186417,
+   "q8_latency_ms": 434.100708,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_407613",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 354.860167,
+   "q8_latency_ms": 330.99525,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_407696",
+   "q4_strict": 0.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 786.140584,
+   "q8_latency_ms": 547.605,
+   "strict_miss_any": true
+  },
+  {
+   "id": "Mercury_SC_408321",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 478.172917,
+   "q8_latency_ms": 439.477,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_408358",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 480.800417,
+   "q8_latency_ms": 439.433084,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_408384",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 472.583209,
+   "q8_latency_ms": 433.243917,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_408547",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 481.000583,
+   "q8_latency_ms": 440.505042,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_408568",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 607.833208,
+   "q8_latency_ms": 550.2065,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_409030",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 473.019209,
+   "q8_latency_ms": 434.637208,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_409139",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 603.447416,
+   "q8_latency_ms": 547.109167,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_409383",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 472.415708,
+   "q8_latency_ms": 434.298834,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_410971",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 477.012834,
+   "q8_latency_ms": 437.294583,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_413299",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 354.657875,
+   "q8_latency_ms": 330.262584,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_413439",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 477.480958,
+   "q8_latency_ms": 437.573541,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_413458",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 353.428042,
+   "q8_latency_ms": 331.06175,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_413624",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 474.699666,
+   "q8_latency_ms": 434.792583,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_414041",
+   "q4_strict": 1.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 479.560917,
+   "q8_latency_ms": 439.869458,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_414129",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 356.353,
+   "q8_latency_ms": 331.771459,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_415407",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 478.24975,
+   "q8_latency_ms": 438.141959,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_415416",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 476.026625,
+   "q8_latency_ms": 437.793708,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_415471",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 473.347417,
+   "q8_latency_ms": 433.123584,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_416174",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 352.404583,
+   "q8_latency_ms": 327.840125,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_417677",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 476.520833,
+   "q8_latency_ms": 438.0045,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_LBS10597",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 353.225959,
+   "q8_latency_ms": 330.374834,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_LBS10662",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 471.446208,
+   "q8_latency_ms": 433.137416,
+   "strict_miss_any": false
+  },
+  {
+   "id": "Mercury_SC_LBS11003",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 475.225334,
+   "q8_latency_ms": 437.114875,
+   "strict_miss_any": false
+  },
+  {
+   "id": "NAEP_2000_8_S11+10",
+   "q4_strict": 0.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 472.5965,
+   "q8_latency_ms": 433.552375,
+   "strict_miss_any": false
+  },
+  {
+   "id": "NCEOGA_2013_5_20",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 354.901375,
+   "q8_latency_ms": 331.928208,
+   "strict_miss_any": false
+  },
+  {
+   "id": "NCEOGA_2013_5_9",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 354.219208,
+   "q8_latency_ms": 329.977208,
+   "strict_miss_any": false
+  },
+  {
+   "id": "NCEOGA_2013_8_26",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 481.9795,
+   "q8_latency_ms": 439.951667,
+   "strict_miss_any": false
+  },
+  {
+   "id": "NCEOGA_2013_8_5",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 472.505875,
+   "q8_latency_ms": 434.339459,
+   "strict_miss_any": false
+  },
+  {
+   "id": "NYSEDREGENTS_2008_4_12",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 473.28025,
+   "q8_latency_ms": 433.924875,
+   "strict_miss_any": false
+  },
+  {
+   "id": "NYSEDREGENTS_2008_4_15",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 350.544709,
+   "q8_latency_ms": 327.546209,
+   "strict_miss_any": false
+  },
+  {
+   "id": "NYSEDREGENTS_2008_4_28",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 479.590333,
+   "q8_latency_ms": 438.859791,
+   "strict_miss_any": false
+  },
+  {
+   "id": "NYSEDREGENTS_2008_8_17",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 478.34425,
+   "q8_latency_ms": 438.514583,
+   "strict_miss_any": false
+  },
+  {
+   "id": "NYSEDREGENTS_2008_8_27",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 822.835,
+   "q8_latency_ms": 841.933959,
+   "strict_miss_any": true
+  },
+  {
+   "id": "NYSEDREGENTS_2008_8_30",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 603.081,
+   "q8_latency_ms": 546.878833,
+   "strict_miss_any": false
+  },
+  {
+   "id": "NYSEDREGENTS_2008_8_32",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 473.858334,
+   "q8_latency_ms": 435.57925,
+   "strict_miss_any": false
+  },
+  {
+   "id": "NYSEDREGENTS_2008_8_42",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 475.225042,
+   "q8_latency_ms": 436.028333,
+   "strict_miss_any": false
+  },
+  {
+   "id": "NYSEDREGENTS_2008_8_5",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 694.582417,
+   "q8_latency_ms": 731.04375,
+   "strict_miss_any": true
+  },
+  {
+   "id": "NYSEDREGENTS_2010_8_42",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 733.855292,
+   "q8_latency_ms": 662.04525,
+   "strict_miss_any": false
+  },
+  {
+   "id": "NYSEDREGENTS_2012_4_1",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 352.861791,
+   "q8_latency_ms": 327.767792,
+   "strict_miss_any": false
+  },
+  {
+   "id": "NYSEDREGENTS_2012_4_2",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 470.416917,
+   "q8_latency_ms": 432.8365,
+   "strict_miss_any": false
+  },
+  {
+   "id": "NYSEDREGENTS_2013_4_1",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 472.068625,
+   "q8_latency_ms": 433.3265,
+   "strict_miss_any": false
+  },
+  {
+   "id": "NYSEDREGENTS_2015_4_26",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 476.4545,
+   "q8_latency_ms": 436.531959,
+   "strict_miss_any": false
+  },
+  {
+   "id": "NYSEDREGENTS_2015_4_7",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 470.531666,
+   "q8_latency_ms": 432.6565,
+   "strict_miss_any": false
+  },
+  {
+   "id": "NYSEDREGENTS_2015_8_9",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 470.09,
+   "q8_latency_ms": 432.963417,
+   "strict_miss_any": false
+  },
+  {
+   "id": "OHAT_2009_8_34",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 474.546541,
+   "q8_latency_ms": 435.154833,
+   "strict_miss_any": false
+  },
+  {
+   "id": "TAKS_2009_5_26",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 355.31775,
+   "q8_latency_ms": 330.476958,
+   "strict_miss_any": false
+  },
+  {
+   "id": "TAKS_2009_5_30",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 479.832625,
+   "q8_latency_ms": 439.584667,
+   "strict_miss_any": false
+  },
+  {
+   "id": "TIMSS_1995_8_K18",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 475.611417,
+   "q8_latency_ms": 436.676167,
+   "strict_miss_any": false
+  },
+  {
+   "id": "TIMSS_2003_4_pg7",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 470.796792,
+   "q8_latency_ms": 433.114208,
+   "strict_miss_any": false
+  },
+  {
+   "id": "TIMSS_2003_8_pg16",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 478.166791,
+   "q8_latency_ms": 438.205916,
+   "strict_miss_any": false
+  },
+  {
+   "id": "TIMSS_2007_8_pg109",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 470.978125,
+   "q8_latency_ms": 435.062875,
+   "strict_miss_any": false
+  },
+  {
+   "id": "TIMSS_2011_4_pg45",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 473.5155,
+   "q8_latency_ms": 435.463084,
+   "strict_miss_any": false
+  },
+  {
+   "id": "TIMSS_2011_8_pg15",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 740.158791,
+   "q8_latency_ms": 666.6515,
+   "strict_miss_any": false
+  },
+  {
+   "id": "TIMSS_2011_8_pg31",
+   "q4_strict": 0.0,
+   "q8_strict": 0.0,
+   "q4_lenient": 0.0,
+   "q8_lenient": 0.0,
+   "q4_latency_ms": 477.407875,
+   "q8_latency_ms": 437.731792,
+   "strict_miss_any": false
+  },
+  {
+   "id": "VASoL_2008_3_32",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 475.974959,
+   "q8_latency_ms": 436.076208,
+   "strict_miss_any": false
+  },
+  {
+   "id": "VASoL_2009_3_23",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 474.653959,
+   "q8_latency_ms": 436.253583,
+   "strict_miss_any": false
+  },
+  {
+   "id": "VASoL_2009_5_30",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 471.54025,
+   "q8_latency_ms": 433.268958,
+   "strict_miss_any": false
+  },
+  {
+   "id": "VASoL_2010_3_39",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 473.052375,
+   "q8_latency_ms": 434.414542,
+   "strict_miss_any": false
+  },
+  {
+   "id": "WASL_2005_8_12",
+   "q4_strict": 1.0,
+   "q8_strict": 1.0,
+   "q4_lenient": 1.0,
+   "q8_lenient": 1.0,
+   "q4_latency_ms": 736.059875,
+   "q8_latency_ms": 663.017958,
+   "strict_miss_any": false
+  }
+ ],
+ "sandbox_reference": {
+  "note": "Published Python results the sandbox can be compared with (contrasts.csv).",
+  "strict": {
+   "delta_pp": 1.6666666666666667,
+   "ci_low_pp": -1.0,
+   "ci_high_pp": 4.333333333333334,
+   "b": 11,
+   "c": 6,
+   "mcnemar_p": 0.332305908203125
+  },
+  "lenient": {
+   "delta_pp": 1.6666666666666667,
+   "ci_low_pp": -1.0,
+   "ci_high_pp": 4.333333333333334,
+   "b": 11,
+   "c": 6,
+   "mcnemar_p": 0.332305908203125
+  }
+ },
+ "sensitivity": [
+  {
+   "check": "S1 prompt template (could invalidate the interpretation)",
+   "status": "not run",
+   "result": "no frozen config; would need new inference"
+  },
+  {
+   "check": "S2 strict versus lenient extraction",
+   "status": "run (confirmatory analysis)",
+   "result": "identical contrast (Table 3); format failures on 3 Q4 items and 4 Q8 items, all recovered by lenient extraction"
+  },
+  {
+   "check": "S3 first versus last repetition latency",
+   "status": "run (descriptive)",
+   "result": "478.1 to 477.4 ms (Q4), 440.0 to 437.8 ms (Q8); drift below 1 %, under the 10 % trigger"
+  },
+  {
+   "check": "S4 modelled energy over a power range",
+   "status": "not run",
+   "result": "the frozen protocol states no power range"
+  },
+  {
+   "check": "E1 latency ratio Q8/Q4, both readings (exploratory)",
+   "status": "computed",
+   "result": "ratio of medians 0.917 [0.916, 0.918]; median of per-item ratios 0.916 [0.916, 0.917]; Q8 faster on 296 of 300 items"
+  },
+  {
+   "check": "E2 decode ratio over item medians (exploratory)",
+   "status": "computed",
+   "result": "0.744 [0.743, 0.744]"
+  },
+  {
+   "check": "E3 warm-up prompt reuse (exploratory)",
+   "status": "found",
+   "result": "the 10 first-in-block records took 102 to 135 ms against at least 325 ms for all others; medians of per-item medians unchanged (477.5 and 437.7 ms) without them"
+  },
+  {
+   "check": "E4 prefill by prompt length (exploratory)",
+   "status": "computed",
+   "result": "prefill time rises in steps across 32-token bins, Q4 287 to 799 ms, Q8 251 to 697 ms; Q8 lower in every bin"
+  },
+  {
+   "check": "E5 format failures and discordance (exploratory, post hoc)",
+   "status": "computed",
+   "result": "one format-failure item is discordant; excluding the 5 items with any strict failure gives +1.36 pp on 295 items"
+  },
+  {
+   "check": "E6 arm position within a repetition (exploratory)",
+   "status": "computed",
+   "result": "median record latency changes by less than 1 ms between first and second position"
+  },
+  {
+   "check": "E8 tokenizer (exploratory)",
+   "status": "computed",
+   "result": "prompt token counts identical between arms for all 1,500 item-repetition pairs"
+  }
+ ],
+ "pending_owner_decisions": [
+  {
+   "id": "TOKEN-EXP-001-002",
+   "title": "Next step for EXP-001 and EXP-002",
+   "status": "pending owner decision",
+   "readings": [
+    "(a) upgrade Ollama and run the frozen matrices unchanged, recording the new runtime version",
+    "(b) a new freeze without A2 or with another arm",
+    "(c) keep both recorded as failed"
+   ],
+   "source": "DL-011, DL-012; manuscript section 5.2"
+  },
+  {
+   "id": "TOKEN-LATENCY-RATIO",
+   "title": "Reading of the frozen latency-ratio interval (protocol section 8)",
+   "status": "pending owner decision",
+   "readings": [
+    "ratio of medians: 0.917 [0.916, 0.918] (exploratory)",
+    "median of per-item ratios: 0.916 [0.916, 0.917] (exploratory)"
+   ],
+   "source": "DL-011 gap 1; manuscript sections 4.5 and 5.4"
+  }
+ ],
+ "display_exceptions": []
+}
