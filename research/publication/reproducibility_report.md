@@ -78,6 +78,15 @@ Scope: the 168 tracked or new files (`git ls-files` plus untracked, not ignored)
 - Dependency licences: `research/publication/dependency_licences.md` (14 Python distributions, 53 npm packages). Flags: numpy's wheel bundles libgfortran (GPL-3.0-or-later WITH GCC-exception-3.1); lightningcss is MPL-2.0 (build only). Nothing unknown.
 - SPDX headers: every text file added since M0 carries the repository identifier where the format allows, except generated result SVGs (frozen results, not edited) and `demo/.npmrc` (template file kept unchanged). `.gitignore` and the generated `manuscript.tex` gained the header in this session.
 
-## 5. Second fresh clone (after the M6 commit)
+## 5. Second fresh clone (after the M6 commit e08b037)
 
-Recorded in `progress.md` (M6 session, "Second fresh clone").
+| Step | Actual output |
+|---|---|
+| `uv sync --frozen --all-groups --all-extras` | success |
+| `.venv/bin/python -m pytest -q` | `1 failed, 161 passed in 10.91s`: `test_committed_results_json_is_reproduced_exactly` (finding 7 below) |
+| Report regeneration from the 7 committed result files, `cmp` | 29 files, 0 differing |
+| `scripts/m4_exploratory_exp003.py` | output unchanged |
+| `scripts/build_pdfs.py` (with `TOKEN_PANDOC` and `TOKEN_TYPST_PYTHON` set, because the clone is outside the labs folder) | 13, 4, 3, 3, 5 pages; `manuscript.tex` byte-identical; the PDFs differ from the committed ones only by their creation date (pypdf: extracted text of every page equal) |
+| `scripts/check_links.py .` | `relative links checked: 14; broken: 0` |
+
+7. **Finding: demo export revision.** `demo/public/data/results.json` records `code_revision`, the last commit that touched its sources. The M6 commit changed two sources (manuscript and claims register), so the file exported before the commit named the previous revision (bfaa36b) instead of e08b037, and the exact re-export test failed in the fresh clone. Fixed by re-exporting after the commit (one line changed) in a follow-up commit; re-checked in a third fresh clone (`progress.md`, M6 session).

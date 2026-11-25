@@ -4,7 +4,7 @@
  "project": "TOKEN",
  "question": "How do local model configurations trade off quality, latency and resource use?",
  "status_label": "Independent research manuscript / preprint draft, not peer-reviewed. One confirmatory experiment complete (EXP-003, null result); two failed before any request (EXP-001, EXP-002). Owner decisions pending.",
- "code_revision": "bfaa36b189868fcc743d2448e71a1be28c34af9d",
+ "code_revision": "e08b03773d249c351b47ea73e08763f9795de7f0",
  "run_code_revision": "57f6187e7b450fea05eedbbee8c663943596a699",
  "run_wall_s": 1509.7494062910118,
  "sources": [
