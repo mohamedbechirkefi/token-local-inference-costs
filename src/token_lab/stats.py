@@ -94,3 +94,50 @@ def cv(x) -> float | None:
     if a.size < 2 or a.mean() == 0:
         return None
     return float(a.std(ddof=1) / a.mean())
+
+
+@dataclass(frozen=True)
+class MedianDiff:
+    """Two-sample bootstrap of medians and of their difference (x minus y)."""
+    median_x: float
+    ci_x: tuple[float, float]
+    median_y: float
+    ci_y: tuple[float, float]
+    diff: float
+    ci_diff: tuple[float, float]
+    n_x: int
+    n_y: int
+
+
+def bootstrap_median_diff(x, y, n_boot: int = 10_000, seed: int = 7, level: float = 0.95) -> MedianDiff:
+    """Percentile bootstrap CIs for median(x), median(y) and median(x) - median(y).
+
+    Used for the EXP-002 penalty (protocol item 6: median cold TTFT minus median
+    warm TTFT; item 16: bootstrap over trials, 10,000 resamples, seed 7). The
+    trial is the experimental unit (item 7), so each sample is resampled with
+    replacement within itself, independently of the other. One generator
+    ``default_rng(seed)`` draws the x indices (n_boot x n_x) first, then the y
+    indices (n_boot x n_y); the same draws give all three intervals. Percentile
+    intervals as in the parent protocol section 8.
+    """
+    a = np.asarray(x, dtype=float)
+    b = np.asarray(y, dtype=float)
+    if a.ndim != 1 or b.ndim != 1 or a.size == 0 or b.size == 0:
+        raise ValueError("x and y must be non-empty 1-D sequences")
+    if not (np.all(np.isfinite(a)) and np.all(np.isfinite(b))):
+        raise ValueError("x and y must be finite")
+    if n_boot < 1 or not 0 < level < 1:
+        raise ValueError("n_boot >= 1 and 0 < level < 1 required")
+    rng = np.random.default_rng(seed)
+    ia = rng.integers(0, a.size, size=(n_boot, a.size))
+    ib = rng.integers(0, b.size, size=(n_boot, b.size))
+    ma = np.median(a[ia], axis=1)
+    mb = np.median(b[ib], axis=1)
+    md = ma - mb
+    alpha = (1 - level) / 2
+
+    def ci(v):
+        return float(np.quantile(v, alpha)), float(np.quantile(v, 1 - alpha))
+
+    med_a, med_b = float(np.median(a)), float(np.median(b))
+    return MedianDiff(med_a, ci(ma), med_b, ci(mb), med_a - med_b, ci(md), int(a.size), int(b.size))

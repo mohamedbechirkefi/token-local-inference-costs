@@ -14,7 +14,7 @@ import os
 import subprocess
 from pathlib import Path
 
-from .analysis import arm_summaries, contrasts, projection
+from .analysis import arm_summaries, cold_warm_ordering, cold_warm_penalties, contrasts, projection
 from .schema import import_result
 
 # Shared zero-cost toolchain (DL-002); override with TOKEN_PANDOC / TOKEN_TYPST_PYTHON on other machines.
@@ -74,13 +74,62 @@ def latency_svg(summaries: list[dict], title: str) -> str:
     return "\n".join(parts) + "\n"
 
 
+COLD_WARM_COLUMNS = [
+    "arm", "model", "n_cold", "n_warm", "n_cold_records", "n_warm_records", "n_cold_invalid", "n_warm_invalid",
+    "n_cold_error", "n_warm_error", "cold_ttft_ms_median", "cold_ci_low", "cold_ci_high", "warm_ttft_ms_median",
+    "warm_ci_low", "warm_ci_high", "penalty_ms", "penalty_ci_low", "penalty_ci_high", "cold_load_ms_median",
+    "warm_load_ms_median", "cold_latency_ms_median", "warm_latency_ms_median",
+]
+
+
+def cold_warm_svg(rows: list[dict], title: str) -> str:
+    """Raw trial TTFT (ms) per arm and start state (EXP-002 item 16), linear axis."""
+    w, left, right, top, bottom = 640, 170, 30, 50, 50
+    h = top + 40 * 2 * len(rows) + 20 + bottom
+    vals = [v for r in rows for v in r["cold_ttft_ms"] + r["warm_ttft_ms"]]
+    vmax = max(vals) * 1.05 if vals and max(vals) > 0 else 1.0
+    sx = lambda v: left + (w - left - right) * v / vmax  # noqa: E731
+    parts = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{w}" height="{h}" viewBox="0 0 {w} {h}" '
+             f'font-family="Helvetica, Arial, sans-serif" font-size="12">',
+             f'<title>{html.escape(title)}</title>', f'<rect width="{w}" height="{h}" fill="white"/>',
+             f'<text x="{left}" y="24" font-size="13">{html.escape(title)}</text>']
+    y_axis = h - bottom
+    parts.append(f'<line x1="{left}" y1="{y_axis}" x2="{w - right}" y2="{y_axis}" stroke="#333"/>')
+    for k in range(6):
+        v = vmax * k / 5
+        x = sx(v)
+        parts.append(f'<line x1="{x:.1f}" y1="{y_axis}" x2="{x:.1f}" y2="{y_axis + 4}" stroke="#333"/>')
+        parts.append(f'<text x="{x:.1f}" y="{y_axis + 18}" text-anchor="middle">{v:.4g}</text>')
+    parts.append(f'<text x="{(left + w - right) / 2}" y="{h - 10}" text-anchor="middle">'
+                 'time to first token per trial (ms)</text>')
+    i = 0
+    for r in rows:
+        for st, colour in (("cold", "#1f4e79"), ("warm", "#b9770e")):
+            y = top + 30 + 40 * i
+            i += 1
+            parts.append(f'<text x="{left - 10}" y="{y + 4}" text-anchor="end">'
+                         f'{html.escape(r["arm"])} {html.escape(r["model"])} {st}</text>')
+            for v in r[f"{st}_ttft_ms"]:
+                parts.append(f'<circle cx="{sx(v):.1f}" cy="{y}" r="3" fill="{colour}" fill-opacity="0.6"/>')
+            med, lo, hi = r[f"{st}_ttft_ms_median"], r[f"{st}_ci_low"], r[f"{st}_ci_high"]
+            if med is not None:
+                parts.append(f'<line x1="{sx(lo):.1f}" y1="{y + 9}" x2="{sx(hi):.1f}" y2="{y + 9}" stroke="#b03a2e"/>')
+                parts.append(f'<line x1="{sx(med):.1f}" y1="{y - 9}" x2="{sx(med):.1f}" y2="{y + 9}" '
+                             f'stroke="#b03a2e" stroke-width="2"/>')
+    parts.append("</svg>")
+    return "\n".join(parts) + "\n"
+
+
 def build_report(result_path: str | Path, out_dir: str | Path | None = None, pdf: bool = False) -> dict:
     doc = import_result(result_path)  # fail closed on malformed input
     rp = Path(result_path)
     out = Path(out_dir) if out_dir else rp.parent
     out.mkdir(parents=True, exist_ok=True)
     sums = arm_summaries(doc)
-    cons = contrasts(doc, "strict") + contrasts(doc, "lenient")
+    cold_warm = doc["manifest"].get("design") == "cold_warm"
+    # accuracy contrasts on EXP-002's single fixed prompt carry no information
+    cons = [] if cold_warm else contrasts(doc, "strict") + contrasts(doc, "lenient")
+    cw_rows = cold_warm_penalties(doc) if cold_warm else []
     proj = projection(doc)
     sim = doc["backend"]["simulated"]
 
@@ -94,6 +143,14 @@ def build_report(result_path: str | Path, out_dir: str | Path | None = None, pdf
             wr = csv.DictWriter(fh, fieldnames=list(cons[0].keys()))
             wr.writeheader()
             wr.writerows(cons)
+    if cold_warm:
+        with open(out / "cold_warm.csv", "w", newline="", encoding="utf-8") as fh:
+            wr = csv.DictWriter(fh, fieldnames=COLD_WARM_COLUMNS, extrasaction="ignore")
+            wr.writeheader()
+            for r in cw_rows:
+                wr.writerow({k: r.get(k) for k in COLD_WARM_COLUMNS})
+        cw_title = f"{doc['run_id']}: cold and warm TTFT" + (" (SIMULATED backend)" if sim else "")
+        (out / "cold_warm.svg").write_text(cold_warm_svg(cw_rows, cw_title), encoding="utf-8")
     fig_title = f"{doc['run_id']}: per-item latency" + (" (SIMULATED backend)" if sim else "")
     (out / "latency.svg").write_text(latency_svg(sums, fig_title), encoding="utf-8")
 
@@ -164,6 +221,29 @@ def build_report(result_path: str | Path, out_dir: str | Path | None = None, pdf
             lines.append(f"| {c['arm']} vs {c['baseline']} | {c['extraction']} | {c['n']} | {c['delta_pp']:.1f} | "
                          f"[{c['ci_low_pp']:.1f}, {c['ci_high_pp']:.1f}] | {c['b']} | {c['c']} | "
                          f"{c['mcnemar_p']:.3g} | {c['holm_p']:.3g} |")
+    if cold_warm:
+        od = cold_warm_ordering(cw_rows)
+        lines += ["", "## Cold-start penalty (EXP-002 items 5, 6 and 16)", "",
+                  "Penalty = median cold TTFT minus median warm TTFT (ms) over the valid trials of each arm. "
+                  "Percentile 95 % bootstrap CIs over trials (10,000 resamples, seed 7; cold and warm trials "
+                  "resampled independently). Load duration and end-to-end latency medians are descriptive.", "",
+                  "| Arm | Model | Valid cold / warm | Invalid cold / warm | Cold TTFT median [95 % CI] (ms) | "
+                  "Warm TTFT median [95 % CI] (ms) | Penalty [95 % CI] (ms) |", "|---|---|---|---|---|---|---|"]
+        for r in cw_rows:
+            def iv(m, lo, hi):
+                return "n/a" if m is None else f"{m:.1f} [{lo:.1f}, {hi:.1f}]"
+            lines.append(f"| {r['arm']} | {r['model']} | {r['n_cold']} / {r['n_warm']} | {r['n_cold_invalid']} / "
+                         f"{r['n_warm_invalid']} | {iv(r['cold_ttft_ms_median'], r['cold_ci_low'], r['cold_ci_high'])} | "
+                         f"{iv(r['warm_ttft_ms_median'], r['warm_ci_low'], r['warm_ci_high'])} | "
+                         f"{iv(r['penalty_ms'], r['penalty_ci_low'], r['penalty_ci_high'])} |")
+        lines += ["", "| Arm | Cold load median (ms) | Warm load median (ms) | Cold latency median (ms) | "
+                  "Warm latency median (ms) |", "|---|---|---|---|---|"]
+        for r in cw_rows:
+            lines.append(f"| {r['arm']} | {_fmt(r['cold_load_ms_median'], 1)} | {_fmt(r['warm_load_ms_median'], 1)} | "
+                         f"{_fmt(r['cold_latency_ms_median'], 1)} | {_fmt(r['warm_latency_ms_median'], 1)} |")
+        lines += ["", f"Ordering check by file size ({' < '.join(od['order'])}): **{od['verdict']}**. "
+                  f"Reversal: {od['reversal']}; adjacent CI overlap: {od['overlap']}.", "",
+                  f"![{cw_title}. Dots: raw trials; red bar: median; red line: 95 % CI.](cold_warm.svg)"]
     lines += ["", "## Projection of planned matrices", "",
               f"Measured seconds per request in this run (block wall time including warm-ups): "
               f"{_fmt(proj['seconds_per_request'], 4)}."
@@ -183,6 +263,8 @@ def build_report(result_path: str | Path, out_dir: str | Path | None = None, pdf
     md.write_text("\n".join(lines), encoding="utf-8")
     info = {"report_md": str(md), "metrics_csv": str(out / "metrics.csv"), "figure": str(out / "latency.svg"),
             "pdf": None, "pdf_error": None}
+    if cold_warm:
+        info.update({"cold_warm_csv": str(out / "cold_warm.csv"), "cold_warm_figure": str(out / "cold_warm.svg")})
     if pdf:
         info.update(build_pdf(md))
     return info

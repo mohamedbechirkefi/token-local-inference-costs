@@ -95,6 +95,13 @@
    "source": "labs/_shared/owner-approvals-2026-11-24b.md (\"Approve all\")",
    "change": "EXP-002 runnable config added (experiments/EXP-002.json) implementing the frozen EXP-002 protocol; no protocol text or earlier config changed, so no frozen hash changes.",
    "config_canonical_sha256": "6885e5f527df271897d6d2ba8f324fc73fd5135d250e92c8bd8dc94f4c3081cf"
+  },
+  {
+   "date": "2026-11-25",
+   "source": "labs/_shared/M3-quiet-brief.md (owner \"Start next\", 2026-11-25)",
+   "change": "EXP-002 penalty analysis (protocol items 5, 6 and 16) implemented in token_lab.analysis.cold_warm_penalties and cold_warm_ordering and token_lab.stats.bootstrap_median_diff; implements frozen EXP-002, added before any EXP-002 data (DL-010). No protocol text or config changed, so no frozen hash changes.",
+   "analysis_sha256": "8b7bb7b63d3fba98aed469274ea6c21617397b26102780fb3355628ef860358c",
+   "stats_sha256": "a6438c30d5e2d7c4c11074bc1185033bb175d6d6b8919b433f29c5dedc2fb097"
   }
  ]
 }

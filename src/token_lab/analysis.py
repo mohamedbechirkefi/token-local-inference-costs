@@ -7,7 +7,7 @@ from collections import defaultdict
 
 import numpy as np
 
-from .stats import cv, holm, median_iqr, paired_compare
+from .stats import bootstrap_median_diff, cv, holm, median_iqr, paired_compare
 from .tokens import throughput_tps
 
 # Planned request counts from research/protocol.md section 10 (v1.0, frozen 2026-11-24).
@@ -132,3 +132,100 @@ def projection(doc: dict) -> dict:
         "simulated_backend": doc["backend"]["simulated"],
         "projected_hours": {k: (None if spr is None else spr * v / 3600) for k, v in PLANNED_REQUESTS.items()},
     }
+
+
+# EXP-002 protocol item 5 (v1.0, frozen 2026-11-24): the H1 ordering is by model
+# file size, A0 phi4-mini:3.8b 2.49 GB < A1 llama3.1:8b 4.92 GB < A2 ministral-3:8b 6.02 GB.
+EXP002_SIZE_ORDER = (("A0", 2.49), ("A1", 4.92), ("A2", 6.02))
+
+
+def _cw_values(recs: list[dict], state: str, key: str) -> list[float]:
+    """Values of ``key`` from the valid trials in ``state`` (protocol item 17).
+
+    A trial enters the analysis only if its start state was confirmed
+    (``state_valid``), the request succeeded and the value exists. Invalid
+    and failed trials are kept in the raw file and counted, never dropped silently.
+    """
+    return [float(r[key]) for r in recs
+            if r.get("start_state") == state and r.get("state_valid") and not r["error"] and r[key] is not None]
+
+
+def cold_warm_penalties(doc: dict, n_boot: int = 10_000, seed: int = 7) -> list[dict]:
+    """EXP-002 estimand (items 6 and 16): per arm, Penalty_k = median cold TTFT
+    minus median warm TTFT (ms), with percentile 95 % bootstrap CIs over trials
+    (10,000 resamples, seed 7) for both medians and the penalty. Each arm's
+    bootstrap starts from ``default_rng(seed)``, as the EXP-001 contrasts do.
+    Load duration and end-to-end latency medians per state are descriptive."""
+    rows = []
+    for a in doc["config"]["arms"]:
+        arm = a["arm_id"]
+        recs = [r for r in doc["records"] if r["arm"] == arm and "start_state" in r]
+        counts = {st: {"planned_or_run": sum(1 for r in recs if r["start_state"] == st),
+                       "invalid_state": sum(1 for r in recs if r["start_state"] == st and not r["state_valid"]),
+                       "request_error": sum(1 for r in recs if r["start_state"] == st and r["error"])}
+                  for st in ("cold", "warm")}
+        cold = _cw_values(recs, "cold", "ttft_ms")
+        warm = _cw_values(recs, "warm", "ttft_ms")
+        row = {"arm": arm, "model": a["model"], "n_cold": len(cold), "n_warm": len(warm),
+               "n_cold_records": counts["cold"]["planned_or_run"], "n_warm_records": counts["warm"]["planned_or_run"],
+               "n_cold_invalid": counts["cold"]["invalid_state"], "n_warm_invalid": counts["warm"]["invalid_state"],
+               "n_cold_error": counts["cold"]["request_error"], "n_warm_error": counts["warm"]["request_error"]}
+        if cold and warm:
+            md = bootstrap_median_diff(cold, warm, n_boot, seed)
+            row.update({"cold_ttft_ms_median": md.median_x, "cold_ci_low": md.ci_x[0], "cold_ci_high": md.ci_x[1],
+                        "warm_ttft_ms_median": md.median_y, "warm_ci_low": md.ci_y[0], "warm_ci_high": md.ci_y[1],
+                        "penalty_ms": md.diff, "penalty_ci_low": md.ci_diff[0], "penalty_ci_high": md.ci_diff[1]})
+        else:
+            row.update({k: None for k in ("cold_ttft_ms_median", "cold_ci_low", "cold_ci_high", "warm_ttft_ms_median",
+                                          "warm_ci_low", "warm_ci_high", "penalty_ms", "penalty_ci_low",
+                                          "penalty_ci_high")})
+        for st in ("cold", "warm"):
+            load = _cw_values(recs, st, "load_duration_ns")
+            lat = _cw_values(recs, st, "latency_ms")
+            row[f"{st}_load_ms_median"] = float(np.median(load)) / 1e6 if load else None
+            row[f"{st}_latency_ms_median"] = float(np.median(lat)) if lat else None
+        row["cold_ttft_ms"] = cold
+        row["warm_ttft_ms"] = warm
+        rows.append(row)
+    return rows
+
+
+def cold_warm_ordering(rows: list[dict]) -> dict:
+    """EXP-002 decision rule (item 5). H1: penalty(A0) < penalty(A1) < penalty(A2).
+
+    Two conditions are evaluated and both are reported: a reversal of the
+    ordering in the point estimates (any adjacent pair, in file-size order, whose
+    penalty does not increase), and overlapping 95 % CIs between adjacent arms
+    (reported as unresolved). H1 is supported only if neither occurs. An exact
+    tie of point estimates is not defined by the frozen text and is reported as
+    such (``tie``), not classified. Descriptive evidence only; no scaling law.
+    """
+    by = {r["arm"]: r for r in rows}
+    order = [a for a, _ in EXP002_SIZE_ORDER]
+    pens = [by.get(a, {}).get("penalty_ms") for a in order]
+    if any(p is None for p in pens):
+        return {"order": order, "evaluable": False, "verdict": "not evaluable (an arm has no valid cold or warm trial)",
+                "reversal": None, "overlap": None, "tie": None, "pairs": []}
+    pairs = []
+    for lo_arm, hi_arm in zip(order, order[1:]):
+        lo, hi = by[lo_arm], by[hi_arm]
+        pairs.append({"lower": lo_arm, "higher": hi_arm,
+                      "increase": hi["penalty_ms"] > lo["penalty_ms"],
+                      "tie": hi["penalty_ms"] == lo["penalty_ms"],
+                      "ci_overlap": lo["penalty_ci_high"] >= hi["penalty_ci_low"]
+                      and hi["penalty_ci_high"] >= lo["penalty_ci_low"]})
+    tie = any(p["tie"] for p in pairs)
+    reversal = any((not p["increase"]) and not p["tie"] for p in pairs)
+    overlap = any(p["ci_overlap"] for p in pairs)
+    if tie:
+        verdict = "tie in point estimates: not classified by the frozen rule (reported to the owner)"
+    elif not reversal and not overlap:
+        verdict = "H1 supported (ordering holds and adjacent CIs do not overlap)"
+    elif reversal and overlap:
+        verdict = "H1 not supported: reversal of the ordering in the point estimates, and overlapping adjacent CIs"
+    elif reversal:
+        verdict = "H1 not supported: reversal of the ordering in the point estimates"
+    else:
+        verdict = "H1 not supported: unresolved (ordering holds in the point estimates, adjacent CIs overlap)"
+    return {"order": order, "evaluable": True, "verdict": verdict, "reversal": reversal, "overlap": overlap,
+            "tie": tie, "pairs": pairs}
