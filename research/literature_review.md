@@ -40,3 +40,19 @@ Status: preliminary, not a systematic review. Every entry marked **opened** was 
 ## 4. Gap and narrow contribution (draft)
 
 Published quantization and efficiency studies (dettmers2022kbit, samsi2023watts, liang2022helm) mostly report datacentre hardware or aggregate scaling. Tool documentation (llamacpp-quantize) reports throughput but not task accuracy alongside it. The narrow contribution proposed here is a small, fully reproducible, paired measurement of accuracy, latency and memory for installed off-the-shelf local model configurations on one consumer laptop, with uncertainty at the item level and an explicit test of prompt-format sensitivity. No novelty is claimed beyond that scope, and the literature search above is not systematic.
+
+## 5. Full-text check of the cited arXiv papers (M6, 2026-11-25)
+
+At M6 the free arXiv PDF of every cited arXiv paper was downloaded from arxiv.org (open access; no login, no paid access) and its text extracted with pypdf. Each statement the manuscript makes about the paper was searched for and checked against the body text. The papers were not read cover to cover: the label is "full text checked for the cited statement", which is stronger than "abstract only" and weaker than "read in full". Page numbers refer to the PDF of the version named.
+
+| Key | Version opened | Statement in the manuscript | Where it is in the full text | Result |
+|---|---|---|---|---|
+| clark2018arc | 1803.05457v1 | Challenge set of grade-school science multiple-choice questions; test split 1,172 items | p. 1 (Challenge Set: questions answered incorrectly by both a retrieval-based and a word co-occurrence algorithm; natural grade-school science questions); p. 3, set-size table (Challenge test 1172) | confirmed |
+| dettmers2022kbit | 2212.09720v2 | More than 35,000 experiments, models from 19M to 176B parameters, 4-bit precision generally optimal for total model bits against zero-shot accuracy | p. 2, Introduction ("more than 35,000 zero-shot experiments", "19M to 176B parameters"); p. 8, Discussion ("almost universally optimal") | confirmed; the paper's own wording is "almost universally optimal" |
+| dettmers2022int8 | 2208.07339v2 | 8-bit inference roughly halves memory without performance degradation | p. 1 ("reduces the memory needed for inference by half while retaining full precision performance"); p. 2 ("without any performance degradation"); p. 4 (BLOOM-176B memory footprint reduced by 1.96x) | confirmed |
+| lin2023awq | 2306.00978v5 | Activation-aware weight-only quantization | p. 2, Introduction ("hardware-friendly low-bit weight-only quantization"); p. 3, Section 3 (weight-only quantization method) | confirmed; v5 is titled "AWQ: Activation-aware Weight Quantization for On-Device LLM Compression and Acceleration", while the bibliography keeps the earlier title |
+| liang2022helm | 2211.09110v2 | Efficiency is among the measured dimensions | pp. 3 and 4, Introduction (seven metrics: accuracy, calibration, robustness, fairness, bias, toxicity, efficiency) | confirmed |
+| samsi2023watts | 2310.03003v1 | Energy and performance of LLaMA models on V100 and A100 GPUs | p. 2 (LLaMA studied); pp. 3 and 4 (V100 and A100 nodes, experiment setup) | confirmed |
+| sclar2023format | 2310.11324v2 | Up to 76 accuracy points from formatting changes; recommends reporting a range over formats | p. 1 (up to 76 accuracy points for LLaMA-2-13B between equivalent formats); p. 9, Conclusion ("we recommend that work evaluating LLMs with prompting-based methods would benefit from reporting a range of performance") | confirmed; the 76-point figure is for one model (LLaMA-2-13B), and the manuscript now says so |
+
+No statement had to be weakened; one (sclar2023format) was made more precise. The non-arXiv sources (arc-hf, llamacpp-quantize, ollama-api) are web pages and were opened in full on 2026-11-24.

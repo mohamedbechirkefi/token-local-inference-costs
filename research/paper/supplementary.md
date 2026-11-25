@@ -6,7 +6,7 @@
 ## S1. Complete experimental matrix
 
 | Experiment | Arms | Items | Repetitions or trials | Planned requests | Sent | Outcome | Report |
-|---|---|---|---|---|---|---|---|
+|-------------|-------------|-----------|----------|---------|--------|---------------|------------------|
 | Smoke attempt, M2 (exploratory) | none | synthetic fixture | none | not applicable | 0 | runtime not running, exit 3, no output (JRN-0002) | `progress.md` (M2 session) |
 | Smoke (exploratory) | A0, A1, A2 | 10 validation items | 2 | 60 | 60 (A2 all failed) | RUN-SMOKE-0005, JRN-0006 | `results/exploratory/RUN-SMOKE-0005/report.md` |
 | Smoke cold/warm (exploratory) | A0 | 1 validation item (Mercury_7103180) | 5 cold, 5 warm | 10 | 10 | RUN-SMOKE-0006, JRN-0006 | `results/exploratory/RUN-SMOKE-0006/report.md` |
@@ -20,7 +20,7 @@ The simulated harness runs RUN-SMOKE-0001 to RUN-SMOKE-0004 (JRN-0003) used no m
 ## S2. Configurations and hashes
 
 | Item | SHA-256 |
-|---|---|
+|---------|-------------------|
 | `research/protocol.md` v1.0 | ea86d0bb2d1864f69ac545bde1c8dd263276c8dbd9d1b3fee5b7a49b8dd4d2c3 |
 | EXP-001 protocol | 1997317c931cf95d04c271ab2414aef82306f5976f1eea7262eb1e4d54fee8e4 |
 | EXP-002 protocol | 54d46696e6b479c83235c789839ae3acaaaeeac1f38eccc6ef7c399d191c011e |

@@ -60,13 +60,13 @@ Every other number matched a committed file directly. Result: **no untraced numb
 
 | Claim in the manuscript | Source key | How much was read | Status |
 |---|---|---|---|
-| 4-bit precision generally optimal for total bits against zero-shot accuracy; over 35,000 experiments, 19M to 176B | dettmers2022kbit | abstract page only | labelled "abstract only" |
-| 8-bit inference roughly halves memory without degradation | dettmers2022int8 | abstract page only | labelled |
-| Activation-aware weight-only quantization | lin2023awq | abstract page only | labelled |
-| Efficiency among HELM's dimensions | liang2022helm | abstract page only | labelled |
-| Energy of LLaMA on V100/A100 | samsi2023watts | abstract page only | labelled |
-| Formatting changes up to 76 points | sclar2023format | abstract page only | labelled |
-| ARC-Challenge description | clark2018arc | abstract page only | labelled |
+| 4-bit precision generally optimal for total bits against zero-shot accuracy; over 35,000 experiments, 19M to 176B | dettmers2022kbit | full text checked (M6; v2 pp. 2, 8) | confirmed; label updated |
+| 8-bit inference roughly halves memory without degradation | dettmers2022int8 | full text checked (M6; v2 pp. 1, 2, 4) | confirmed; label updated |
+| Activation-aware weight-only quantization | lin2023awq | full text checked (M6; v5 pp. 2, 3) | confirmed; label updated |
+| Efficiency among HELM's dimensions | liang2022helm | full text checked (M6; v2 pp. 3, 4) | confirmed; label updated |
+| Energy of LLaMA on V100/A100 | samsi2023watts | full text checked (M6; v1 pp. 2 to 4) | confirmed; label updated |
+| Formatting changes up to 76 points | sclar2023format | full text checked (M6; v2 pp. 1, 9) | confirmed; manuscript now names the model (LLaMA-2-13B) |
+| ARC-Challenge description | clark2018arc | full text checked (M6; v1 pp. 1 to 3) | confirmed; label updated |
 | ARC licence, split sizes | arc-hf | dataset card | opened |
 | Llama-3.1-8B Q4_K_M 4.58 GiB, 71.93 t/s; Q8_0 7.95 GiB, 50.93 t/s | llamacpp-quantize | page opened; hardware not recorded | stated as such |
 | Counter field definitions | ollama-api | main-branch page opened; installed runtime 0.9.6 | stated as such |
@@ -93,3 +93,10 @@ Every reference in the manuscript is cited in the text, and every cited key is i
 ## 8. Gate
 
 Every numerical claim maps to a result id, config hash and table or figure (manifest and claims register), and every external claim maps to an opened source, with abstract-only reading marked. The M4 evidence gate holds.
+
+## 7. M6 update (2026-11-25): reference labels and citation coverage
+
+- **Labels.** Of the 10 references, 0 are read in full (cover to cover), 7 are "full text checked for the cited statement" (the free arXiv PDF was downloaded from arxiv.org, its text extracted, and every statement the manuscript makes about the paper checked against the page given in `research/literature_review.md` section 5), 3 are web pages opened in full on 2026-11-24 (arc-hf, llamacpp-quantize, ollama-api; their content may have changed since), and 0 are abstract only or unverified. The two unverified entries of the literature review (section 3) are not cited.
+- **Qualified claim.** sclar2023format's 76-point figure is for one model; the manuscript now says "(for LLaMA-2-13B)". No other statement changed in substance.
+- **Bibliography.** Every citation key in `manuscript.md` (10 keys, cited as bracketed keys, not pandoc citations) is in `references.bib`, and every bib entry is cited in the manuscript. lin2023awq's v5 title reads "for On-Device LLM Compression and Acceleration" where the bibliography has "for LLM Compression and Acceleration"; the bibliography keeps the earlier title (noted, not changed).
+

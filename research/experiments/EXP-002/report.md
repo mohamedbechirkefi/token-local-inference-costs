@@ -22,6 +22,7 @@ As in the frozen protocol, item 3.
 ## 4. Hypotheses
 
 Unchanged and untested.
+
 - Penalty_k = median cold TTFT minus median warm TTFT (ms).
 - H1: penalty(A0) < penalty(A1) < penalty(A2).
 - Not supported on a reversal of that order in the point estimates, or on overlapping adjacent 95 % CIs; the latter case is reported as unresolved.

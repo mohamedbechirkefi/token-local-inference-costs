@@ -15,7 +15,7 @@ The question was whether Llama 3.1 8B at Q8_0 differs in accuracy from Q4_K_M on
 
 ## 3. Rationale
 
-dettmers2022kbit (abstract opened) reports that 4-bit precision is generally near the best trade-off between model size and accuracy. llamacpp-quantize (opened) lists for Llama-3.1-8B Q4_K_M 4.58 GiB and 71.93 t/s against Q8_0 7.95 GiB and 50.93 t/s, on hardware that was not recorded. The gap this experiment fills is paired task accuracy measured alongside those costs on this laptop.
+dettmers2022kbit (abstract opened at M0; full text checked at M6, p. 8) reports that 4-bit precision is generally near the best trade-off between model size and accuracy. llamacpp-quantize (opened) lists for Llama-3.1-8B Q4_K_M 4.58 GiB and 71.93 t/s against Q8_0 7.95 GiB and 50.93 t/s, on hardware that was not recorded. The gap this experiment fills is paired task accuracy measured alongside those costs on this laptop.
 
 ## 4. Hypotheses and definitions
 
@@ -87,6 +87,7 @@ dettmers2022kbit (abstract opened) reports that 4-bit precision is generally nea
 ## 11. Conclusion and next experiment
 
 On this laptop, the frozen design detected no accuracy difference between Llama 3.1 8B at Q8_0 and at Q4_K_M (+1.67 pp, CI -1.00 to +4.33). Q8_0 costs about 3.2 GiB more runtime memory and decodes more slowly, while its short-answer latency was lower. Possible next steps, all needing the owner:
+
 - implement the frozen latency-ratio interval once the owner resolves its definition;
 - run S1 (template sensitivity) under a frozen config;
 - try a larger item set if smaller differences matter.

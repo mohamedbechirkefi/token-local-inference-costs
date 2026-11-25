@@ -55,6 +55,7 @@ Not applicable to results. A rerun on another runtime version would change a rec
 ## 11. Conclusion and next step
 
 No conclusion. The owner should choose one of:
+
 - (a) upgrade Ollama (a download, and a change for the owner's other projects), then run the frozen matrix unchanged with the new runtime version recorded;
 - (b) a new freeze that replaces or drops A2;
 - (c) keep EXP-001 recorded as failed.

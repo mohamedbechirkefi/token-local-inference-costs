@@ -3,7 +3,7 @@
 
 **Question.** How do local model configurations trade off quality, latency and resource use?
 
-**Status: M5 (interactive experience) done, 2026-11-25; M6 (release candidate) not started.** Protocol v1.0 frozen by the owner on 2026-11-24. One confirmatory experiment complete (EXP-003, null result); two failed before any request (EXP-001, EXP-002). The manuscript draft is `research/paper/manuscript.md` (independent research manuscript / preprint draft, not peer-reviewed). Full-text owner review of the manuscript is pending (M6). Repository and demo URL: `[OWNER PLACEHOLDER: repository URL, not published]`.
+**Status: M6 release candidate prepared, 2026-11-25, awaiting owner review and G-PUBLIC; nothing is released.** Protocol v1.0 frozen by the owner on 2026-11-24. One confirmatory experiment complete (EXP-003, null result); two failed before any request (EXP-001, EXP-002). The manuscript draft is `research/paper/manuscript.md` (independent research manuscript / preprint draft, not peer-reviewed). Full-text owner review of the manuscript is pending (`research/publication/author_review.md`). PDFs: `research/paper/manuscript.pdf`, `research/paper/supplementary.pdf` and one report PDF per experiment, built with `.venv/bin/python -I scripts/build_pdfs.py`. Repository and demo URL: `[OWNER PLACEHOLDER: repository URL, not published]`.
 
 ![Top of the TOKEN results page: the research question, the status label, the labels used for measured, exploratory, modelled and sandbox values, the pending owner decisions banner, and the three experiment panels.](docs/demo.png)
 
@@ -43,8 +43,8 @@ Each item is a pending owner decision; nothing in this repository chooses among 
 ## Quick start (development)
 
 ```
-/Users/bechir/research/labs/.tools/py/bin/uv sync
-/Users/bechir/research/labs/.tools/py/bin/uv run pytest
+~/research/labs/.tools/py/bin/uv sync
+~/research/labs/.tools/py/bin/uv run pytest
 ```
 
 ## Demo quick start

@@ -36,15 +36,15 @@ No novelty is claimed beyond this scope.
 
 # 2. Related work
 
-The literature review (`research/literature_review.md`) is preliminary and not systematic; every source below was opened on 2026-11-24, and for arXiv papers only the abstract page was read.
+The literature review (`research/literature_review.md`) is preliminary and not systematic; every source below was opened on 2026-11-24, when for arXiv papers only the abstract page was read. On 2026-11-25 (M6) the free arXiv full text of each cited paper was opened and each statement made here was checked against the page given in brackets (page numbers of the arXiv PDF version named in the literature review); the papers were not read cover to cover.
 
-**Quantization and accuracy.** Dettmers and Zettlemoyer (dettmers2022kbit; abstract only) report, from more than 35,000 experiments on models from 19M to 176B parameters, that 4-bit precision is generally optimal for the trade-off between total model bits and zero-shot accuracy. Dettmers et al. (dettmers2022int8; abstract only) report that 8-bit inference roughly halves memory without performance degradation. Lin et al. (lin2023awq; abstract only) describe activation-aware weight-only quantization. These results concern quantization methods and scaling across many models; they do not measure the GGUF k-quant files used here on a laptop.
+**Quantization and accuracy.** Dettmers and Zettlemoyer (dettmers2022kbit; full text checked, pp. 2, 8) report, from more than 35,000 experiments on models from 19M to 176B parameters, that 4-bit precision is generally optimal for the trade-off between total model bits and zero-shot accuracy. Dettmers et al. (dettmers2022int8; full text checked, pp. 1, 2, 4) report that 8-bit inference roughly halves memory without performance degradation. Lin et al. (lin2023awq; full text checked, pp. 2, 3) describe activation-aware weight-only quantization. These results concern quantization methods and scaling across many models; they do not measure the GGUF k-quant files used here on a laptop.
 
 **Throughput tables.** The llama.cpp quantization documentation (llamacpp-quantize; page opened) lists, for Llama-3.1-8B, Q4_K_M at 4.58 GiB and 71.93 tokens/s and Q8_0 at 7.95 GiB and 50.93 tokens/s. The hardware for that table was not recorded in our notes, and it reports no task accuracy. These values are external reference points and are never mixed with our measurements.
 
-**Multi-metric and energy evaluation.** HELM (liang2022helm; abstract only) includes efficiency among the measured dimensions of language-model evaluation. Samsi et al. (samsi2023watts; abstract only) benchmark energy and performance of LLaMA models on V100 and A100 GPUs. Both concern datacentre-scale settings.
+**Multi-metric and energy evaluation.** HELM (liang2022helm; full text checked, pp. 3, 4) includes efficiency among the measured dimensions of language-model evaluation. Samsi et al. (samsi2023watts; full text checked, pp. 2 to 4) benchmark energy and performance of LLaMA models on V100 and A100 GPUs. Both concern datacentre-scale settings.
 
-**Prompt sensitivity.** Sclar et al. (sclar2023format; abstract only) report accuracy differences of up to 76 points from formatting changes alone and recommend reporting a range over formats. This motivated sensitivity analysis S1, which was not run (Section 5.4).
+**Prompt sensitivity.** Sclar et al. (sclar2023format; full text checked, pp. 1, 9) report accuracy differences of up to 76 points from formatting changes alone (for LLaMA-2-13B) and recommend reporting a range over formats. This motivated sensitivity analysis S1, which was not run (Section 5.4).
 
 **Position of this study.** This is a small replication-style measurement in a new setting (one consumer laptop, one runtime), not an extension of any method. It adds paired item-level accuracy to the kind of cost figures that tool documentation reports.
 
@@ -72,7 +72,7 @@ The main protocol (`research/protocol.md`) and the three experiment protocols we
 
 ## 4.2 Data
 
-ARC-Challenge (clark2018arc), test split, 1,172 items, licence CC BY-SA 4.0 (dataset card arc-hf), downloaded from the Hugging Face repository `allenai/ai2_arc` at revision 210d026f. A simple random sample of 300 items without replacement was drawn once with seed 20261124; the item IDs and the SHA-256 of the source file are committed (`data/arc_challenge_test_subset_ids.json`, `data/manifest.json`), the question texts are not, and `scripts/fetch_arc.py` regenerates them. No tuning was done on these items. A chance floor (the mean of 1 / number of options) is 0.251 for this subset.
+ARC-Challenge (clark2018arc; full text checked, pp. 1 to 3), test split, 1,172 items, licence CC BY-SA 4.0 (dataset card arc-hf), downloaded from the Hugging Face repository `allenai/ai2_arc` at revision 210d026f. A simple random sample of 300 items without replacement was drawn once with seed 20261124; the item IDs and the SHA-256 of the source file are committed (`data/arc_challenge_test_subset_ids.json`, `data/manifest.json`), the question texts are not, and `scripts/fetch_arc.py` regenerates them. No tuning was done on these items. A chance floor (the mean of 1 / number of options) is 0.251 for this subset.
 
 ## 4.3 Configurations and baseline
 
@@ -144,7 +144,7 @@ The run took 1,509.8 s (2026-11-25, 12:30:58Z to 12:56:08Z) on AC power, with no
 
 **Cost.** Q8_0 used 3,290.4 MiB (56 %) more runtime-reported model memory and decoded at 0.744 times the rate of Q4_K_M. Its median time to first token and median end-to-end latency were nevertheless lower, because almost every answer was two tokens long (eval_count 2 in 1,485 Q4 and 1,480 Q8 records), so latency is governed by prefill, and Q8_0's prefill was faster. Figure 1 shows the per-item latency distributions.
 
-![FIG-001. Per-item median end-to-end latency per arm in EXP-003 (RUN-EXP-003-0001). Each dot is one item (n = 300 per arm); the red bar is the median over items, in ms. Generated by `token-lab report` from `result.json`.](../experiments/EXP-003/figures/FIG-001-exp003-latency.svg)
+![FIG-001. Per-item median end-to-end latency per arm in EXP-003 (RUN-EXP-003-0001). Each dot is one item (n = 300 per arm); the red bar is the median over items, in ms. Upper row: arm Q4 (llama3.1:8b, Q4_K_M); lower row: arm Q8 (llama3.1:8b-instruct-q8_0). The generated figure clips the start of the lower row's label; the committed result figure is not edited (M6, DL-014). Generated by `token-lab report` from `result.json`.](../experiments/EXP-003/figures/FIG-001-exp003-latency.svg)
 
 ## 5.4 Sensitivity analyses and robustness checks
 
@@ -181,7 +181,7 @@ The two frozen sensitivity analyses that were run (S2, S3) did not change the EX
 
 # 6. Discussion
 
-**What the evidence supports.** On this laptop, moving Llama 3.1 8B from Q4_K_M to Q8_0 produced no detected accuracy difference on 300 ARC-Challenge items, at the price of about 3.2 GiB more runtime memory. This must not be read as "Q4_K_M is as accurate as Q8_0": the point estimate favours Q8_0 (11 against 6 discordant items), and the 95 % interval extends to a gain of 4.33 points. The interval's lower end (-1.00 points) is a property of this 300-item subset and this bootstrap; because no non-inferiority or equivalence margin was preregistered, it supports no non-inferiority claim. The result is compatible with the abstract-level statement of dettmers2022kbit that 4-bit precision is generally near the best size and accuracy trade-off, but one model and one benchmark do not test that statement.
+**What the evidence supports.** On this laptop, moving Llama 3.1 8B from Q4_K_M to Q8_0 produced no detected accuracy difference on 300 ARC-Challenge items, at the price of about 3.2 GiB more runtime memory. This must not be read as "Q4_K_M is as accurate as Q8_0": the point estimate favours Q8_0 (11 against 6 discordant items), and the 95 % interval extends to a gain of 4.33 points. The interval's lower end (-1.00 points) is a property of this 300-item subset and this bootstrap; because no non-inferiority or equivalence margin was preregistered, it supports no non-inferiority claim. The result is compatible with the statement of dettmers2022kbit (full text checked, p. 8) that 4-bit precision is generally near the best size and accuracy trade-off, but one model and one benchmark do not test that statement.
 
 **Cost.** The decode ratio of 0.744 has the same direction as the ratio implied by the llama.cpp table (50.93 / 71.93, about 0.708). That table comes from unrecorded hardware and settings, so the comparison is a sanity check on direction, not a replication. The memory ratio (1.56) is lower than the ratio of the model files (8.54 against 4.92 GB, about 1.74). One plausible reason is that the runtime-reported size also includes the KV cache and other allocations at num_ctx 2048, which would be similar for both arms; the allocation was not decomposed, so this is unverified.
 
@@ -235,16 +235,16 @@ Code, configs, protocols, item IDs, result files and this manuscript are in the 
 
 # References
 
-- [clark2018arc] P. Clark, I. Cowhey, O. Etzioni, T. Khot, A. Sabharwal, C. Schoenick, O. Tafjord. Think you have Solved Question Answering? Try ARC, the AI2 Reasoning Challenge. arXiv:1803.05457, 2018. https://arxiv.org/abs/1803.05457 (abstract page read).
-- [arc-hf] AI2 ARC dataset card. https://huggingface.co/datasets/allenai/ai2_arc (read 2026-11-24).
-- [dettmers2022kbit] T. Dettmers, L. Zettlemoyer. The case for 4-bit precision: k-bit Inference Scaling Laws. arXiv:2212.09720, 2022. https://arxiv.org/abs/2212.09720 (abstract page read).
-- [dettmers2022int8] T. Dettmers, M. Lewis, Y. Belkada, L. Zettlemoyer. LLM.int8(): 8-bit Matrix Multiplication for Transformers at Scale. arXiv:2208.07339, 2022. https://arxiv.org/abs/2208.07339 (abstract page read).
-- [lin2023awq] J. Lin et al. AWQ: Activation-aware Weight Quantization for LLM Compression and Acceleration. arXiv:2306.00978, 2023. https://arxiv.org/abs/2306.00978 (abstract page read).
-- [liang2022helm] P. Liang et al. Holistic Evaluation of Language Models. arXiv:2211.09110, 2022. https://arxiv.org/abs/2211.09110 (abstract page read).
-- [samsi2023watts] S. Samsi et al. From Words to Watts: Benchmarking the Energy Costs of Large Language Model Inference. arXiv:2310.03003, 2023. https://arxiv.org/abs/2310.03003 (abstract page read).
-- [sclar2023format] M. Sclar, Y. Choi, Y. Tsvetkov, A. Suhr. Quantifying Language Models' Sensitivity to Spurious Features in Prompt Design or: How I learned to start worrying about prompt formatting. arXiv:2310.11324, 2023. https://arxiv.org/abs/2310.11324 (abstract page read).
-- [llamacpp-quantize] llama.cpp quantize README. https://github.com/ggml-org/llama.cpp/blob/master/tools/quantize/README.md (read 2026-11-24).
-- [ollama-api] Ollama API documentation (main branch). https://raw.githubusercontent.com/ollama/ollama/main/docs/api.md (read 2026-11-24; the installed runtime is 0.9.6).
+- [clark2018arc] P. Clark, I. Cowhey, O. Etzioni, T. Khot, A. Sabharwal, C. Schoenick, O. Tafjord. Think you have Solved Question Answering? Try ARC, the AI2 Reasoning Challenge. arXiv:1803.05457, 2018. <https://arxiv.org/abs/1803.05457> (abstract page read 2026-11-24; full text v1 opened 2026-11-25 and the cited statements checked).
+- [arc-hf] AI2 ARC dataset card. <https://huggingface.co/datasets/allenai/ai2_arc> (read 2026-11-24).
+- [dettmers2022kbit] T. Dettmers, L. Zettlemoyer. The case for 4-bit precision: k-bit Inference Scaling Laws. arXiv:2212.09720, 2022. <https://arxiv.org/abs/2212.09720> (abstract page read 2026-11-24; full text v2 opened 2026-11-25 and the cited statements checked).
+- [dettmers2022int8] T. Dettmers, M. Lewis, Y. Belkada, L. Zettlemoyer. LLM.int8(): 8-bit Matrix Multiplication for Transformers at Scale. arXiv:2208.07339, 2022. <https://arxiv.org/abs/2208.07339> (abstract page read 2026-11-24; full text v2 opened 2026-11-25 and the cited statements checked).
+- [lin2023awq] J. Lin et al. AWQ: Activation-aware Weight Quantization for LLM Compression and Acceleration. arXiv:2306.00978, 2023. <https://arxiv.org/abs/2306.00978> (abstract page read 2026-11-24; full text v5 opened 2026-11-25 and the cited statements checked).
+- [liang2022helm] P. Liang et al. Holistic Evaluation of Language Models. arXiv:2211.09110, 2022. <https://arxiv.org/abs/2211.09110> (abstract page read 2026-11-24; full text v2 opened 2026-11-25 and the cited statements checked).
+- [samsi2023watts] S. Samsi et al. From Words to Watts: Benchmarking the Energy Costs of Large Language Model Inference. arXiv:2310.03003, 2023. <https://arxiv.org/abs/2310.03003> (abstract page read 2026-11-24; full text v1 opened 2026-11-25 and the cited statements checked).
+- [sclar2023format] M. Sclar, Y. Choi, Y. Tsvetkov, A. Suhr. Quantifying Language Models' Sensitivity to Spurious Features in Prompt Design or: How I learned to start worrying about prompt formatting. arXiv:2310.11324, 2023. <https://arxiv.org/abs/2310.11324> (abstract page read 2026-11-24; full text v2 opened 2026-11-25 and the cited statements checked).
+- [llamacpp-quantize] llama.cpp quantize README. <https://github.com/ggml-org/llama.cpp/blob/master/tools/quantize/README.md> (read 2026-11-24).
+- [ollama-api] Ollama API documentation (main branch). <https://raw.githubusercontent.com/ollama/ollama/main/docs/api.md> (read 2026-11-24; the installed runtime is 0.9.6).
 
 # Supplementary appendix
 

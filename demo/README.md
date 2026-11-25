@@ -17,7 +17,7 @@ No visitor data is collected or stored, and the page makes no request to any hos
 
 ## Commands
 
-Node from `/Users/bechir/research/helix/.tools/node/bin`; Python from the repository's `.venv`.
+Node from `~/research/helix/.tools/node/bin`; Python from the repository's `.venv`.
 
     ../.venv/bin/python ../scripts/export_demo_data.py        # writes public/data/results.json from committed results
     ../.venv/bin/python ../scripts/export_sandbox_fixture.py  # writes src/engine.fixture.json (Python engine output)

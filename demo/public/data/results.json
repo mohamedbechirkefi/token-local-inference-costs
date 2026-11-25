@@ -34,7 +34,7 @@
   },
   {
    "path": "research/claims_register.csv",
-   "sha256": "b1dc4bd5773ebdf8449232d4abdf5d2882ed5fd686474ad090338da9316da0e8"
+   "sha256": "d17ca20ba425017c24f1a56d2187f41199a96634486dbbf940f122fedbd7a66e"
   },
   {
    "path": "research/publication/artifact_manifest.json",
@@ -42,7 +42,7 @@
   },
   {
    "path": "research/paper/manuscript.md",
-   "sha256": "0c62fecdc2dd9505bccec6bcd6f5c4fa4a58ea42db873b11d456a96a280f9215"
+   "sha256": "371a4c1685a6fd07a0e01e68c6ef96f43a0b9215f1d981e16e2f55854b2ff6ea"
   }
  ],
  "experiments": [

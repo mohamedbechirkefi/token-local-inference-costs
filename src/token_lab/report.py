@@ -11,15 +11,18 @@ from __future__ import annotations
 import csv
 import html
 import os
+import re
 import subprocess
 from pathlib import Path
 
 from .analysis import arm_summaries, cold_warm_ordering, cold_warm_penalties, contrasts, projection
 from .schema import import_result
 
-# Shared zero-cost toolchain (DL-002); override with TOKEN_PANDOC / TOKEN_TYPST_PYTHON on other machines.
-PANDOC = os.environ.get("TOKEN_PANDOC", "/Users/bechir/research/labs/.tools/pandoc")
-TYPST_PY = os.environ.get("TOKEN_TYPST_PYTHON", "/Users/bechir/research/labs/.tools/py/bin/python")
+# Shared zero-cost toolchain (DL-002) in the labs folder that contains this repository (src/token_lab/ -> repo -> labs);
+# override with TOKEN_PANDOC / TOKEN_TYPST_PYTHON on other machines.
+_TOOLS = Path(__file__).resolve().parents[3] / ".tools"
+PANDOC = os.environ.get("TOKEN_PANDOC", str(_TOOLS / "pandoc"))
+TYPST_PY = os.environ.get("TOKEN_TYPST_PYTHON", str(_TOOLS / "py" / "bin" / "python"))
 
 METRIC_COLUMNS = [
     "arm", "model", "n_records", "n_items", "accuracy_strict", "accuracy_lenient", "chance", "errors",
@@ -270,18 +273,57 @@ def build_report(result_path: str | Path, out_dir: str | Path | None = None, pdf
     return info
 
 
-def build_pdf(md: Path) -> dict:
-    typ = md.with_suffix(".typ")
-    pdf = md.with_suffix(".pdf")
+# M6 layout rules (DL-014): long tables may break across pages; table and list cells are not justified;
+# table text is 9 pt so that 64-character hashes fit their column.
+TYPST_PREAMBLE = ("#show figure.where(kind: table): set block(breakable: true)\n"
+                  "#show table: set par(justify: false)\n"
+                  "#show list: set par(justify: false)\n"
+                  "#show table: set text(size: 9pt)\n")
+
+
+def pdf_title(md: str) -> str | None:
+    """PDF metadata title: the first level-1 heading of a Markdown file without a
+    YAML ``title`` (pandoc sets that one itself)."""
+    if md.startswith("---") and re.search(r"^title:", md.split("\n---", 1)[0], re.M):
+        return None
+    m = re.search(r"^# (.+)$", md, re.M)
+    return m.group(1).strip() if m else None
+
+
+def typst_layout_fixes(typ: str, title: str | None = None) -> str:
+    """Return pandoc's Typst source with the M6 layout rules and, if given, the title."""
+    if title:
+        esc = title.replace("\\", "\\\\").replace('"', '\\"')
+        typ, n = re.subn(r"(set document\(\s*title: )title,", lambda m: f'{m.group(1)}"{esc}",', typ, count=1)
+        if n == 0:
+            raise ValueError("pandoc Typst template: set document(title: ...) not found")
+    return TYPST_PREAMBLE + typ
+
+
+def build_pdf(md: Path, pdf_path: Path | None = None, root: Path | None = None) -> dict:
+    """Markdown to Typst (pandoc) to PDF (typst package). ``root`` is the Typst
+    project root and pandoc resource path (default: the Markdown file's folder);
+    figures referenced outside it need a wider root. Returns pdf path, page count
+    or the error, never raises on a toolchain failure."""
+    md = Path(md).resolve()
+    pdf = Path(pdf_path).resolve() if pdf_path else md.with_suffix(".pdf")
+    res = Path(root).resolve() if root else md.parent
+    typ = md.parent / (pdf.stem + ".m6tmp.typ")
+    code = ("import sys, typst, pypdf\n"
+            "typst.compile(sys.argv[1], output=sys.argv[2], root=sys.argv[3])\n"
+            "print(len(pypdf.PdfReader(sys.argv[2]).pages))\n")
     try:
-        subprocess.run([PANDOC, str(md), "-s", "-t", "typst", "-V", 'mainfont=Libertinus Serif', "-o", str(typ)],
-                       check=True, capture_output=True, text=True, timeout=120)
-        subprocess.run([TYPST_PY, "-c", "import sys, typst; typst.compile(sys.argv[1], output=sys.argv[2])",
-                        str(typ), str(pdf)], check=True, capture_output=True, text=True, timeout=120)
-    except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
+        subprocess.run([PANDOC, str(md), "-s", "-t", "typst", "-V", 'mainfont=Libertinus Serif', "--wrap=none",
+                        "--resource-path", str(md.parent), "-o", str(typ)],
+                       check=True, capture_output=True, text=True, timeout=120, cwd=str(md.parent))
+        typ.write_text(typst_layout_fixes(typ.read_text(encoding="utf-8"), pdf_title(md.read_text(encoding="utf-8"))),
+                       encoding="utf-8")
+        out = subprocess.run([TYPST_PY, "-I", "-c", code, str(typ), str(pdf), str(res)],
+                             check=True, capture_output=True, text=True, timeout=300, cwd=str(md.parent))
+    except (OSError, ValueError, subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
         err = getattr(exc, "stderr", None) or str(exc)
-        return {"pdf": None, "pdf_error": str(err)[:500]}
+        return {"pdf": None, "pdf_error": str(err)[:500], "pages": None}
     finally:
         if typ.exists():
             typ.unlink()
-    return {"pdf": str(pdf), "pdf_error": None}
+    return {"pdf": str(pdf), "pdf_error": None, "pages": int(out.stdout.strip().splitlines()[-1])}

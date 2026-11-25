@@ -286,3 +286,34 @@ A11Y-CHECK PASS
 ### Not done, and why
 
 - No PDF (M6). Nothing pushed (G-PUBLIC). S1 and S4 stay not run.
+
+## 2026-11-25: M6 session (release candidate)
+
+**Milestone:** M6, started by the owner's instruction (owner, 2026-11-25, "Push and next"; `labs/_shared/owner-approvals-2026-11-25f.md`), under the M6 brief and its timing addendum. **Next bounded task:** none for the agent; the owner's review of `research/publication/author_review.md` and any G-PUBLIC decision.
+
+### Starting state
+
+`git status`: clean at `26eede9`. Frozen protocol hashes ea86d0bb..., 1997317c..., 54d46696..., 8196740a... (unchanged at the end). Ollama not contacted, started or stopped; no inference; no timing compared with frozen results.
+
+### Commands run and actual outputs
+
+- Clean clone `git clone -q <repo> <scratch>/clone` at `26eede9`; `uv sync --frozen --all-groups --all-extras`: success; `.venv/bin/python -m pytest -q`: "151 passed in 10.83s".
+- `token-lab report --result <run>/result.json --out <scratch>/regen/<run>` for RUN-EXP-003-0001 and RUN-SMOKE-0001 to 0006, `cmp` with the committed files: 29 of 29 identical. `scripts/m4_exploratory_exp003.py --repo .`: `git status` empty. EXP-003 copies: 4 of 4 identical.
+- Exploratory harness smoke, simulated backend, in the clone: RUN-SMOKE-0007, 150 requests, 0 failures; load average 2.08 1.96 1.69; timing not compared; folder deleted with the clone.
+- Demo in the clone: `npm ci --prefer-offline`: "added 53 packages in 679ms"; `npm test`: "Test Files 2 passed (2)", "Tests 21 passed (21)"; `npm run build`: "built in 271ms"; `node tools/a11y_check.mjs dist`: 9 PASS lines and "A11Y-CHECK PASS". Export re-run: 0 `git status` lines.
+- References: the free arXiv PDFs of the 7 cited arXiv papers fetched from arxiv.org, text extracted with pypdf in scratch, cited statements checked with page numbers (`research/literature_review.md` section 5). Result: 0 read in full, 7 full text checked for the cited statement, 3 web pages opened in full (M0), 0 abstract only, 0 unverified; 10 of 10 keys cited and in `references.bib`. One claim made more precise (sclar2023format, LLaMA-2-13B).
+- `.venv/bin/python -I scripts/build_pdfs.py`: manuscript 13 pages, supplementary 4, EXP-001 3, EXP-002 3, EXP-003 5; `manuscript.tex` regenerated. Sizes 59 kB to 212 kB. pypdf: title set in all five; no e-mail address or local path in metadata or text.
+- Visual inspection (PNG at 60 ppi in scratch, read page by page): every manuscript page, every supplementary page, every page of the three reports. Fixed: reference list gaps (pandoc line wrap read as a Typst list item; `--wrap=none`), overlapping supplementary tables (column widths, 9 pt table text), three raw Markdown lists in the reports (blank lines), FIG-001 clipped lower label (caption names both rows; the result figure is not edited).
+- `scripts/check_links.py .`: "relative links checked: 14; broken: 0". Data manifest: 5 of 5 hashes match. Artifact manifest: 20 of 20 paths exist; FIG-001 hash matches. Run hash manifest: 7 of 7.
+- Scan of 168 tracked or new files: 0 e-mail addresses (apart from the `noreply@anthropic.com` trailer in `CLAUDE.md`), 0 keys or tokens, 0 `.env`; home paths 21 in 7 files before, now only `CLAUDE.md` (8) and append-only records (this file 2, decision log 1; not edited, noted here and in DL-014).
+- Licences: `research/publication/dependency_licences.md` (14 Python, 53 npm). Flags: numpy wheel bundles libgfortran (GPL-3.0-or-later WITH GCC-exception-3.1); lightningcss MPL-2.0 (build only).
+- `CITATION.cff`: `version: "0.1.0-rc1"`; `date-released` absent; title kept (software title; alignment is an owner decision).
+- Working repository: `.venv/bin/python -m pytest -q`: "162 passed in 8.56s" (151 plus 11 in `tests/test_m6_release.py`); demo `npm test` 21 passed, `npm run build` success, checker "A11Y-CHECK PASS"; `scripts/export_demo_data.py` updated only the two source hashes of the manuscript and claims register in `results.json`.
+
+### Owner items
+
+Listed in `research/publication/author_review.md` ("Prepared for the owner (M6, 2026-11-25)"): EXP-001 and EXP-002 options (a), (b), (c); the latency-ratio interval reading; S1 and S4; manuscript title; funding, competing-interest and AI-use statements; author line and affiliation; repository and demo URL; CITATION.cff title; article titles; publication. No box ticked.
+
+### Not done, and why
+
+- No release, tag or push (G-PUBLIC). No confirmatory or timing run. `manuscript.tex` not compiled (DL-002).

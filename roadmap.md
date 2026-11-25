@@ -13,7 +13,7 @@ Status values: not started, in progress, done (all acceptance criteria checked),
 | M3 | Experiments | M1 freeze, M2 | P0 | 1 day | done with documented failures (2026-11-25) | EXP-003 complete; EXP-001 and EXP-002 failed before any request (Ollama 0.9.6 cannot render the A2 template, DL-011); owner decision pending |
 | M4 | Interpretation | M3 | P0 | 0.5 day | done (2026-11-25; owner, 2026-11-25, "Next"): evidence gate holds; S2 and S3 reported, S1 and S4 not run (no frozen config or power range, DL-012) | owner choice for EXP-001 and EXP-002 pending (DL-011) |
 | M5 | Interactive experience | M4 (results), M2 (schema) | P1 (cut first) | 0.5 day | done (2026-11-25; owner, 2026-11-25, "Next" (second); DL-013): static offline page, fail-closed export, consistency test, sandbox illustrative (statistics port, tolerance-tested), checker PASS | none; owner decisions for EXP-001/EXP-002 and the latency-ratio reading still pending (shown as pending) |
-| M6 | Release candidate | M4, M5 | P0 | 0.5 day | not started | owner approval for any publication (G-PUBLIC) |
+| M6 | Release candidate | M4, M5 | P0 | 0.5 day | release candidate prepared, awaiting owner review and G-PUBLIC | owner approval for any publication (G-PUBLIC) |
 
 ## M0: Bootstrap and feasibility
 
@@ -61,3 +61,4 @@ Status values: not started, in progress, done (all acceptance criteria checked),
 
 - Deliverables: PDFs via Typst, generated `manuscript.tex`, clean-clone reproduction, secret and licence scan, `research/publication/*` completed, Medium and LinkedIn drafts.
 - Acceptance: actual command outputs recorded; publication only with owner approval.
+- Status (2026-11-25, M6 session, DL-014): release candidate prepared, awaiting owner review and G-PUBLIC. [x] PDFs built and inspected (manuscript 13 pages, supplementary 4, reports 3, 3, 5); [x] `manuscript.tex` regenerated (not compiled, DL-002); [x] clean-clone reproduction (151 tests passed; 29 of 29 regenerated report files byte-identical; demo 21 tests, `A11Y-CHECK PASS`; export deterministic); [x] references, links (14 checked, 0 broken), manifests and numbers verified; [x] secret, identifier and licence scan (`research/publication/dependency_licences.md`); [x] owner review checklist prepared (`research/publication/author_review.md`). Not done: owner sign-off and publication (owner only). Medium and LinkedIn drafts exist (M5) and stay drafts.

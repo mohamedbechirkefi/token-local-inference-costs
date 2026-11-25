@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: LicenseRef-TOKEN-NC-Research-1.0
 .DS_Store
 __pycache__/
 *.pyc
