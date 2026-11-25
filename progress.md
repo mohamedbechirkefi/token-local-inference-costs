@@ -177,3 +177,7 @@ Real inference timing, memory (RSS versus Metal allocations, DL-007 A2) and dete
 - Latency-ratio intervals, block repeat, and S1 to S4: gaps listed in DL-011.
 - `report.pdf` was generated for EXP-003 but not inspected, so it was removed and not committed.
 - Nothing pushed (G-PUBLIC).
+
+## 2026-11-25: M3 done with documented failures (coordinator, quiet window)
+
+The owner approved the experiment reports (owner, 2026-11-25, "approve all recommendations, RIGGED A", item 4). Subagents may not write report files, so the reports were composed by the M3 session from committed results only and written by the coordinator: 3 report(s). The coordinator checked that every decimal number in them appears in a committed file. Four numbers in the EXP-003 report are derived, not copied, and were traced by hand: 5,872.0 and 9,162.4 MiB are the `/api/ps` byte sizes in `result.json` divided by 2^20; 0.744 is the ratio of the two committed decode medians; 3,073.6 MiB is the swap reading in the experiment journal. EXP-003 ran in full in an exclusive quiet-machine window (3,000 of 3,000 requests). EXP-001 and EXP-002 failed before any request: the installed Ollama 0.9.6 cannot render the chat template of arm A2 (ministral-3:8b), and the frozen F8 rule aborts the run (DL-011). Both failures are documented, so the M3 gate holds. M3 is **done** with these failures. Next: the owner chooses for EXP-001 and EXP-002 between upgrading Ollama, a new freeze without A2, or keeping them as failed; then M4.

@@ -10,7 +10,7 @@ Status values: not started, in progress, done (all acceptance criteria checked),
 | M0 | Bootstrap and feasibility | none | P0 | 0.5 day | done (2026-11-24), pending owner review of the gate | none |
 | M1 | Research and preregistration | M0 | P0 | 0.5 day | done (2026-11-24): M1 gate passed, owner freeze v1.0 with amendments F1 to F9 (DL-008, `research/freeze.json`) | none |
 | M2 | Core implementation | M1 drafts (implementation may start before the freeze) | P0 | 1.5 days | in progress: core, freeze amendments and ARC loader on the real file done (2026-11-24); EXP-002 cold/warm mode done (2026-11-24, DL-009); real-runtime smoke not done | real smoke in the coordinator's exclusive window (F1) |
-| M3 | Experiments | M1 freeze, M2 | P0 | 1 day | not started | exclusive Ollama window scheduled by the coordinator; AC power; Q8_0 pull for EXP-003 in that window |
+| M3 | Experiments | M1 freeze, M2 | P0 | 1 day | done with documented failures (2026-11-25) | EXP-003 complete; EXP-001 and EXP-002 failed before any request (Ollama 0.9.6 cannot render the A2 template, DL-011); owner decision pending |
 | M4 | Interpretation | M3 | P0 | 0.5 day | not started | M3 |
 | M5 | Interactive experience | M4 (results), M2 (schema) | P1 (cut first) | 0.5 day | not started | M4 |
 | M6 | Release candidate | M4, M5 | P0 | 0.5 day | not started | owner approval for any publication (G-PUBLIC) |
