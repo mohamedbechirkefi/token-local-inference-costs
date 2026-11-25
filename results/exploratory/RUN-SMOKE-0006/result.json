@@ -1,0 +1,571 @@
+{
+ "backend": {
+  "name": "ollama",
+  "runtime_version": "0.9.6",
+  "simulated": false
+ },
+ "blocks": [
+  {
+   "arm": "A0",
+   "loaded_after": [
+    {
+     "name": "phi4-mini:3.8b",
+     "size": 3907679232,
+     "size_vram": 3907679232
+    }
+   ],
+   "loaded_before": [
+    {
+     "name": "phi4-mini:3.8b",
+     "size": 3907679232,
+     "size_vram": 3907679232
+    },
+    {
+     "name": "llama3.1:8b",
+     "size": 6157232128,
+     "size_vram": 6157232128
+    }
+   ],
+   "memory": {
+    "peak_rss_mib": 1220.703125,
+    "peak_system_used_mib": 11362.5625,
+    "samples": 70,
+    "swap_delta_mib": 0.0
+   },
+   "repetition": 0,
+   "start_utc": "2026-11-25T12:07:27Z",
+   "wall_s": 7.17090820800513
+  }
+ ],
+ "config": {
+  "arms": [
+   {
+    "arm_id": "A0",
+    "model": "phi4-mini:3.8b"
+   }
+  ],
+  "backend": {
+   "base_url": "http://127.0.0.1:11434",
+   "name": "ollama",
+   "timeout_s": 120
+  },
+  "baseline_arm": "A0",
+  "cold_warm": {
+   "arm_order_seed": 2002,
+   "trials_per_state": 5,
+   "unload_confirm_timeout_s": 30,
+   "unload_poll_s": 0.25,
+   "wall_cap_s": 3600
+  },
+  "decoding": {
+   "num_ctx": 2048,
+   "num_predict": 8,
+   "temperature": 0
+  },
+  "description": "Exploratory cold/warm smoke (protocol section 10, amendment F1: 5 cold and 5 warm trials for one arm) in the coordinator's exclusive window. Arm A0 only; one ARC-Challenge validation item drawn with seed 20261125 (Mercury_7103180), deliberately different from the EXP-002 fixed prompt; otherwise the EXP-002 runner settings. Never used for confirmatory analysis.",
+  "design": "cold_warm",
+  "exp_id": "SMOKE",
+  "items": {
+   "path": "results/raw/arc/ARC-Challenge-validation.jsonl",
+   "source_sha256": "16b59737cb520f748020546b5e3fa76f0893d1a1237bb350dd81dd43a09f151b",
+   "subset_seed": 20261125,
+   "subset_size": 1,
+   "synthetic": false
+  },
+  "max_retries": 0,
+  "memory_sample_hz": 10,
+  "mode": "exploratory",
+  "process_match": "ollama",
+  "repetitions": 1,
+  "runtime_seeds": [
+   0
+  ],
+  "template": "T1",
+  "warmup": false
+ },
+ "config_sha256": "144bbca302679a1120839a82ff544c4bba962e09dabf2c5df90496d6440ce67d",
+ "exp_id": "SMOKE",
+ "failures": [],
+ "items_source": {
+  "n_items": 1,
+  "path": "results/raw/arc/ARC-Challenge-validation.jsonl",
+  "sha256": "16b59737cb520f748020546b5e3fa76f0893d1a1237bb350dd81dd43a09f151b",
+  "synthetic": false
+ },
+ "kind": "token-lab-result",
+ "label": "exploratory",
+ "manifest": {
+  "arm_runtime": {
+   "A0": {
+    "format": "gguf",
+    "model": "phi4-mini:3.8b",
+    "modelfile_sha256": "c2413937533c1a6cd2d69372127e73b728458473999f342dacadbca7eb8b54ec",
+    "parameter_size": "3.8B",
+    "parameters_sha256": null,
+    "quantization_level": "Q4_K_M",
+    "system_sha256": null,
+    "template_sha256": "813f53fdc6e58d35bb1c3853c93266380e9ca918a993e8eab193e8ede5d3a603"
+   }
+  },
+  "backend": {
+   "name": "ollama",
+   "runtime_version": "0.9.6",
+   "simulated": false
+  },
+  "cold_warm": {
+   "arm_order": [
+    "A0"
+   ],
+   "arm_order_seed": 2002,
+   "fixed_item_id": "Mercury_7103180",
+   "n_invalid_state": 0,
+   "stopped_by_wall_cap": false,
+   "trial_states": [
+    "cold",
+    "warm",
+    "cold",
+    "warm",
+    "cold",
+    "warm",
+    "cold",
+    "warm",
+    "cold",
+    "warm"
+   ],
+   "trials_per_state": 5,
+   "wall_cap_s": 3600.0
+  },
+  "config_sha256": "144bbca302679a1120839a82ff544c4bba962e09dabf2c5df90496d6440ce67d",
+  "design": "cold_warm",
+  "end_utc": "2026-11-25T12:07:35Z",
+  "exp_id": "SMOKE",
+  "git": {
+   "dirty": false,
+   "revision": "57f6187e7b450fea05eedbbee8c663943596a699"
+  },
+  "harness_peak_rss_mib": 44.609375,
+  "host": {
+   "after": {
+    "cpu": "Apple M1 Pro",
+    "cpu_count_logical": 10,
+    "load_avg_1_5_15": [
+     3.47314453125,
+     2.388671875,
+     2.0537109375
+    ],
+    "machine": "arm64",
+    "memory_total_bytes": 17179869184,
+    "os": "macOS-15.3.1-arm64-arm-64bit",
+    "os_release": "15.3.1",
+    "power": {
+     "raw": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=7340131)\t100%; charged; 0:00 remaining present: true",
+     "source": "ac"
+    }
+   },
+   "before": {
+    "cpu": "Apple M1 Pro",
+    "cpu_count_logical": 10,
+    "load_avg_1_5_15": [
+     3.66943359375,
+     2.38623046875,
+     2.048828125
+    ],
+    "machine": "arm64",
+    "memory_total_bytes": 17179869184,
+    "os": "macOS-15.3.1-arm64-arm-64bit",
+    "os_release": "15.3.1",
+    "power": {
+     "raw": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=7340131)\t100%; charged; 0:00 remaining present: true",
+     "source": "ac"
+    }
+   }
+  },
+  "label": "exploratory",
+  "n_failures": 0,
+  "n_requests": 10,
+  "packages": {
+   "jsonschema": "4.25.1",
+   "numpy": "2.3.4",
+   "psutil": "7.1.0",
+   "python": "3.12.1",
+   "token-lab": "0.1.0"
+  },
+  "protocol_sha256": null,
+  "run_id": "RUN-SMOKE-0006",
+  "runtime_s": 7.198695125000086,
+  "schema_version": "1.0.0",
+  "seeds": {
+   "order_seed_base": 1000,
+   "runtime": [
+    0
+   ],
+   "subset_seed": 20261125
+  },
+  "start_utc": "2026-11-25T12:07:27Z"
+ },
+ "records": [
+  {
+   "answer_key": "B",
+   "arm": "A0",
+   "attempts": 1,
+   "correct_lenient": 1,
+   "correct_strict": 0,
+   "error": null,
+   "eval_count": 4,
+   "eval_duration_ns": 70181500,
+   "extracted_lenient": "B",
+   "extracted_strict": null,
+   "item_id": "Mercury_7103180",
+   "latency_ms": 1028.251459,
+   "load_duration_ns": 797827125,
+   "model": "phi4-mini:3.8b",
+   "n_choices": 4,
+   "order_index": 0,
+   "prompt_eval_count": 52,
+   "prompt_eval_duration_ns": 157343541,
+   "repetition": 0,
+   "response": "B. forest",
+   "runtime_seed": 0,
+   "start_state": "cold",
+   "state_check": {
+    "confirm_polls": 2,
+    "loaded_at_confirm": [],
+    "loaded_before_request": [],
+    "unload_error": null,
+    "unloaded": [
+     "phi4-mini:3.8b",
+     "llama3.1:8b"
+    ]
+   },
+   "state_valid": true,
+   "stream_chunks": 3,
+   "template": "T1",
+   "total_duration_ns": 1027105584,
+   "trial_index": 0,
+   "ttft_ms": 958.332459
+  },
+  {
+   "answer_key": "B",
+   "arm": "A0",
+   "attempts": 1,
+   "correct_lenient": 1,
+   "correct_strict": 0,
+   "error": null,
+   "eval_count": 4,
+   "eval_duration_ns": 70172375,
+   "extracted_lenient": "B",
+   "extracted_strict": null,
+   "item_id": "Mercury_7103180",
+   "latency_ms": 124.6665,
+   "load_duration_ns": 29824542,
+   "model": "phi4-mini:3.8b",
+   "n_choices": 4,
+   "order_index": 1,
+   "prompt_eval_count": 52,
+   "prompt_eval_duration_ns": 23311708,
+   "repetition": 0,
+   "response": "B. forest",
+   "runtime_seed": 0,
+   "start_state": "warm",
+   "state_check": {
+    "previous_request_completed": true
+   },
+   "state_valid": true,
+   "stream_chunks": 3,
+   "template": "T1",
+   "total_duration_ns": 123699167,
+   "trial_index": 0,
+   "ttft_ms": 55.114584
+  },
+  {
+   "answer_key": "B",
+   "arm": "A0",
+   "attempts": 1,
+   "correct_lenient": 1,
+   "correct_strict": 0,
+   "error": null,
+   "eval_count": 4,
+   "eval_duration_ns": 70124833,
+   "extracted_lenient": "B",
+   "extracted_strict": null,
+   "item_id": "Mercury_7103180",
+   "latency_ms": 1041.618834,
+   "load_duration_ns": 809559667,
+   "model": "phi4-mini:3.8b",
+   "n_choices": 4,
+   "order_index": 2,
+   "prompt_eval_count": 52,
+   "prompt_eval_duration_ns": 159881584,
+   "repetition": 0,
+   "response": "B. forest",
+   "runtime_seed": 0,
+   "start_state": "cold",
+   "state_check": {
+    "confirm_polls": 2,
+    "loaded_at_confirm": [],
+    "loaded_before_request": [],
+    "unload_error": null,
+    "unloaded": [
+     "phi4-mini:3.8b"
+    ]
+   },
+   "state_valid": true,
+   "stream_chunks": 3,
+   "template": "T1",
+   "total_duration_ns": 1040226209,
+   "trial_index": 1,
+   "ttft_ms": 971.753292
+  },
+  {
+   "answer_key": "B",
+   "arm": "A0",
+   "attempts": 1,
+   "correct_lenient": 1,
+   "correct_strict": 0,
+   "error": null,
+   "eval_count": 4,
+   "eval_duration_ns": 70313708,
+   "extracted_lenient": "B",
+   "extracted_strict": null,
+   "item_id": "Mercury_7103180",
+   "latency_ms": 124.5725,
+   "load_duration_ns": 29243000,
+   "model": "phi4-mini:3.8b",
+   "n_choices": 4,
+   "order_index": 3,
+   "prompt_eval_count": 52,
+   "prompt_eval_duration_ns": 23476959,
+   "repetition": 0,
+   "response": "B. forest",
+   "runtime_seed": 0,
+   "start_state": "warm",
+   "state_check": {
+    "previous_request_completed": true
+   },
+   "state_valid": true,
+   "stream_chunks": 3,
+   "template": "T1",
+   "total_duration_ns": 123518708,
+   "trial_index": 1,
+   "ttft_ms": 54.80975
+  },
+  {
+   "answer_key": "B",
+   "arm": "A0",
+   "attempts": 1,
+   "correct_lenient": 1,
+   "correct_strict": 0,
+   "error": null,
+   "eval_count": 4,
+   "eval_duration_ns": 74852000,
+   "extracted_lenient": "B",
+   "extracted_strict": null,
+   "item_id": "Mercury_7103180",
+   "latency_ms": 1045.153667,
+   "load_duration_ns": 807218833,
+   "model": "phi4-mini:3.8b",
+   "n_choices": 4,
+   "order_index": 4,
+   "prompt_eval_count": 52,
+   "prompt_eval_duration_ns": 161004583,
+   "repetition": 0,
+   "response": "B. forest",
+   "runtime_seed": 0,
+   "start_state": "cold",
+   "state_check": {
+    "confirm_polls": 2,
+    "loaded_at_confirm": [],
+    "loaded_before_request": [],
+    "unload_error": null,
+    "unloaded": [
+     "phi4-mini:3.8b"
+    ]
+   },
+   "state_valid": true,
+   "stream_chunks": 3,
+   "template": "T1",
+   "total_duration_ns": 1043713208,
+   "trial_index": 2,
+   "ttft_ms": 972.017875
+  },
+  {
+   "answer_key": "B",
+   "arm": "A0",
+   "attempts": 1,
+   "correct_lenient": 1,
+   "correct_strict": 0,
+   "error": null,
+   "eval_count": 4,
+   "eval_duration_ns": 69872125,
+   "extracted_lenient": "B",
+   "extracted_strict": null,
+   "item_id": "Mercury_7103180",
+   "latency_ms": 126.48525,
+   "load_duration_ns": 31545125,
+   "model": "phi4-mini:3.8b",
+   "n_choices": 4,
+   "order_index": 5,
+   "prompt_eval_count": 52,
+   "prompt_eval_duration_ns": 23665584,
+   "repetition": 0,
+   "response": "B. forest",
+   "runtime_seed": 0,
+   "start_state": "warm",
+   "state_check": {
+    "previous_request_completed": true
+   },
+   "state_valid": true,
+   "stream_chunks": 3,
+   "template": "T1",
+   "total_duration_ns": 125507583,
+   "trial_index": 2,
+   "ttft_ms": 57.127708
+  },
+  {
+   "answer_key": "B",
+   "arm": "A0",
+   "attempts": 1,
+   "correct_lenient": 1,
+   "correct_strict": 0,
+   "error": null,
+   "eval_count": 4,
+   "eval_duration_ns": 70413666,
+   "extracted_lenient": "B",
+   "extracted_strict": null,
+   "item_id": "Mercury_7103180",
+   "latency_ms": 1038.634083,
+   "load_duration_ns": 808202625,
+   "model": "phi4-mini:3.8b",
+   "n_choices": 4,
+   "order_index": 6,
+   "prompt_eval_count": 52,
+   "prompt_eval_duration_ns": 157894042,
+   "repetition": 0,
+   "response": "B. forest",
+   "runtime_seed": 0,
+   "start_state": "cold",
+   "state_check": {
+    "confirm_polls": 2,
+    "loaded_at_confirm": [],
+    "loaded_before_request": [],
+    "unload_error": null,
+    "unloaded": [
+     "phi4-mini:3.8b"
+    ]
+   },
+   "state_valid": true,
+   "stream_chunks": 3,
+   "template": "T1",
+   "total_duration_ns": 1037233584,
+   "trial_index": 3,
+   "ttft_ms": 968.408292
+  },
+  {
+   "answer_key": "B",
+   "arm": "A0",
+   "attempts": 1,
+   "correct_lenient": 1,
+   "correct_strict": 0,
+   "error": null,
+   "eval_count": 4,
+   "eval_duration_ns": 70258125,
+   "extracted_lenient": "B",
+   "extracted_strict": null,
+   "item_id": "Mercury_7103180",
+   "latency_ms": 124.817916,
+   "load_duration_ns": 29659417,
+   "model": "phi4-mini:3.8b",
+   "n_choices": 4,
+   "order_index": 7,
+   "prompt_eval_count": 52,
+   "prompt_eval_duration_ns": 23501709,
+   "repetition": 0,
+   "response": "B. forest",
+   "runtime_seed": 0,
+   "start_state": "warm",
+   "state_check": {
+    "previous_request_completed": true
+   },
+   "state_valid": true,
+   "stream_chunks": 3,
+   "template": "T1",
+   "total_duration_ns": 123871417,
+   "trial_index": 3,
+   "ttft_ms": 55.150333
+  },
+  {
+   "answer_key": "B",
+   "arm": "A0",
+   "attempts": 1,
+   "correct_lenient": 1,
+   "correct_strict": 0,
+   "error": null,
+   "eval_count": 4,
+   "eval_duration_ns": 70367500,
+   "extracted_lenient": "B",
+   "extracted_strict": null,
+   "item_id": "Mercury_7103180",
+   "latency_ms": 1037.652667,
+   "load_duration_ns": 805365958,
+   "model": "phi4-mini:3.8b",
+   "n_choices": 4,
+   "order_index": 8,
+   "prompt_eval_count": 52,
+   "prompt_eval_duration_ns": 160038250,
+   "repetition": 0,
+   "response": "B. forest",
+   "runtime_seed": 0,
+   "start_state": "cold",
+   "state_check": {
+    "confirm_polls": 2,
+    "loaded_at_confirm": [],
+    "loaded_before_request": [],
+    "unload_error": null,
+    "unloaded": [
+     "phi4-mini:3.8b"
+    ]
+   },
+   "state_valid": true,
+   "stream_chunks": 3,
+   "template": "T1",
+   "total_duration_ns": 1036437375,
+   "trial_index": 4,
+   "ttft_ms": 967.560542
+  },
+  {
+   "answer_key": "B",
+   "arm": "A0",
+   "attempts": 1,
+   "correct_lenient": 1,
+   "correct_strict": 0,
+   "error": null,
+   "eval_count": 4,
+   "eval_duration_ns": 70330458,
+   "extracted_lenient": "B",
+   "extracted_strict": null,
+   "item_id": "Mercury_7103180",
+   "latency_ms": 124.748834,
+   "load_duration_ns": 29225250,
+   "model": "phi4-mini:3.8b",
+   "n_choices": 4,
+   "order_index": 9,
+   "prompt_eval_count": 52,
+   "prompt_eval_duration_ns": 23774125,
+   "repetition": 0,
+   "response": "B. forest",
+   "runtime_seed": 0,
+   "start_state": "warm",
+   "state_check": {
+    "previous_request_completed": true
+   },
+   "state_valid": true,
+   "stream_chunks": 3,
+   "template": "T1",
+   "total_duration_ns": 123675958,
+   "trial_index": 4,
+   "ttft_ms": 54.929792
+  }
+ ],
+ "run_id": "RUN-SMOKE-0006",
+ "schema_version": "1.0.0"
+}

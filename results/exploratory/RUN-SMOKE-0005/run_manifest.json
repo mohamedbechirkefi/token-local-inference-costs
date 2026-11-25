@@ -1,0 +1,101 @@
+{
+ "arm_runtime": {
+  "A0": {
+   "format": "gguf",
+   "model": "phi4-mini:3.8b",
+   "modelfile_sha256": "c2413937533c1a6cd2d69372127e73b728458473999f342dacadbca7eb8b54ec",
+   "parameter_size": "3.8B",
+   "parameters_sha256": null,
+   "quantization_level": "Q4_K_M",
+   "system_sha256": null,
+   "template_sha256": "813f53fdc6e58d35bb1c3853c93266380e9ca918a993e8eab193e8ede5d3a603"
+  },
+  "A1": {
+   "format": "gguf",
+   "model": "llama3.1:8b",
+   "modelfile_sha256": "05e50568037cecbcc0d684dd53ba6cac46b925e9920e265bbfa7b3cfb71f8627",
+   "parameter_size": "8.0B",
+   "parameters_sha256": "2801e61a8848e505a6e20beeaea63cca1600200f6720e5f916ba7d6da5c3ba39",
+   "quantization_level": "Q4_K_M",
+   "system_sha256": null,
+   "template_sha256": "948af2743fc78a328dcb3b0f5a31b3d75f415840fdb699e8b1235978392ecf85"
+  },
+  "A2": {
+   "error": "RuntimeReportedError: HTTP 500: {\"error\":\"template: :10: function \\\"currentDate\\\" not defined\"}",
+   "model": "ministral-3:8b"
+  }
+ },
+ "backend": {
+  "name": "ollama",
+  "runtime_version": "0.9.6",
+  "simulated": false
+ },
+ "config_sha256": "c72c5e8ce6ca19a742f634f2cd52f7611b9afb21b19647fd119bf19288180e9d",
+ "design": "matrix",
+ "end_utc": "2026-11-25T12:06:51Z",
+ "exp_id": "SMOKE",
+ "git": {
+  "dirty": false,
+  "revision": "57f6187e7b450fea05eedbbee8c663943596a699"
+ },
+ "harness_peak_rss_mib": 43.578125,
+ "host": {
+  "after": {
+   "cpu": "Apple M1 Pro",
+   "cpu_count_logical": 10,
+   "load_avg_1_5_15": [
+    2.4599609375,
+    2.0869140625,
+    1.9375
+   ],
+   "machine": "arm64",
+   "memory_total_bytes": 17179869184,
+   "os": "macOS-15.3.1-arm64-arm-64bit",
+   "os_release": "15.3.1",
+   "power": {
+    "raw": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=7340131)\t100%; charged; 0:00 remaining present: true",
+    "source": "ac"
+   }
+  },
+  "before": {
+   "cpu": "Apple M1 Pro",
+   "cpu_count_logical": 10,
+   "load_avg_1_5_15": [
+    2.0732421875,
+    1.9765625,
+    1.8955078125
+   ],
+   "machine": "arm64",
+   "memory_total_bytes": 17179869184,
+   "os": "macOS-15.3.1-arm64-arm-64bit",
+   "os_release": "15.3.1",
+   "power": {
+    "raw": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=7340131)\t100%; charged; 0:00 remaining present: true",
+    "source": "ac"
+   }
+  }
+ },
+ "label": "exploratory",
+ "n_failures": 22,
+ "n_requests": 60,
+ "packages": {
+  "jsonschema": "4.25.1",
+  "numpy": "2.3.4",
+  "psutil": "7.1.0",
+  "python": "3.12.1",
+  "token-lab": "0.1.0"
+ },
+ "protocol_sha256": null,
+ "run_id": "RUN-SMOKE-0005",
+ "runtime_s": 28.768126291994122,
+ "schema_version": "1.0.0",
+ "seeds": {
+  "order_seed_base": 1000,
+  "runtime": [
+   0,
+   1
+  ],
+  "subset_seed": 20261124
+ },
+ "start_utc": "2026-11-25T12:06:22Z"
+}

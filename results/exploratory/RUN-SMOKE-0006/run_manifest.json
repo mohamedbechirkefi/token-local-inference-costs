@@ -1,0 +1,109 @@
+{
+ "arm_runtime": {
+  "A0": {
+   "format": "gguf",
+   "model": "phi4-mini:3.8b",
+   "modelfile_sha256": "c2413937533c1a6cd2d69372127e73b728458473999f342dacadbca7eb8b54ec",
+   "parameter_size": "3.8B",
+   "parameters_sha256": null,
+   "quantization_level": "Q4_K_M",
+   "system_sha256": null,
+   "template_sha256": "813f53fdc6e58d35bb1c3853c93266380e9ca918a993e8eab193e8ede5d3a603"
+  }
+ },
+ "backend": {
+  "name": "ollama",
+  "runtime_version": "0.9.6",
+  "simulated": false
+ },
+ "cold_warm": {
+  "arm_order": [
+   "A0"
+  ],
+  "arm_order_seed": 2002,
+  "fixed_item_id": "Mercury_7103180",
+  "n_invalid_state": 0,
+  "stopped_by_wall_cap": false,
+  "trial_states": [
+   "cold",
+   "warm",
+   "cold",
+   "warm",
+   "cold",
+   "warm",
+   "cold",
+   "warm",
+   "cold",
+   "warm"
+  ],
+  "trials_per_state": 5,
+  "wall_cap_s": 3600.0
+ },
+ "config_sha256": "144bbca302679a1120839a82ff544c4bba962e09dabf2c5df90496d6440ce67d",
+ "design": "cold_warm",
+ "end_utc": "2026-11-25T12:07:35Z",
+ "exp_id": "SMOKE",
+ "git": {
+  "dirty": false,
+  "revision": "57f6187e7b450fea05eedbbee8c663943596a699"
+ },
+ "harness_peak_rss_mib": 44.609375,
+ "host": {
+  "after": {
+   "cpu": "Apple M1 Pro",
+   "cpu_count_logical": 10,
+   "load_avg_1_5_15": [
+    3.47314453125,
+    2.388671875,
+    2.0537109375
+   ],
+   "machine": "arm64",
+   "memory_total_bytes": 17179869184,
+   "os": "macOS-15.3.1-arm64-arm-64bit",
+   "os_release": "15.3.1",
+   "power": {
+    "raw": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=7340131)\t100%; charged; 0:00 remaining present: true",
+    "source": "ac"
+   }
+  },
+  "before": {
+   "cpu": "Apple M1 Pro",
+   "cpu_count_logical": 10,
+   "load_avg_1_5_15": [
+    3.66943359375,
+    2.38623046875,
+    2.048828125
+   ],
+   "machine": "arm64",
+   "memory_total_bytes": 17179869184,
+   "os": "macOS-15.3.1-arm64-arm-64bit",
+   "os_release": "15.3.1",
+   "power": {
+    "raw": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=7340131)\t100%; charged; 0:00 remaining present: true",
+    "source": "ac"
+   }
+  }
+ },
+ "label": "exploratory",
+ "n_failures": 0,
+ "n_requests": 10,
+ "packages": {
+  "jsonschema": "4.25.1",
+  "numpy": "2.3.4",
+  "psutil": "7.1.0",
+  "python": "3.12.1",
+  "token-lab": "0.1.0"
+ },
+ "protocol_sha256": null,
+ "run_id": "RUN-SMOKE-0006",
+ "runtime_s": 7.198695125000086,
+ "schema_version": "1.0.0",
+ "seeds": {
+  "order_seed_base": 1000,
+  "runtime": [
+   0
+  ],
+  "subset_seed": 20261125
+ },
+ "start_utc": "2026-11-25T12:07:27Z"
+}

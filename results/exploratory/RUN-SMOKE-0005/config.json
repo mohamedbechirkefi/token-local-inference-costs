@@ -1,0 +1,49 @@
+{
+ "arms": [
+  {
+   "arm_id": "A0",
+   "model": "phi4-mini:3.8b"
+  },
+  {
+   "arm_id": "A1",
+   "model": "llama3.1:8b"
+  },
+  {
+   "arm_id": "A2",
+   "model": "ministral-3:8b"
+  }
+ ],
+ "backend": {
+  "base_url": "http://127.0.0.1:11434",
+  "name": "ollama",
+  "timeout_s": 120
+ },
+ "baseline_arm": "A0",
+ "decoding": {
+  "num_ctx": 2048,
+  "num_predict": 8,
+  "temperature": 0
+ },
+ "description": "Exploratory smoke run (protocol section 10) against an already running, idle Ollama server on mains power, in the exclusive window the coordinator schedules: 10 ARC-Challenge validation items (seed 20261124) x 3 arms x 2 repetitions. Never used for confirmatory analysis. The harness never starts or stops the server.",
+ "exp_id": "SMOKE",
+ "items": {
+  "path": "results/raw/arc/ARC-Challenge-validation.jsonl",
+  "source_sha256": "16b59737cb520f748020546b5e3fa76f0893d1a1237bb350dd81dd43a09f151b",
+  "subset_ids_path": "data/arc_challenge_validation_smoke_ids.json",
+  "subset_seed": 20261124,
+  "subset_size": 10,
+  "synthetic": false
+ },
+ "max_retries": 2,
+ "memory_sample_hz": 10,
+ "mode": "exploratory",
+ "order_seed_base": 1000,
+ "process_match": "ollama",
+ "repetitions": 2,
+ "runtime_seeds": [
+  0,
+  1
+ ],
+ "template": "T1",
+ "warmup": true
+}

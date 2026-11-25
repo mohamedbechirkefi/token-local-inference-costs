@@ -1,0 +1,2 @@
+arm,model,n_cold,n_warm,n_cold_records,n_warm_records,n_cold_invalid,n_warm_invalid,n_cold_error,n_warm_error,cold_ttft_ms_median,cold_ci_low,cold_ci_high,warm_ttft_ms_median,warm_ci_low,warm_ci_high,penalty_ms,penalty_ci_low,penalty_ci_high,cold_load_ms_median,warm_load_ms_median,cold_latency_ms_median,warm_latency_ms_median
+A0,phi4-mini:3.8b,5,5,5,5,0,0,0,0,968.408292,958.332459,972.017875,55.114584,54.80975,57.127708,913.2937079999999,903.2178749999999,916.943542,807.218833,29.659417,1038.634083,124.748834

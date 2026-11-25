@@ -153,3 +153,27 @@ Real inference timing, memory (RSS versus Metal allocations, DL-007 A2) and dete
 
 - No smoke or confirmatory run (coordinator schedules M3). The EXP-002 penalty analysis (protocol items 6 and 16) and the item-20 exploratory page-cache check are not implemented yet (M4 and an exploratory config respectively).
 - Nothing pushed (G-PUBLIC).
+
+## 2026-11-25: M3 session (exclusive quiet-machine window)
+
+**Milestone:** M3 (owner "Start next", 2026-11-25). The M3 status line is left to the coordinator.
+
+### Starting state
+
+`git status`: clean at `e242e86`. Every frozen hash matched (main protocol, three EXP protocols, three configs via the guard, subset and EXP-002 item ID files, both ARC JSONL files). `uv sync --frozen --all-groups --all-extras`: "Audited 14 packages"; `.venv/bin/python -m pytest -q`: "128 passed in 8.45s". Load average 1.53 at 13:02 local, AC power, Low Power Mode off, no Ollama process running.
+
+### What was done
+
+- EXP-002 penalty analysis implemented and committed before any EXP-002 output (`57f6187`, DL-010; 16 new tests). Provenance revision for all M3 runs: `57f6187e7b450fea05eedbbee8c663943596a699`.
+- Ollama 0.9.6 started by this session (`ollama serve`, 12:03Z) and stopped again at 12:56Z, as found. Q8_0 pull: `llama3.1:8b-instruct-q8_0`, manifest digest b158ded76fa0..., 8,540,789,934 bytes, 12:03Z to 12:29Z (JRN-0005).
+- Exploratory smoke RUN-SMOKE-0005 (matrix) and RUN-SMOKE-0006 (cold/warm, A0, new exploratory config `experiments/smoke-cold-warm.json`); metric validation 21 of 21 checks passed (JRN-0006). A2 ministral-3:8b fails on Ollama 0.9.6 (template function `currentDate` undefined).
+- EXP-001 and EXP-002 run through the guard: both aborted before any request (exit 3, no output; JRN-0007, DL-011).
+- EXP-003 RUN-EXP-003-0001: 3,000 of 3,000 requests, 0 failures, 25.2 min, no excluded block (JRN-0008). Delta Q8_0 minus Q4_K_M +1.67 pp, 95 % CI [-1.00, +4.33], McNemar p 0.332: H0 not rejected.
+- Records: registry statuses, CLM-001 to CLM-004, limitations 11 to 15, DL-010, DL-011, results README, `research/experiments/EXP-003/` (config, manifest, metrics, contrasts, FIG-001). Experiment reports are written by the coordinator from the texts returned by this session.
+
+### Not done, and why
+
+- EXP-001 and EXP-002: runtime incompatibility; needs the owner (DL-011 options a to c).
+- Latency-ratio intervals, block repeat, and S1 to S4: gaps listed in DL-011.
+- `report.pdf` was generated for EXP-003 but not inspected, so it was removed and not committed.
+- Nothing pushed (G-PUBLIC).

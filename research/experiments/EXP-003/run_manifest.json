@@ -1,0 +1,100 @@
+{
+ "arm_runtime": {
+  "Q4": {
+   "format": "gguf",
+   "model": "llama3.1:8b",
+   "modelfile_sha256": "05e50568037cecbcc0d684dd53ba6cac46b925e9920e265bbfa7b3cfb71f8627",
+   "parameter_size": "8.0B",
+   "parameters_sha256": "2801e61a8848e505a6e20beeaea63cca1600200f6720e5f916ba7d6da5c3ba39",
+   "quantization_level": "Q4_K_M",
+   "system_sha256": null,
+   "template_sha256": "948af2743fc78a328dcb3b0f5a31b3d75f415840fdb699e8b1235978392ecf85"
+  },
+  "Q8": {
+   "format": "gguf",
+   "model": "llama3.1:8b-instruct-q8_0",
+   "modelfile_sha256": "eb2088ee2494a1236a23bc965d2faab4b5b0466e77860c4de1628c6b64e03dac",
+   "parameter_size": "8.0B",
+   "parameters_sha256": "2801e61a8848e505a6e20beeaea63cca1600200f6720e5f916ba7d6da5c3ba39",
+   "quantization_level": "Q8_0",
+   "system_sha256": null,
+   "template_sha256": "948af2743fc78a328dcb3b0f5a31b3d75f415840fdb699e8b1235978392ecf85"
+  }
+ },
+ "backend": {
+  "name": "ollama",
+  "runtime_version": "0.9.6",
+  "simulated": false
+ },
+ "config_sha256": "3ebe5b2a60e4ddb6ae1c8e1e35f3d316f35f0fd56272f90299b992e702065560",
+ "design": "matrix",
+ "end_utc": "2026-11-25T12:56:08Z",
+ "exp_id": "EXP-003",
+ "git": {
+  "dirty": true,
+  "revision": "57f6187e7b450fea05eedbbee8c663943596a699"
+ },
+ "harness_peak_rss_mib": 44.25,
+ "host": {
+  "after": {
+   "cpu": "Apple M1 Pro",
+   "cpu_count_logical": 10,
+   "load_avg_1_5_15": [
+    1.36376953125,
+    1.18505859375,
+    1.40673828125
+   ],
+   "machine": "arm64",
+   "memory_total_bytes": 17179869184,
+   "os": "macOS-15.3.1-arm64-arm-64bit",
+   "os_release": "15.3.1",
+   "power": {
+    "raw": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=7340131)\t100%; charged; 0:00 remaining present: true",
+    "source": "ac"
+   }
+  },
+  "before": {
+   "cpu": "Apple M1 Pro",
+   "cpu_count_logical": 10,
+   "load_avg_1_5_15": [
+    2.2919921875,
+    3.08740234375,
+    3.0419921875
+   ],
+   "machine": "arm64",
+   "memory_total_bytes": 17179869184,
+   "os": "macOS-15.3.1-arm64-arm-64bit",
+   "os_release": "15.3.1",
+   "power": {
+    "raw": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=7340131)\t100%; charged; 0:00 remaining present: true",
+    "source": "ac"
+   }
+  }
+ },
+ "label": "confirmatory",
+ "n_failures": 0,
+ "n_requests": 3000,
+ "packages": {
+  "jsonschema": "4.25.1",
+  "numpy": "2.3.4",
+  "psutil": "7.1.0",
+  "python": "3.12.1",
+  "token-lab": "0.1.0"
+ },
+ "protocol_sha256": "8196740a07ce6b0d0e254a23729aa18e5866e0b72b7ac3dd97b779e23a024068",
+ "run_id": "RUN-EXP-003-0001",
+ "runtime_s": 1509.7907750829909,
+ "schema_version": "1.0.0",
+ "seeds": {
+  "order_seed_base": 1000,
+  "runtime": [
+   0,
+   1,
+   2,
+   3,
+   4
+  ],
+  "subset_seed": 20261124
+ },
+ "start_utc": "2026-11-25T12:30:58Z"
+}

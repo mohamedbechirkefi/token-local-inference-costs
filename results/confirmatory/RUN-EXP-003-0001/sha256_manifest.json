@@ -1,0 +1,16 @@
+{
+ "run_id": "RUN-EXP-003-0001",
+ "exp_id": "EXP-003",
+ "label": "confirmatory",
+ "algorithm": "sha256",
+ "files": {
+  "config.json": "8b054f620c11b430ebf3876fa59367afdbb6629f142d0d8f02074dbc44619341",
+  "contrasts.csv": "0e61f05d48d14d6530441ba8a5cb3914eccc841961bd735954bfadf3752760ff",
+  "latency.svg": "73883986a550ae3be3960739bc68873f453b078b868f9ab1924a6e4ed094b2b0",
+  "metrics.csv": "c2233bb0b5fc9b7b99e79f6984f98c5cc3ae6694faac944263207fdcf3f2f315",
+  "report.md": "ed246f709191ea044e093d62719fe03d3ec8ecfa4e7bc19219c38f5679029278",
+  "result.json": "3a5b2e60f24444cbdd282bb2dcb43bc61feff836ce9c4257ec241f6c92255064",
+  "run_manifest.json": "a733b483f84639c328f39b4b8b4b4567c87e7e01fe8b7cb8f01bf3b8ea0b9130"
+ },
+ "note": "result.json, run_manifest.json and config.json are written by the runner; report.md, metrics.csv, contrasts.csv and latency.svg by token-lab report from result.json. report.pdf was generated but not inspected, so it was removed and is not committed."
+}

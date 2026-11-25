@@ -1,0 +1,46 @@
+{
+ "exp_id": "SMOKE",
+ "mode": "exploratory",
+ "design": "cold_warm",
+ "description": "Exploratory cold/warm smoke (protocol section 10, amendment F1: 5 cold and 5 warm trials for one arm) in the coordinator's exclusive window. Arm A0 only; one ARC-Challenge validation item drawn with seed 20261125 (Mercury_7103180), deliberately different from the EXP-002 fixed prompt; otherwise the EXP-002 runner settings. Never used for confirmatory analysis.",
+ "backend": {
+  "name": "ollama",
+  "base_url": "http://127.0.0.1:11434",
+  "timeout_s": 120
+ },
+ "arms": [
+  {
+   "arm_id": "A0",
+   "model": "phi4-mini:3.8b"
+  }
+ ],
+ "baseline_arm": "A0",
+ "items": {
+  "path": "results/raw/arc/ARC-Challenge-validation.jsonl",
+  "synthetic": false,
+  "subset_size": 1,
+  "subset_seed": 20261125,
+  "source_sha256": "16b59737cb520f748020546b5e3fa76f0893d1a1237bb350dd81dd43a09f151b"
+ },
+ "template": "T1",
+ "repetitions": 1,
+ "runtime_seeds": [
+  0
+ ],
+ "decoding": {
+  "temperature": 0,
+  "num_predict": 8,
+  "num_ctx": 2048
+ },
+ "max_retries": 0,
+ "warmup": false,
+ "cold_warm": {
+  "trials_per_state": 5,
+  "arm_order_seed": 2002,
+  "unload_confirm_timeout_s": 30,
+  "unload_poll_s": 0.25,
+  "wall_cap_s": 3600
+ },
+ "memory_sample_hz": 10,
+ "process_match": "ollama"
+}

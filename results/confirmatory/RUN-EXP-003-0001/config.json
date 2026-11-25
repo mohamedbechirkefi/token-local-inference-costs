@@ -1,0 +1,48 @@
+{
+ "arms": [
+  {
+   "arm_id": "Q4",
+   "model": "llama3.1:8b"
+  },
+  {
+   "arm_id": "Q8",
+   "model": "llama3.1:8b-instruct-q8_0"
+  }
+ ],
+ "backend": {
+  "base_url": "http://127.0.0.1:11434",
+  "name": "ollama",
+  "timeout_s": 120
+ },
+ "baseline_arm": "Q4",
+ "decoding": {
+  "num_ctx": 2048,
+  "num_predict": 8,
+  "temperature": 0
+ },
+ "description": "EXP-003 confirmatory matrix per research/experiments/EXP-003/protocol.md (v1.0, frozen by the owner 2026-11-24): Llama 3.1 8B at Q4_K_M (baseline) and Q8_0, same 300-item subset as EXP-001. The Q8_0 tag is pulled in the owner-scheduled exclusive window; a different tag changes this config and makes the run refused.",
+ "exp_id": "EXP-003",
+ "items": {
+  "path": "results/raw/arc/ARC-Challenge-test.jsonl",
+  "source_sha256": "86ccaace4cd159b5c02b6b3339ebe8a7022a54f1b488e433c060b3bc38ac1f63",
+  "subset_ids_path": "data/arc_challenge_test_subset_ids.json",
+  "subset_seed": 20261124,
+  "subset_size": 300,
+  "synthetic": false
+ },
+ "max_retries": 2,
+ "memory_sample_hz": 10,
+ "mode": "confirmatory",
+ "order_seed_base": 1000,
+ "process_match": "ollama",
+ "repetitions": 5,
+ "runtime_seeds": [
+  0,
+  1,
+  2,
+  3,
+  4
+ ],
+ "template": "T1",
+ "warmup": true
+}
