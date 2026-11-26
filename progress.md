@@ -324,3 +324,12 @@ Listed in `research/publication/author_review.md` ("Prepared for the owner (M6, 
 - Fix: re-exported after the commit (one line), commit e5d0801.
 - Third clone at e5d0801: "162 passed in 10.81s"; export re-run leaves `git status` empty; demo `npm ci` "added 53 packages in 635ms", "Tests 21 passed (21)", build "built in 270ms", "A11Y-CHECK PASS". Clone deleted.
 - Note for future sessions: after any change to the export sources (manuscript, claims register, results, registry, freeze record, artifact manifest), commit first, then re-export and commit `results.json`.
+
+## 2026-11-26: EXP-001 and EXP-002 rerun on Ollama 0.40.6 (owner option a)
+
+- Authority: owner, 2026-11-26, decision sheet, R-TOKEN-1 option (a), run first and alone (`labs/_shared/owner-approvals-2026-11-26.md`); brief `labs/_shared/TOKEN-rerun-brief.md`.
+- Rerun session commits b4818be to 82ac8fa (DL-015, DL-016; JRN-0010 to JRN-0013). Runtime `labs/.tools/ollama-0.40.6/ollama`, tarball SHA-256 b2b55434...f974 (equal to the Helix record), no model pulled; the session stopped the server it started.
+- EXP-002: complete, 60 of 60 trials, H1 supported (descriptive; confounded with prompt length 631 against 81 and 88 tokens).
+- EXP-001: 4,500 of 4,500 requests, but blocks 3 and 11 met frozen exclusion criteria and block 11 the stopping rule (swap growth 734.1 and 2,778.1 MiB), which the runner does not enforce; status is the owner's decision (DL-016).
+- Coordinator: checked the report numbers against `contrasts.csv`, `metrics.csv`, `cold_warm.csv`, `result.json` (SHA-256 f95ee205...003c), `RERUN-EXPL-0001` and JRN-0011; installed both reports (attempt 1 kept with headings one level lower); rebuilt the PDFs with `scripts/build_pdfs.py` (EXP-001 9 pages, EXP-002 7 pages; manuscript, supplementary and EXP-003 PDFs restored to their committed versions since their sources did not change); inspected pages 4 and 5 of EXP-001 and 3 and 4 of EXP-002 as PNG renders. `pytest`: "162 passed in 8.50s". Commit a53c03a.
+- Next action: the owner decides the EXP-001 status; the manuscript title still says "two failed experiments" and is flagged to the owner; `docs/demo.png` is stale. Nothing pushed.
