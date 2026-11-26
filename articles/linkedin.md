@@ -3,6 +3,8 @@
 
 *Draft, pending owner approval. Numbers as printed in `research/paper/manuscript.md`.*
 
+*Note (2026-11-26): this draft was written before the owner-approved rerun of EXP-001 and EXP-002 on Ollama 0.40.6 (manuscript sections 5.1 and 5.2, DL-015, DL-016). Its statements that these experiments produced no results describe the first attempts only. The draft is not revised here; revising it is left to the owner's review of the article drafts.*
+
 Does a higher-precision model file buy accuracy on a laptop?
 
 I preregistered three experiments on local inference costs and ran them on one Apple M1 Pro laptop. Two never started: the installed runtime (Ollama 0.9.6) cannot render one model's chat template, so the primary comparison has no result, and I report that as a failure.

@@ -45,6 +45,7 @@ Status values: not started, in progress, done (all acceptance criteria checked),
 - Deliverables: smoke run (exploratory), then EXP-001, EXP-002 and, if approved, EXP-003 per the frozen matrix; raw results, run manifests, metrics.csv, figures, standalone reports per 11.3.
 - Acceptance: complete planned matrix or documented failure; no silently dropped runs; provenance captured at run time.
 - Blockers: freeze, exclusive runtime window, AC power.
+- Status (2026-11-26, rerun session, DL-015, DL-016): owner option (a) carried out on Ollama 0.40.6. [x] EXP-002 complete (RUN-EXP-002-0001, 60 of 60, H1 supported, descriptive). [x] EXP-001 matrix complete (RUN-EXP-001-0001, 4,500 of 4,500) with the frozen stopping criterion met after the fact at block 11 (not enforced by the runner); [ ] EXP-001 confirmatory status: owner decision. EXP-003 complete (M3, 0.9.6). Report texts handed to the coordinator; report PDFs to be rebuilt after installation.
 
 ## M4: Interpretation (11.6: finish reports and evidence audit; synthesise into the manuscript with contradictory results and sensitivity analyses)
 

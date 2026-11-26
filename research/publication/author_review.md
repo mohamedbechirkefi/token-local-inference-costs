@@ -50,3 +50,14 @@ Only the owner ticks these boxes. At M6 no box was ticked, so no box had to be u
 - `articles/linkedin.md:14`: repository URL.
 - `demo/src/App.tsx:73`: author line and repository URL (page footer).
 - The generated `research/paper/manuscript.tex` and the PDFs carry the manuscript's placeholders.
+
+## Added after the EXP-001 and EXP-002 rerun (2026-11-26)
+
+No box was ticked. The owner decided on 2026-11-26 (`labs/_shared/owner-approvals-2026-11-26.md`): R-TOKEN-1, option (a), carried out (DL-015); R-TOKEN-2, both latency-ratio readings stay shown. The first two open decisions above are therefore settled. New items for the owner:
+
+- **EXP-001 status** (DL-016; manuscript 5.1; EXP-001 report sections 7 and 11): on the rerun, block 11 met the frozen stopping rule (swap growth above 2 GiB) and blocks 3 and 11 the exclusion criterion (above 512 MiB); the runner enforces neither. Choose: report EXP-001 as a failure under the rule as written; count the frozen accuracy analysis of the complete matrix with the criteria disclosed (accuracy was identical in every repetition); or have blocks 3 and 11, or the experiment, repeated (a further run).
+- **Manuscript title** (approved as written, per the coordinator's brief): it says "two failed experiments". After the rerun, EXP-002 is complete and EXP-001's status is open; the manuscript carries a note on this under the status line. The title is unchanged; changing it is the owner's choice.
+- **Runner rules** (DL-011 gap 2): implementing the exclusion and stopping rules before any further confirmatory run needs the owner's approval of a code change to the frozen code path.
+- **Article drafts:** `articles/medium.md` and `articles/linkedin.md` now carry a dated note that they predate the rerun; their text is not revised.
+- **PDFs:** after the coordinator installs the two report texts, `scripts/build_pdfs.py` rebuilds the five PDFs; the manuscript and supplementary PDFs in this commit were rebuilt and inspected by the rerun session.
+- **Placeholder lines moved:** manuscript repository URL now at line 282, funding at 286, competing interests at 288; `articles/medium.md` repository URL at 36, author line at 38; `articles/linkedin.md` placeholder at 16.

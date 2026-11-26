@@ -3,6 +3,8 @@
 
 *Draft title, pending owner approval. Working title in the master prompt: "The local cost of intelligence". Every number below is printed in `research/paper/manuscript.md`; nothing here is peer-reviewed.*
 
+*Note (2026-11-26): this draft was written before the owner-approved rerun of EXP-001 and EXP-002 on Ollama 0.40.6 (manuscript sections 5.1 and 5.2, DL-015, DL-016). Its statements that these experiments produced no results describe the first attempts only. The draft is not revised here; revising it is left to the owner's review of the article drafts.*
+
 Running a language model on your own laptop has no per-request fee. The cost moves to your machine: memory, waiting time and electricity. I set out to measure that trade on one consumer laptop, with the analysis fixed in advance.
 
 ## The question

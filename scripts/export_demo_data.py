@@ -4,6 +4,8 @@
 Writes ``demo/public/data/results.json`` in the shared lab demo schema
 (``lab-demo-results`` 1.0.0) from committed files only: the confirmatory EXP-003
 result, its ``metrics.csv`` and ``contrasts.csv``, the M4 exploratory re-analysis,
+the EXP-001 and EXP-002 rerun tables (``contrasts.csv``, ``metrics.csv``,
+``cold_warm.csv``) and the rerun exploratory checks (DL-015, DL-016),
 the freeze record, the experiment registry, the claims register, the artifact
 manifest and the manuscript. No inference runs and no runtime is contacted.
 
@@ -36,12 +38,19 @@ OUT = ROOT / "demo/public/data/results.json"
 RUN = "RUN-EXP-003-0001"
 RUN_DIR = f"results/confirmatory/{RUN}"
 EXPL = "results/exploratory/M4-EXPL-0001/exploratory_exp003.json"
+RUN1 = "results/confirmatory/RUN-EXP-001-0001"
+RUN2 = "results/confirmatory/RUN-EXP-002-0001"
+EXPL1 = "results/exploratory/RERUN-EXPL-0001/exploratory_exp001.json"
 
 SOURCES = [
     f"{RUN_DIR}/result.json",
     f"{RUN_DIR}/metrics.csv",
     f"{RUN_DIR}/contrasts.csv",
     EXPL,
+    f"{RUN1}/contrasts.csv",
+    f"{RUN1}/metrics.csv",
+    f"{RUN2}/cold_warm.csv",
+    EXPL1,
     "research/freeze.json",
     "research/experiment_registry.csv",
     "research/claims_register.csv",
@@ -141,6 +150,10 @@ def f3(x: float) -> str:
 
 def pp(x: float) -> str:
     return f"{x:+.2f}"
+
+
+def pe(x: float) -> str:
+    return f"{x:.1e}"
 
 
 def iv(lo: float, hi: float, fmt) -> str:
@@ -357,35 +370,115 @@ def build() -> dict:
             unit="percentage points on 295 items"),
     ]
 
-    sent_001 = est("Requests sent of planned", "confirmatory attempt, failed", 0,
+    sent_001 = est("Attempt 1 (Ollama 0.9.6): requests sent of planned", "confirmatory attempt, failed", 0,
                    ck.text("0 of 4,500 requests", "0 of 4,500 requests", ("N-019",)),
                    interval_kind="no result exists", unit="requests", manifest_ids=["N-019"])
-    sent_002 = est("Requests sent of planned", "confirmatory attempt, failed", 0,
+    sent_002 = est("Attempt 1 (Ollama 0.9.6): requests sent of planned", "confirmatory attempt, failed", 0,
                    ck.text("0 of 60 requests", "0 of 60 requests"),
                    interval_kind="no result exists", unit="requests", manifest_ids=["N-019"])
+
+    # EXP-001 and EXP-002, attempt 2 (Ollama 0.40.6, owner option a; DL-015, DL-016)
+    c1 = {(r["arm"], r["extraction"]): r for r in _csv(f"{RUN1}/contrasts.csv")}
+    m1 = {r["arm"]: r for r in _csv(f"{RUN1}/metrics.csv")}
+    x1 = _json(EXPL1)
+    if x1["B_blocks"]["first_stopping_rule_block"] != 11 or x1["B_blocks"]["n_blocks_meeting_a_criterion"] != 2:
+        raise ExportError("EXP-001 block check differs from the recorded status (DL-016)")
+    reps = x1["R_accuracy_per_repetition"]
+    for arm in ("A0", "A1", "A2"):
+        vals = {round(v["strict"], 12) for k, v in reps.items() if k.startswith(arm)}
+        if len(vals) != 1 or not close(vals.pop(), float(m1[arm]["accuracy_strict"])):
+            raise ExportError(f"{arm}: accuracy is not identical across repetitions")
+    pending_001 = ("Pending owner decision (DL-016): under the frozen stopping rule as written this experiment is a "
+                   "failure; the frozen analysis of the complete matrix is shown with that status. The owner decides "
+                   "whether it counts as confirmatory and whether blocks 3 and 11 are repeated. This page chooses none.")
+    exp001_est = [sent_001,
+                  est("Attempt 2 (Ollama 0.40.6): requests sent of planned", "confirmatory run, measured", 4500,
+                      ck.text("4,500", "4,500", ("N-024",)), interval_kind="count", unit="requests",
+                      manifest_ids=["N-024"])]
+    for arm, name, ext, exp_d, exp_ci, exp_p in (
+        ("A1", "llama3.1:8b", "strict", "+16.00", "[+9.67, +22.33]", "2.1e-06"),
+        ("A2", "ministral-3:8b", "strict", "+33.33", "[+27.67, +39.33]", "3.3e-23"),
+        ("A1", "llama3.1:8b", "lenient", "-9.33", "[-14.67, -4.33]", "7.6e-04"),
+        ("A2", "ministral-3:8b", "lenient", "+8.33", "[+4.00, +12.67]", "4.9e-04"),
+    ):
+        r = c1[(arm, ext)]
+        mid = "N-025" if ext == "strict" else "N-026"
+        lo, hi = float(r["ci_low_pp"]), float(r["ci_high_pp"])
+        exp001_est.append(est(
+            f"Attempt 2: {ext} accuracy difference, {name} minus phi4-mini:3.8b"
+            + (" (primary)" if ext == "strict" else " (S2)") + f"; Holm p {ck.text(pe(float(r['holm_p'])), exp_p, (mid,))}",
+            "confirmatory analysis, status pending owner decision", float(r["delta_pp"]),
+            ck.text(pp(float(r["delta_pp"])), exp_d, (mid,)), ci=(lo, hi), ci_level=0.95,
+            interval_kind="95 % paired bootstrap interval over items (10,000 resamples, seed 7)",
+            interval_display=ck.text(iv(lo, hi, pp), exp_ci, (mid,)), unit="percentage points", manifest_ids=[mid]))
+    for arm, name, exp_s, exp_l in (("A0", "phi4-mini:3.8b", "0.560", "0.813"), ("A1", "llama3.1:8b", "0.720", "0.720"),
+                                    ("A2", "ministral-3:8b", "0.893", "0.897")):
+        v = float(m1[arm]["accuracy_strict"])
+        exp001_est.append(est(f"Attempt 2: strict accuracy, {name}", "confirmatory run, measured", v,
+                              ck.text(f3(v), exp_s, ("N-027",)),
+                              interval_kind="none published per arm (the paired difference carries the interval)",
+                              unit="proportion of 300 items", manifest_ids=["N-027"]))
+    sizes1 = x1["M_runtime_model_mib"]
+    for arm, name, exp_lat, exp_mem in (("A0", "phi4-mini:3.8b", "221.6", "2,698.6"),
+                                        ("A1", "llama3.1:8b", "434.8", "4,777.5"),
+                                        ("A2", "ministral-3:8b", "476.8", "5,113.6")):
+        v = float(m1[arm]["latency_ms_median"])
+        exp001_est.append(est(f"Attempt 2: median of per-item median latency, {name}", "confirmatory run, measured, descriptive",
+                              v, ck.text(f1(v), exp_lat, ("N-029",)),
+                              interval_kind="descriptive median over 300 items", unit="ms", manifest_ids=["N-029"]))
+        exp001_est.append(est(f"Attempt 2: runtime-reported model memory, {name}", "confirmatory run, measured (runtime-reported)",
+                              sizes1[arm], ck.text(f1c(sizes1[arm]), exp_mem, ("N-029",)),
+                              interval_kind="deterministic runtime report, no interval", unit="MiB", manifest_ids=["N-029"]))
+
+    cw = {r["arm"]: r for r in _csv(f"{RUN2}/cold_warm.csv")}
+    exp002_est = [sent_002,
+                  est("Attempt 2 (Ollama 0.40.6): trials run of planned", "confirmatory run, measured", 60,
+                      ck.text("60", "60", ("N-024",)), interval_kind="count", unit="trials", manifest_ids=["N-024"])]
+    for arm, name, exp_pen, exp_ci in (("A0", "phi4-mini:3.8b (2.49 GB)", "1,246.4", "[1,242.3, 1,254.8]"),
+                                       ("A1", "llama3.1:8b (4.92 GB)", "1,443.8", "[1,440.5, 1,450.3]"),
+                                       ("A2", "ministral-3:8b (6.02 GB)", "6,039.8", "[5,310.1, 6,530.9]")):
+        r = cw[arm]
+        if int(r["n_cold_invalid"]) or int(r["n_warm_invalid"]):
+            raise ExportError(f"{arm}: invalid cold or warm trials")
+        lo, hi = float(r["penalty_ci_low"]), float(r["penalty_ci_high"])
+        exp002_est.append(est(f"Attempt 2: cold-start penalty (median cold minus median warm TTFT), {name}",
+                              "confirmatory, measured", float(r["penalty_ms"]),
+                              ck.text(f1c(float(r["penalty_ms"])), exp_pen, ("N-030",)), ci=(lo, hi), ci_level=0.95,
+                              interval_kind="95 % bootstrap interval over trials (10,000 resamples, seed 7)",
+                              interval_display=ck.text(iv(lo, hi, f1c), exp_ci, ("N-030",)), unit="ms",
+                              manifest_ids=["N-030"]))
 
     def reg(e: str) -> dict:
         r = registry[e]
         return {"title": r["title"], "report_path": r["report_path"], "registry_status": r["status"]}
 
-    pending_001 = ("Pending owner decision (DL-011): (a) upgrade Ollama and run the frozen matrices "
-                   "unchanged, recording the new runtime version; (b) a new freeze without A2 or with "
-                   "another arm; (c) keep both recorded as failed. This page chooses none of them.")
     experiments = [
         {"id": "EXP-001", **{k: v for k, v in reg("EXP-001").items() if k != "registry_status"},
-         "status": "confirmatory, failed before any request", "outcome": "failed",
-         "verdict": "not testable; experiment failed",
-         "estimates": [sent_001], "claim_ids": claims["EXP-001"],
-         "notes": ["The run aborted at the per-arm /api/show fingerprint (F8): Ollama 0.9.6 cannot render "
-                   "the chat template of ministral-3:8b (HTTP 500, function currentDate not defined). "
-                   "No generation request was sent. The study has no evidence on the primary question.",
+         "status": ("attempt 1 (Ollama 0.9.6) failed before any request; attempt 2 (Ollama 0.40.6, owner option a): "
+                    "4,500 of 4,500 requests, frozen stopping criterion met at block 11 of 15 after the fact"),
+         "outcome": "failed",
+         "verdict": ("failure under the stopping rule as written; the frozen analysis of the complete matrix rejects H0 "
+                     "for both arms under strict extraction, and S2 reverses the A1 sign; status pending owner decision"),
+         "estimates": exp001_est, "claim_ids": claims["EXP-001"],
+         "notes": ["Attempt 1 aborted at the per-arm /api/show fingerprint (F8): Ollama 0.9.6 cannot render the chat "
+                   "template of ministral-3:8b (HTTP 500, function currentDate not defined). No generation request was sent.",
+                   "Attempt 2 ran unchanged on Ollama 0.40.6. Blocks 3 and 11 had swap growth above 512 MiB and block 11 "
+                   "above 2 GiB; the runner enforces neither rule, so the run did not stop. Accuracy was identical in all "
+                   "five repetitions, so no accuracy value depends on these blocks. A0 phi4-mini:3.8b wrote text after "
+                   "the label in 520 of 1,500 records; under lenient extraction (S2) the llama3.1:8b difference is negative. "
+                   "On 0.40.6 ministral-3:8b receives a prompt about seven times longer.",
                    pending_001]},
         {"id": "EXP-002", **{k: v for k, v in reg("EXP-002").items() if k != "registry_status"},
-         "status": "confirmatory, failed before any request", "outcome": "failed",
-         "verdict": "not testable; experiment failed",
-         "estimates": [sent_002], "claim_ids": claims["EXP-002"],
-         "notes": ["EXP-002 aborted at the same step for the same reason. No cold-start penalty was "
-                   "measured and its ordering hypothesis is untested.", pending_001]},
+         "status": ("attempt 1 (Ollama 0.9.6) failed before any request; attempt 2 (Ollama 0.40.6, owner option a) "
+                    "complete: 60 of 60 trials, 0 invalid start states, 0 excluded blocks"),
+         "outcome": "positive",
+         "verdict": "H1 supported (descriptive evidence; ordering confounded with prompt length)",
+         "estimates": exp002_est, "claim_ids": claims["EXP-002"],
+         "notes": ["Attempt 1 aborted at the same step for the same reason; no penalty was measured on that attempt.",
+                   "On 0.40.6 the ministral-3:8b prompt is 631 tokens against 81 and 88, and the penalty contains "
+                   "uncached prefill as well as loading, so file size and prompt length are confounded. Cold means "
+                   "runtime-cold only. EXP-001 and EXP-002 ran on Ollama 0.40.6 and EXP-003 on 0.9.6; no latency "
+                   "comparison is made across them."]},
         {"id": "EXP-003", **{k: v for k, v in reg("EXP-003").items() if k != "registry_status"},
          "status": "confirmatory, complete (3,000 of 3,000 requests)", "outcome": "null",
          "verdict": "H0 not rejected: no detected difference, not equivalence",
@@ -418,12 +511,13 @@ def build() -> dict:
         ],
         "not_measured": [
             {"arm": "A0", "model": "phi4-mini:3.8b (Q4_K_M)", "experiment": "EXP-001, EXP-002",
-             "reason": "experiment failed before any request"},
+             "reason": "measured on Ollama 0.40.6 (EXP-001 attempt 2), not placed here: this chart holds EXP-003, "
+                       "which ran on 0.9.6, and no comparison is made across runtime versions"},
             {"arm": "A1", "model": "llama3.1:8b (Q4_K_M)", "experiment": "EXP-001, EXP-002",
-             "reason": "experiment failed before any request (the same model is the EXP-003 baseline, "
-                       "but EXP-001 results do not exist)"},
+             "reason": "its EXP-001 values come from Ollama 0.40.6 and are not placed beside its EXP-003 values "
+                       "(Ollama 0.9.6)"},
             {"arm": "A2", "model": "ministral-3:8b (Q4_K_M)", "experiment": "EXP-001, EXP-002",
-             "reason": "Ollama 0.9.6 cannot render its chat template"},
+             "reason": "measured on Ollama 0.40.6 only (Ollama 0.9.6 cannot render its chat template)"},
         ],
     }
     for a in frontier["arms"]:
@@ -447,25 +541,24 @@ def build() -> dict:
         raise ExportError("sensitivity table too short")
 
     pending = [
-        {"id": "TOKEN-EXP-001-002", "title": "Next step for EXP-001 and EXP-002",
+        {"id": "TOKEN-EXP-001-STATUS", "title": "Status of EXP-001 after the stopping criterion met in block 11",
          "status": "pending owner decision",
-         "readings": ["(a) upgrade Ollama and run the frozen matrices unchanged, recording the new runtime version",
-                      "(b) a new freeze without A2 or with another arm",
-                      "(c) keep both recorded as failed"],
-         "source": "DL-011, DL-012; manuscript section 5.2"},
-        {"id": "TOKEN-LATENCY-RATIO", "title": "Reading of the frozen latency-ratio interval (protocol section 8)",
+         "readings": ["report EXP-001 as a failure under the stopping rule as written",
+                      "count the frozen accuracy analysis of the complete matrix, with the criteria disclosed",
+                      "repeat blocks 3 and 11 or the experiment (a further run)"],
+         "source": "DL-016; manuscript section 5.1"},
+        {"id": "TOKEN-TITLE", "title": "Manuscript title, approved as written, says \"two failed experiments\"",
          "status": "pending owner decision",
-         "readings": [f"ratio of medians: {f3(e1['ratio_of_medians'])} {iv(*e1['ratio_of_medians_ci'], f3)} (exploratory)",
-                      f"median of per-item ratios: {f3(e1['median_of_item_ratios'])} "
-                      f"{iv(*e1['median_of_item_ratios_ci'], f3)} (exploratory)"],
-         "source": "DL-011 gap 1; manuscript sections 4.5 and 5.4"},
+         "readings": ["keep the approved title", "change it to describe the rerun"],
+         "source": "DL-016; manuscript note on the title"},
     ]
-    for p in pending[1]["readings"]:
-        ck.text(p.split(": ", 1)[1].replace(" (exploratory)", ""), p.split(": ", 1)[1].replace(" (exploratory)", ""))
+    for p in (f"ratio of medians: {f3(e1['ratio_of_medians'])} {iv(*e1['ratio_of_medians_ci'], f3)}",
+              f"median of per-item ratios: {f3(e1['median_of_item_ratios'])} {iv(*e1['median_of_item_ratios_ci'], f3)}"):
+        ck.text(p.split(": ", 1)[1], p.split(": ", 1)[1])
 
     assumptions = [
-        {"name": "Runtime and machine", "value": "Ollama 0.9.6 on one Apple M1 Pro laptop (16 GB), AC power",
-         "source": "measured setting, RUN-EXP-003-0001 run manifest"},
+        {"name": "Runtime and machine", "value": "Ollama 0.9.6 (EXP-003) and Ollama 0.40.6 (EXP-001 and EXP-002, attempt 2) on one Apple M1 Pro laptop (16 GB), AC power",
+         "source": "measured setting, run manifests of RUN-EXP-003-0001, RUN-EXP-001-0001 and RUN-EXP-002-0001; DL-015"},
         {"name": "Decoding", "value": "template T1, temperature 0, num_predict 8, num_ctx 2048, runtime seeds 0 to 4",
          "source": "frozen EXP-003 config"},
         {"name": "Benchmark subset", "value": "300 ARC-Challenge test items drawn once with seed 20261124",
@@ -485,9 +578,10 @@ def build() -> dict:
         "schema_version": "1.0.0",
         "project": "TOKEN",
         "question": "How do local model configurations trade off quality, latency and resource use?",
-        "status_label": ("Independent research manuscript / preprint draft, not peer-reviewed. One confirmatory "
-                         "experiment complete (EXP-003, null result); two failed before any request (EXP-001, "
-                         "EXP-002). Owner decisions pending."),
+        "status_label": ("Independent research manuscript / preprint draft, not peer-reviewed. EXP-003 complete (null "
+                         "result, Ollama 0.9.6). EXP-001 and EXP-002 failed on Ollama 0.9.6 and were rerun unchanged on "
+                         "0.40.6 with the owner's approval: EXP-002 complete; EXP-001 ran in full but met a frozen "
+                         "stopping criterion after the fact. Owner decisions pending."),
         "code_revision": _revision(),
         "run_code_revision": doc["manifest"]["git"]["revision"],
         "run_wall_s": wall,

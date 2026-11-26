@@ -92,17 +92,21 @@ def test_every_registered_experiment_is_exported_with_status_verdict_and_claims(
     for e in exported.values():
         assert e["status"] and e["verdict"] and e["claim_ids"]
         assert set(e["claim_ids"]) <= claim_ids
+    # EXP-001: failure under the stopping rule as written, status pending the owner (DL-016);
+    # EXP-002: complete on the rerun, H1 supported under the frozen rule.
     assert exported["EXP-001"]["outcome"] == "failed"
-    assert exported["EXP-002"]["outcome"] == "failed"
+    assert "pending owner decision" in exported["EXP-001"]["verdict"]
+    assert exported["EXP-002"]["outcome"] == "positive"
+    assert exported["EXP-002"]["verdict"].startswith("H1 supported")
     assert exported["EXP-003"]["verdict"] == "H0 not rejected: no detected difference, not equivalence"
 
 
 def test_pending_owner_decisions_are_shown_with_every_reading():
     pend = {p["id"]: p for p in _data()["pending_owner_decisions"]}
-    assert set(pend) == {"TOKEN-EXP-001-002", "TOKEN-LATENCY-RATIO"}
+    assert set(pend) == {"TOKEN-EXP-001-STATUS", "TOKEN-TITLE"}
     assert all(p["status"] == "pending owner decision" for p in pend.values())
-    assert len(pend["TOKEN-EXP-001-002"]["readings"]) == 3
-    assert len(pend["TOKEN-LATENCY-RATIO"]["readings"]) == 2
+    assert len(pend["TOKEN-EXP-001-STATUS"]["readings"]) == 3
+    assert len(pend["TOKEN-TITLE"]["readings"]) == 2
 
 
 def test_no_timestamp_and_sources_hashed():
