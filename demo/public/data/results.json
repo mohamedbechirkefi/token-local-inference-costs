@@ -4,7 +4,7 @@
  "project": "TOKEN",
  "question": "How do local model configurations trade off quality, latency and resource use?",
  "status_label": "Independent research manuscript / preprint draft, not peer-reviewed. EXP-003 complete (null result, Ollama 0.9.6). EXP-001 and EXP-002 failed on Ollama 0.9.6 and were rerun unchanged on 0.40.6 with the owner's approval: EXP-002 complete; EXP-001 ran in full but met a frozen stopping criterion after the fact. Owner decisions pending.",
- "code_revision": "bfc1a94520976da5bc99a2e4c2bb75160afab276",
+ "code_revision": "d72f1131fbe5b61faef95cb71abf51b314a96e95",
  "run_code_revision": "57f6187e7b450fea05eedbbee8c663943596a699",
  "run_wall_s": 1509.7494062910118,
  "sources": [
