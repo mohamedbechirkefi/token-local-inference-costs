@@ -353,3 +353,4 @@ Listed in `research/publication/author_review.md` ("Prepared for the owner (M6, 
 - `scripts/check_links.py .`: "relative links checked: 24; broken: 0".
 - Remaining home paths: 3 lines in this file and 1 in `research/decision_log.md` (append-only). Remaining owner placeholders: none.
 - Next action: the coordinator deploys the demo and pushes on the owner's recorded word; the owner's B15, B16, B18 and R-TOKEN-3. No push, no deploy, no box ticked.
+- Re-export after commit b7d2e3e: `demo/public/data/results.json` changed in `code_revision` only (b7d2e3e); committed separately.
