@@ -1,25 +1,28 @@
 <!-- SPDX-License-Identifier: LicenseRef-TOKEN-NC-Research-1.0 -->
 # EXP-001 report: accuracy and cost of installed local models of different sizes
 
-**Status: CONFIRMATORY, two attempts.**
+**Status: CONFIRMATORY, COMPLETE under the frozen rules (after a repeat of two blocks). Two attempts.**
 
 - **Attempt 1 (2026-11-25, Ollama 0.9.6): FAILED before any request. No results.** Kept unchanged in the section "Attempt 1" at the end of this report.
-- **Attempt 2 (2026-11-26, Ollama 0.40.6, owner option a): matrix complete (4,500 of 4,500 requests, 0 errors), but a frozen stopping criterion was met after the fact.** Block 11 of 15 had swap growth above 2 GiB and blocks 3 and 11 above 512 MiB. The runner enforces neither rule, so the run did not stop and no block was repeated. Under the stopping rule as written the experiment is a failure; the frozen analysis of the complete matrix is reported below with that status, and **whether it counts as confirmatory is the owner's decision** (DL-016).
+- **Attempt 2 (2026-11-26, Ollama 0.40.6, owner option a): complete under the frozen rules.** RUN-EXP-001-0001 ran all 4,500 requests, but blocks 3 and 11 met the frozen exclusion criterion and block 11 the stopping criterion, which that runner did not enforce. On the owner's instruction ("Repeat blocks 3 and 11"), the frozen block rules were implemented in the runner and committed first, and both blocks were repeated once (RUN-EXP-001-0002). Neither met a criterion on repeat. As the protocol defines, the repeated blocks replace the excluded ones; all 15 blocks of the combined analysis input are free of the frozen criteria (DL-017, DL-018).
+- The analysis reported before the repeat (RUN-EXP-001-0001 alone, status then pending) is kept as written in the section "Pre-repeat analysis of attempt 2". Its accuracy values and contrasts are identical to the final ones.
 
 ## 1. Identification
 
-- Experiment: EXP-001. Run: RUN-EXP-001-0001. Date: 2026-11-26. Protocol v1.0, frozen 2026-11-24 (owner, G-FREEZE), SHA-256 1997317c931cf95d04c271ab2414aef82306f5976f1eea7262eb1e4d54fee8e4; main protocol ea86d0bb2d1864f69ac545bde1c8dd263276c8dbd9d1b3fee5b7a49b8dd4d2c3.
+- Experiment: EXP-001. Runs: RUN-EXP-001-0001 (2026-11-26, full matrix) and RUN-EXP-001-0002 (2026-11-26, repeat of blocks 3 and 11); analysis input `results/confirmatory/RUN-EXP-001-0002/combined/`. Protocol v1.0, frozen 2026-11-24 (owner, G-FREEZE), SHA-256 1997317c931cf95d04c271ab2414aef82306f5976f1eea7262eb1e4d54fee8e4; main protocol ea86d0bb2d1864f69ac545bde1c8dd263276c8dbd9d1b3fee5b7a49b8dd4d2c3.
 - Config `experiments/EXP-001.json`, canonical SHA-256 355d86f1cd3bc28373bef6e3e36c32828337583b0893d2b87d4c33fa48c7913e (unchanged).
-- Code revision ca3a08fb536fbb80196354b5bdc0b3c26b38aa56, clean tree (`dirty: false`). Authorship: Mohamed Bechir Kefi (C3); the AI was used as a research and development assistant.
-- **Dated deviation (owner-approved): runtime version 0.9.6 -> 0.40.6, owner option a** (owner, 2026-11-26, R-TOKEN-1: "upgrade Ollama and run the frozen EXP-001 and EXP-002 matrices unchanged, runtime version recorded"; DL-015). Nothing else changed.
+- Code revisions: ca3a08fb536fbb80196354b5bdc0b3c26b38aa56 (RUN-EXP-001-0001) and c7d1ba666b258450c6780df755362b81d0e218ef (RUN-EXP-001-0002, the pre-data commit that implements the frozen block rules), both with a clean tree. Authorship: Mohamed Bechir Kefi (C3); the AI was used as a research and development assistant.
+- **Dated deviation (owner-approved): runtime version 0.9.6 -> 0.40.6, owner option a** (owner, 2026-11-26, R-TOKEN-1: "upgrade Ollama and run the frozen EXP-001 and EXP-002 matrices unchanged, runtime version recorded"; DL-015).
+- **Owner instruction (2026-11-26, follow-up answers):** "Repeat blocks 3 and 11". The frozen block-exclusion and stopping rules were to be implemented in the runner first, tested on the simulated backend and committed before any new confirmatory output; then block 3 (A1, repetition 0) and block 11 (A0, repetition 3) were to be repeated once, unchanged otherwise (same runtime 0.40.6, seeds, order, template) (DL-017).
 
 ## 2. Executive summary
 
 - Question: do llama3.1:8b (A1) or ministral-3:8b (A2) differ in accuracy from phi4-mini:3.8b (A0) on a fixed 300-item ARC-Challenge subset, and at what cost?
 - Frozen primary analysis (strict extraction, Holm over two contrasts): A1 minus A0 = +16.00 pp, 95 % CI [+9.67, +22.33], Holm p = 2.1e-06; A2 minus A0 = +33.33 pp [+27.67, +39.33], Holm p = 3.3e-23. By the decision rule, H0 is rejected for both arms.
 - Frozen sensitivity S2 (lenient extraction): A1 minus A0 = -9.33 pp [-14.67, -4.33]; A2 minus A0 = +8.33 pp [+4.00, +12.67]. The A1 sign reverses: A0 often wrote the label followed by text (520 of 1,500 records), so by the frozen S2 text the strict A1 advantage reflects format compliance, not knowledge. A2 leads A0 under both rules.
-- Cost: both larger arms were about twice as slow per item as A0 (median 434.8 and 476.8 against 221.6 ms) and used 4,777.5 and 5,113.6 against 2,698.6 MiB of runtime-reported model memory.
-- Principal caveats: the stopping-criterion status above; on 0.40.6, A2's prompts are about seven times longer than A0's and A1's; EXP-003 ran on a different runtime version (0.9.6), so no latency comparison with EXP-003 is made.
+- Cost: both larger arms were about twice as slow per item as A0 (median 435.3 and 476.8 against 221.6 ms) and used 4,777.5 and 5,113.6 against 2,698.6 MiB of runtime-reported model memory.
+- The block repeat changed no accuracy value: the 600 repeated requests returned the same responses as the excluded ones. It changed A0's and A1's latency summaries slightly (A1 median 434.8 ms before, 435.3 ms after).
+- Principal caveats: block 11 of RUN-EXP-001-0001 had met the memory-exhaustion stopping rule, which as written ends the run as a failure; repeating it follows the owner's instruction. On 0.40.6, A2's prompts are about seven times longer than A0's and A1's. EXP-003 ran on a different runtime version (0.9.6), so no latency comparison with EXP-003 is made.
 
 ## 3. Rationale
 
@@ -32,20 +35,142 @@ Unchanged. H0_k: Delta_k = 0 against H1_k: Delta_k != 0, for k in {A1, A2}, with
 ## 5. Methodology (as frozen)
 
 - Data: ARC-Challenge test (CC BY-SA 4.0), Hugging Face `allenai/ai2_arc` at revision 210d026f, JSONL SHA-256 86ccaace...1f63; 300 items drawn with seed 20261124 (`data/arc_challenge_test_subset_ids.json`).
+- Arms: A0 phi4-mini:3.8b, A1 llama3.1:8b, A2 ministral-3:8b, all GGUF Q4_K_M, from the local store; no model was pulled. Manifest digests 78fad5d1..., 46e0c10c..., 1922accd... (checked with `/api/tags` before the repeat; equal to DL-015).
+- Template T1, temperature 0, num_predict 8, num_ctx 2048, runtime seeds 0 to 4, item and arm order from seed 1000 + repetition, one discarded warm-up per block, at most 2 retries.
+- Block rules (main protocol section 9), enforced by the runner from revision c7d1ba6 on: a block is excluded and repeated once if a foreign model was loaded, the machine was on battery, swap grew by more than 512 MiB, or the runtime version changed; the run aborts and is reported as a failure on swap growth above 2 GiB or a killed runner; wall-clock cap of 4 hours per experiment (DL-017 gives the operational reading).
+- Statistics: paired bootstrap over items (10,000 resamples, seed 7, percentile intervals), exact McNemar on majority correctness, Holm over the two contrasts within each extraction rule.
+- Hardware and software: Apple M1 Pro (10 cores), 16 GB, macOS 15.3.1, AC power, Low Power Mode off. Ollama 0.40.6 (official darwin build; binary `labs/.tools/ollama-0.40.6/ollama` SHA-256 69fcb23a...c2ff) on 127.0.0.1:11434, started for each run by the session that ran it, with no other client. Python 3.12.1, numpy 2.3.4, psutil 7.1.0, jsonschema 4.25.1.
+- Budget: 4,500 requests, 4-hour cap, zero cost.
+
+## 6. Implementation verification
+
+- Block rules: `tests/test_block_rules.py` (22 tests on the simulated backend with injected machine readings) covers each exclusion criterion with its one repeat, a second exclusion not repeated, the memory-exhaustion abort (swap growth, killed runner, lost runtime), the 4-hour cap, the block-repeat mode (new run id, source untouched, same seed, order and warm-up, refusals) and the combination. Full suite at the pre-data commit c7d1ba6: 184 passed. Reports of runs made before the rules regenerate byte for byte.
+- Before the repeat: frozen protocol, config and item-file hashes matched; the runner checked the item file and subset before any request; the arm fingerprints (`/api/show` template, system, parameter and Modelfile hashes) equal those of RUN-EXP-001-0001.
+- The repeat mode refuses a block that meets no frozen criterion in its own records; blocks 3 and 11 of RUN-EXP-001-0001 met one (swap growth 734.1 and 2,778.1 MiB).
+
+## 7. Execution record
+
+- RUN-EXP-001-0001 (full matrix): 2026-11-26T12:31:06Z to 13:01:55Z, 1,849.1 s, 4,500 requests, 0 errors, exit 0 (JRN-0011; details in the pre-repeat section below).
+- RUN-EXP-001-0002 (block repeat): `nice -n 5 .venv/bin/token-lab repeat-blocks --config experiments/EXP-001.json --source results/confirmatory/RUN-EXP-001-0001 --blocks 3,11`; 2026-11-26T14:12:03Z to 14:15:52Z, 228.4 s, 600 requests, 0 errors, exit 0 (JRN-0014).
+- Quiet-machine readings for the repeat (rule of DL-015: 1-minute load below 2.5 and an empty `/api/ps`, AC power, Low Power Mode off):
+  - Before the server start, 14:11:37Z: load 1.66 / 1.70 / 1.77, AC power, Low Power Mode off, no Ollama process, swap used 4,570.44 MiB of 6,144 MiB. Largest resident processes (read only): Creative Cloud 953 MiB, the coding agent 624 MiB, a Creative Cloud helper 570 MiB, VS Code helpers 430 and 352 MiB, Adobe Desktop Service and mediaanalysisd 338 MiB each.
+  - Start, 14:11:57Z: load 1.47 / 1.66 / 1.75, `/api/ps` empty, swap used 4,570.44 MiB.
+  - End, 14:15:52Z: load 2.49 / 1.87 / 1.79, swap used 4,988.75 MiB. The server started for the repeat was stopped at 14:16:15Z.
+- Block outcomes (main protocol section 9):
+
+| Block | Arm, repetition | RUN-EXP-001-0001: swap growth (MiB), criterion | RUN-EXP-001-0002: swap growth (MiB) | Loaded before the repeat | Outcome |
+|---|---|---|---|---|---|
+| 3 | A1, 0 | 734.1, exclusion | 426.3 | none | included; repeat spent |
+| 11 | A0, 3 | 2,778.1, exclusion and stopping rule | -8.0 | llama3.1:8b (an arm model) | included; repeat spent |
+| other 13 | | at most 0.0, none | not repeated | | included |
+
+- In both repeated blocks: AC power before and after, runtime version 0.40.6 after, no foreign model. Peak swap growth during the blocks 426.3 and 0.0 MiB. Responses, extracted labels and correctness are identical to those of the excluded blocks (300 of 300 records each).
+- Combination (`token-lab combine`): RUN-EXP-001-0001 with blocks 3 and 11 replaced by RUN-EXP-001-0002; 15 of 15 blocks, 4,500 records, no block meets a criterion (JRN-0015); status **complete**. The two runs took 2,077.5 s of wall-clock time in total, within the 4-hour cap; the 70 minutes between them, with no request, are not counted.
+
+## 8. Results
+
+Analysis exactly as frozen, computed by `token-lab report` on the combined input (`results/confirmatory/RUN-EXP-001-0002/combined/`).
+
+| Arm | Accuracy strict | Accuracy lenient | Strict format failures (records of 1,500) | Median latency [Q1, Q3] (ms) | TTFT median (ms) | Decode (tok/s) | Runtime model memory (MiB) | Median prompt length (tokens) | Determinism |
+|---|---|---|---|---|---|---|---|---|---|
+| A0 phi4-mini:3.8b | 0.560 | 0.813 | 520 | 221.6 [218.2, 306.9] | 195.2 | 88.7 | 2,698.6 | 84 | 1.00 |
+| A1 llama3.1:8b | 0.720 | 0.720 | 10 | 435.3 [431.4, 555.6] | 394.0 | 49.1 | 4,777.5 | 91.5 | 1.00 |
+| A2 ministral-3:8b | 0.893 | 0.897 | 5 | 476.8 [470.9, 606.9] | 430.4 | 45.7 | 5,113.6 | 636 | 1.00 |
+
+| Contrast | Extraction | n | Delta (pp) | 95 % CI (pp) | b | c | McNemar p | Holm p |
+|---|---|---|---|---|---|---|---|---|
+| A1 vs A0 | strict (primary) | 300 | +16.00 | [+9.67, +22.33] | 75 | 27 | 2.1e-06 | 2.1e-06 |
+| A2 vs A0 | strict (primary) | 300 | +33.33 | [+27.67, +39.33] | 108 | 8 | 1.6e-23 | 3.3e-23 |
+| A1 vs A0 | lenient (S2) | 300 | -9.33 | [-14.67, -4.33] | 19 | 47 | 7.6e-04 | 7.6e-04 |
+| A2 vs A0 | lenient (S2) | 300 | +8.33 | [+4.00, +12.67] | 35 | 10 | 2.5e-04 | 4.9e-04 |
+
+- `combined/contrasts.csv` is byte-identical to the pre-repeat `RUN-EXP-001-0001/contrasts.csv`. Chance floor 0.251. Accuracy was identical in every repetition (A0 0.560, A1 0.720, A2 0.893, five times each).
+- A0's strict failures are on 104 items; typical responses are "B. liquid" or "A. wind energy": the label followed by the option text, which strict extraction does not accept and lenient extraction does.
+- Latency ratio to A0, both readings of protocol section 8 (owner R-TOKEN-2; exploratory, JRN-0015): A1/A0 1.964 [1.776, 1.970] (ratio of medians) and 1.980 [1.975, 1.982] (median of per-item ratios); A2/A0 2.151 [1.945, 2.157] and 2.163 [2.156, 2.166]. Both larger arms were slower than A0 on 300 of 300 items.
+- Changes caused by the repeat (secondary values only): A0 median latency quartiles [218.2, 306.9] ms (before [218.2, 307.7]), decode 88.7 tokens/s (88.6); A1 median latency 435.3 [431.4, 555.6] ms (434.8 [430.9, 555.2]), TTFT 394.0 ms (393.6); largest block swap delta A0 0.0 MiB (2,778.1) and A1 426.3 MiB (734.1); the latency ratios above (before: 1.962, 1.977, 2.151 and 2.162).
+- S3 (descriptive): per-repetition median latency of A1 and A2 varied by less than 1 % (A1 434.5 to 437.4 ms, A2 476.3 to 477.0 ms). A0's repetition 2 block had a median latency of 50.1 ms against 221.7 to 222.5 ms in the others (section 9), so its coefficient of variation across repetitions is 0.41.
+- Peak RSS (26.5 to 34.3 MiB per block) covers only the Ollama server process on 0.40.6 and is not reported as memory.
+- Figure FIG-002 (`figures/FIG-002-exp001-latency.svg`, from the combined input): per-item median latency per arm. Each dot is one item (n = 300 per arm); the red bar is the median over items, in ms.
+
+![FIG-002. Per-item median end-to-end latency per arm in EXP-001 (RUN-EXP-001-0001 with blocks 3 and 11 replaced by RUN-EXP-001-0002, Ollama 0.40.6).](figures/FIG-002-exp001-latency.svg)
+
+## 9. Interpretation
+
+- **Expected versus observed.** The frozen H1 was nondirectional. Under strict extraction both 8B-class arms differed from the 3.8B baseline, in favour of the larger models. That is what the rationale suggests, but it is not what the frozen sensitivity analysis supports for A1.
+- **Format compliance.** S2 is the frozen check for exactly this case. A0 knew the answer often enough to reach 0.813 under lenient extraction, above A1's 0.720, but it wrote the option text after the label in about a third of its records. The strict A1 advantage is therefore a difference in following the "label only" instruction, not in answering the questions. A2 is ahead of A0 under both rules, by 33.33 and 8.33 points, and ahead of A1 by inspection of the per-arm accuracies under both rules (no A2 versus A1 contrast was frozen, so none is tested).
+- **Configurations, not size.** The arms differ in parameter count, architecture, training data, tokenizer and, on 0.40.6, prompt length: the ministral-3:8b template adds a default system text, so A2 received about 636 tokens per prompt against 84 and 91.5. A2's accuracy and latency belong to this configuration as rendered by this runtime.
+- **Cost.** A1 and A2 took about twice A0's time per item and about 1.8 and 1.9 times its runtime-reported memory. Latency here is prefill-dominated (two-token answers); A2's higher latency includes its longer prompt.
+- **The memory criteria.** In RUN-EXP-001-0001 both affected blocks began with ministral-3:8b still loaded from the preceding block, and in block 11 the runtime held it beside phi4-mini:3.8b. Repeated from a different runtime state, the same blocks stayed below the exclusion threshold. Swap is system-wide on a shared 16 GB laptop and is not under the experiment's control; the enforced rules now detect such blocks and repeat them during the run.
+- **Prompt reuse.** The A0 block of repetition 2 ran immediately after the A0 block of repetition 1, with the model still loaded, and its median prefill fell from about 191 to 22.0 ms. This is consistent with the runtime reusing processed prompts; it was not tested further.
+
+## 10. Threats to validity
+
+- **Stopping rule (internal).** Block 11 of RUN-EXP-001-0001 met the stopping rule ("Abort on any sign of memory exhaustion (runner killed or swap growth above 2 GiB); report as a failure"). Read strictly, that rule ends the first run as a failure at block 11. The owner instructed a repeat of the block instead; this report follows that instruction and discloses it. Every accuracy value is the same under either reading.
+- **Repeated blocks (internal).** The two repeated blocks ran 70 minutes after the rest of the matrix, from a different preceding runtime state, with the same seed, item order and warm-up. Their timings enter each affected arm's per-item medians as one of five repetitions.
+- **Runtime (external).** One runtime version (0.40.6), different from EXP-003's (0.9.6). Prompt rendering by each model's own chat template is part of each arm; for A2 it includes a system text that depends on the run date (`currentDate`). The repeated blocks are A0 and A1 blocks; A2 was not rerun.
+- **Construct.** ARC-Challenge multiple-choice accuracy is a narrow proxy for quality; contamination is untested. Strict extraction measures instruction following as well as knowledge (S2).
+- **Statistical.** The intervals are over items within one session; latency ratios are exploratory, both readings shown. S1 (template sensitivity) was not run.
+- **Instrumentation.** Peak RSS does not include the runner process on 0.40.6; the named memory metric (`/api/ps`) is unaffected.
+
+## 11. Conclusion and next step
+
+EXP-001 is complete under the frozen rules. On this laptop with Ollama 0.40.6 and template T1, ministral-3:8b answered more ARC-Challenge items correctly than phi4-mini:3.8b under both extraction rules, while llama3.1:8b's strict advantage over phi4-mini:3.8b reverses under lenient extraction and is attributed to format compliance. Both 8B-class configurations cost about twice the latency and 1.8 to 1.9 times the runtime memory. Open items for the owner: S1 under a frozen config; the definition of the latency-ratio interval (both readings stay shown).
+
+## 12. Reproduction appendix
+
+- Environment: `../.tools/py/bin/uv sync --frozen --all-groups --all-extras`; tests `.venv/bin/python -m pytest`.
+- Data: `/usr/local/bin/python3 -I scripts/fetch_arc.py --repo .` (expected JSONL SHA-256 86ccaace4cd159b5c02b6b3339ebe8a7022a54f1b488e433c060b3bc38ac1f63).
+- Runtime: Ollama 0.40.6 official darwin build (`ollama-darwin.tgz`, SHA-256 b2b55434865a668decb494110d7fd970eed3ecc8837be2872f672ccbb95df974), `OLLAMA_HOST=127.0.0.1:11434 ollama serve`; models at the digests in section 5.
+- Full matrix: `.venv/bin/token-lab run --config experiments/EXP-001.json` (from revision c7d1ba6 on, the runner enforces the block rules itself).
+- Block repeat: `.venv/bin/token-lab repeat-blocks --config experiments/EXP-001.json --source results/confirmatory/RUN-EXP-001-0001 --blocks 3,11`.
+- Combination, tables and figure: `.venv/bin/token-lab combine --source results/confirmatory/RUN-EXP-001-0001 --repeat results/confirmatory/RUN-EXP-001-0002 --out results/confirmatory/RUN-EXP-001-0002/combined`, then `.venv/bin/token-lab report --result results/confirmatory/RUN-EXP-001-0002/combined/result.json`. Exploratory checks: `.venv/bin/python -I scripts/rerun_exploratory_exp001.py --repo . --result results/confirmatory/RUN-EXP-001-0002/combined/result.json --out results/exploratory/REPEAT-EXPL-0001`.
+- Raw outputs: `results/confirmatory/RUN-EXP-001-0001/` (unchanged; result.json SHA-256 f95ee2055a9048559162cf8417a63f31682e5bf23dd724e0813b38e197cd003c) and `results/confirmatory/RUN-EXP-001-0002/` (result.json SHA-256 be35b70bd32b640ad80f65b11e8f8e0705fa7e3f7873cccbb0cfb4dd61977238; combined/result.json SHA-256 4743f2d78c49019fea63857a59c731c8f8917bb6dc3465fea02e242c34b2c7a4; all hashes in `sha256_manifest.json`). The per-run report, metrics and contrasts of RUN-EXP-001-0002 outside `combined/` cover only the two repeated blocks and are not an analysis of EXP-001. Copies in this folder: `config.json`, `run_manifest.json` (the combined input's manifest), `metrics.csv`, `contrasts.csv`, `figures/FIG-002-exp001-latency.svg`.
+- Records: JRN-0010 to JRN-0015; DL-015 to DL-018; claims CLM-016 to CLM-021, CLM-023 to CLM-028.
+
+## Pre-repeat analysis of attempt 2 (RUN-EXP-001-0001 alone, kept as written)
+
+**Label: CONFIRMATORY RUN, PRE-REPEAT ANALYSIS, SUPERSEDED FOR THE STATUS.** The text below is the attempt-2 report as installed on 2026-11-26 before the block repeat, unchanged except that its headings are one level lower and the embedded figure is replaced by its path (marked). The decisions it asks for were made on 2026-11-26 (DL-017); the status above replaces "pending".
+
+### 1. Identification
+
+- Experiment: EXP-001. Run: RUN-EXP-001-0001. Date: 2026-11-26. Protocol v1.0, frozen 2026-11-24 (owner, G-FREEZE), SHA-256 1997317c931cf95d04c271ab2414aef82306f5976f1eea7262eb1e4d54fee8e4; main protocol ea86d0bb2d1864f69ac545bde1c8dd263276c8dbd9d1b3fee5b7a49b8dd4d2c3.
+- Config `experiments/EXP-001.json`, canonical SHA-256 355d86f1cd3bc28373bef6e3e36c32828337583b0893d2b87d4c33fa48c7913e (unchanged).
+- Code revision ca3a08fb536fbb80196354b5bdc0b3c26b38aa56, clean tree (`dirty: false`). Authorship: Mohamed Bechir Kefi (C3); the AI was used as a research and development assistant.
+- **Dated deviation (owner-approved): runtime version 0.9.6 -> 0.40.6, owner option a** (owner, 2026-11-26, R-TOKEN-1: "upgrade Ollama and run the frozen EXP-001 and EXP-002 matrices unchanged, runtime version recorded"; DL-015). Nothing else changed.
+
+### 2. Executive summary
+
+- Question: do llama3.1:8b (A1) or ministral-3:8b (A2) differ in accuracy from phi4-mini:3.8b (A0) on a fixed 300-item ARC-Challenge subset, and at what cost?
+- Frozen primary analysis (strict extraction, Holm over two contrasts): A1 minus A0 = +16.00 pp, 95 % CI [+9.67, +22.33], Holm p = 2.1e-06; A2 minus A0 = +33.33 pp [+27.67, +39.33], Holm p = 3.3e-23. By the decision rule, H0 is rejected for both arms.
+- Frozen sensitivity S2 (lenient extraction): A1 minus A0 = -9.33 pp [-14.67, -4.33]; A2 minus A0 = +8.33 pp [+4.00, +12.67]. The A1 sign reverses: A0 often wrote the label followed by text (520 of 1,500 records), so by the frozen S2 text the strict A1 advantage reflects format compliance, not knowledge. A2 leads A0 under both rules.
+- Cost: both larger arms were about twice as slow per item as A0 (median 434.8 and 476.8 against 221.6 ms) and used 4,777.5 and 5,113.6 against 2,698.6 MiB of runtime-reported model memory.
+- Principal caveats: the stopping-criterion status above; on 0.40.6, A2's prompts are about seven times longer than A0's and A1's; EXP-003 ran on a different runtime version (0.9.6), so no latency comparison with EXP-003 is made.
+
+### 3. Rationale
+
+As in the frozen protocol, items 2 and 3: larger parameter counts may raise multiple-choice accuracy, while bytes read per generated token grow with model size. dettmers2022kbit and llamacpp-quantize are the verified sources; neither gives a paired, item-level accuracy-plus-cost measurement for these installed configurations on a laptop.
+
+### 4. Hypotheses
+
+Unchanged. H0_k: Delta_k = 0 against H1_k: Delta_k != 0, for k in {A1, A2}, with Holm correction over the two contrasts (family-wise alpha 0.05). Contradiction for an arm: the 95 % paired bootstrap CI contains 0 and the Holm-adjusted exact McNemar test does not reject; reported as no detected difference, not equivalence.
+
+### 5. Methodology (as frozen)
+
+- Data: ARC-Challenge test (CC BY-SA 4.0), Hugging Face `allenai/ai2_arc` at revision 210d026f, JSONL SHA-256 86ccaace...1f63; 300 items drawn with seed 20261124 (`data/arc_challenge_test_subset_ids.json`).
 - Arms: A0 phi4-mini:3.8b, A1 llama3.1:8b, A2 ministral-3:8b, all GGUF Q4_K_M, from the local store; no model was pulled. Each weights blob was re-hashed and matched its content digest (A0 sha256-3c168af1..., A1 sha256-667b0c19..., A2 sha256-3ea32f88...; manifest digests 78fad5d1..., 46e0c10c..., 1922accd...).
 - Template T1, temperature 0, num_predict 8, num_ctx 2048, runtime seeds 0 to 4, item and arm order from seed 1000 + repetition, one discarded warm-up per block, at most 2 retries.
 - Statistics: paired bootstrap over items (10,000 resamples, seed 7, percentile intervals), exact McNemar on majority correctness, Holm over the two contrasts within each extraction rule.
 - Hardware and software: Apple M1 Pro (10 cores), 16 GB, macOS 15.3.1, AC power, Low Power Mode off. Ollama 0.40.6 (official darwin build; tarball SHA-256 b2b55434...f974, binary `labs/.tools/ollama-0.40.6/ollama` SHA-256 69fcb23a...c2ff), started by the rerun session on 127.0.0.1:11434 with no other client. Python 3.12.1, numpy 2.3.4, psutil 7.1.0, jsonschema 4.25.1.
 - Budget: 4,500 requests, 4-hour cap, zero cost.
 
-## 6. Implementation verification
+### 6. Implementation verification
 
 - Before the run: full suite 162 passed; every frozen hash (protocols, configs, item IDs, item files) matched; the runner checked the item file and the subset IDs before the first request.
 - The guard does not include the runtime version in the frozen fingerprint; nothing refused the run on that ground.
 - `/api/show` on 0.40.6: A0 and A1 template, parameter and Modelfile hashes equal those recorded on 0.9.6; A2 now describes (template 5b74c26b..., parameters e96fd3ce..., Modelfile bfc40cd3...).
 - Exploratory smoke on the new runtime, RUN-SMOKE-0007 (JRN-0010): 10 validation items x 3 arms x 2 repetitions, 60 requests, 0 failures, determinism 1.00, TTFT not above latency on any record. It found that peak RSS no longer covers the runner process (limitation 27).
 
-## 7. Execution record
+### 7. Execution record
 
 - Command: `nice -n 5 .venv/bin/token-lab run --config experiments/EXP-001.json`, then `token-lab report --result results/confirmatory/RUN-EXP-001-0001/result.json`.
 - Start 2026-11-26T12:31:06Z, end 13:01:55Z, 1,849.1 s, exit 0.
@@ -65,7 +190,7 @@ Unchanged. H0_k: Delta_k = 0 against H1_k: Delta_k != 0, for k in {A1, A2}, with
 - No foreign model was listed before or after any block; the machine was on AC power at start and end (power is not recorded per block); one runtime version served the whole run.
 - Consequence: the run did not stop and neither block was repeated. Accuracy was identical in all five repetitions of every arm (JRN-0013), so no accuracy value depends on blocks 3 and 11; their timing and memory readings were taken under memory pressure. The status is for the owner (DL-016).
 
-## 8. Results
+### 8. Results
 
 Analysis exactly as frozen, computed by `token-lab report` on the complete matrix, with the status of section 7.
 
@@ -87,11 +212,9 @@ Analysis exactly as frozen, computed by `token-lab report` on the complete matri
 - Latency ratio to A0, both readings of protocol section 8 (owner R-TOKEN-2; exploratory, JRN-0013): A1/A0 1.962 [1.767, 1.968] (ratio of medians) and 1.977 [1.973, 1.980] (median of per-item ratios); A2/A0 2.151 [1.937, 2.157] and 2.162 [2.156, 2.166]. Both larger arms were slower than A0 on 300 of 300 items.
 - S3 (descriptive): per-repetition median latency of A1 and A2 varied by less than 1 % (A1 434.5 to 435.9 ms, A2 476.3 to 477.0 ms). A0's repetition 2 block had a median latency of 50.1 ms against 221.7 to 223.8 ms in the others (see section 9), so its coefficient of variation across repetitions is 0.41; per-item medians over five repetitions are not affected by one fast repetition.
 - Peak RSS (26.5 to 28.0 MiB per block) covers only the Ollama server process on 0.40.6 and is not reported as memory.
-- Figure FIG-002 (`figures/FIG-002-exp001-latency.svg`): per-item median latency per arm. Each dot is one item (n = 300 per arm); the red bar is the median over items, in ms.
+- Figure: the pre-repeat version of FIG-002 is `results/confirmatory/RUN-EXP-001-0001/latency.svg` (per-item median latency per arm; each dot is one item, n = 300 per arm; the red bar is the median over items, in ms). [Edited on 2026-11-26 after the block repeat: the embedded image was replaced by this path, because `figures/FIG-002-exp001-latency.svg` now holds the combined version.]
 
-![FIG-002. Per-item median end-to-end latency per arm in EXP-001 (RUN-EXP-001-0001, Ollama 0.40.6).](figures/FIG-002-exp001-latency.svg)
-
-## 9. Interpretation
+### 9. Interpretation
 
 - **Expected versus observed.** The frozen H1 was nondirectional. Under strict extraction both 8B-class arms differed from the 3.8B baseline, in favour of the larger models. That is what the rationale suggests, but it is not what the frozen sensitivity analysis supports for A1.
 - **Format compliance.** S2 is the frozen check for exactly this case. A0 knew the answer often enough to reach 0.813 under lenient extraction, above A1's 0.720, but it wrote the option text after the label in about a third of its records. The strict A1 advantage is therefore a difference in following the "label only" instruction, not in answering the questions. A2 is ahead of A0 under both rules, by 33.33 and 8.33 points, and ahead of A1 by inspection of the per-arm accuracies under both rules (no A2 versus A1 contrast was frozen, so none is tested).
@@ -99,7 +222,7 @@ Analysis exactly as frozen, computed by `token-lab report` on the complete matri
 - **Cost.** A1 and A2 took about twice A0's time per item and about 1.8 and 1.9 times its runtime-reported memory. Latency here is prefill-dominated (two-token answers); A2's higher latency includes its longer prompt.
 - **Prompt reuse.** The A0 block of repetition 2 ran immediately after the A0 block of repetition 1, with the model still loaded, and its median prefill fell from about 191 to 22.0 ms. This is consistent with the runtime reusing processed prompts; it was not tested further.
 
-## 10. Threats to validity
+### 10. Threats to validity
 
 - **Stopping and exclusion criteria (internal).** Two blocks met frozen memory criteria that the runner does not enforce. Accuracy is unaffected (identical across repetitions); timings of those blocks were measured under memory pressure. Swap is system-wide: 4,505.56 MiB were in use at the start, and in block 11 the runtime kept ministral-3:8b loaded beside phi4-mini:3.8b.
 - **Runtime (external).** One runtime version (0.40.6), different from EXP-003's (0.9.6). Prompt rendering by each model's own chat template is part of each arm; for A2 it includes a system text that depends on the run date (`currentDate`), so a rerun on another date sends a slightly different prompt.
@@ -107,7 +230,7 @@ Analysis exactly as frozen, computed by `token-lab report` on the complete matri
 - **Statistical.** The intervals are over items within one session; latency ratios are exploratory, both readings shown. S1 (template sensitivity) was not run.
 - **Instrumentation.** Peak RSS does not include the runner process on 0.40.6; the named memory metric (`/api/ps`) is unaffected.
 
-## 11. Conclusion and next step
+### 11. Conclusion and next step
 
 If the owner counts the accuracy analysis as confirmatory: on this laptop with Ollama 0.40.6 and template T1, ministral-3:8b answered more ARC-Challenge items correctly than phi4-mini:3.8b under both extraction rules, while llama3.1:8b's strict advantage over phi4-mini:3.8b reverses under lenient extraction and is attributed to format compliance. Both 8B-class configurations cost about twice the latency and 1.8 to 1.9 times the runtime memory. Decisions for the owner:
 
@@ -116,7 +239,7 @@ If the owner counts the accuracy analysis as confirmatory: on this laptop with O
 - implementing the exclusion and stopping rules in the runner before any further confirmatory run;
 - S1 under a frozen config.
 
-## 12. Reproduction appendix
+### 12. Reproduction appendix
 
 - Environment: `../.tools/py/bin/uv sync --frozen --all-groups --all-extras`; tests `.venv/bin/python -m pytest`.
 - Data: `/usr/local/bin/python3 -I scripts/fetch_arc.py --repo .` (expected JSONL SHA-256 86ccaace4cd159b5c02b6b3339ebe8a7022a54f1b488e433c060b3bc38ac1f63).
