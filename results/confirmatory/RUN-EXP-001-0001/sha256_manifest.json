@@ -1,0 +1,16 @@
+{
+ "run_id": "RUN-EXP-001-0001",
+ "exp_id": "EXP-001",
+ "label": "confirmatory",
+ "algorithm": "sha256",
+ "files": {
+  "config.json": "50d50735d8e0ba0fc5d4cd28e7cfea9abd1bcd83952ff30f568ba533603993d2",
+  "contrasts.csv": "bf08f26fdc4b7a34107b80dc5627a8bf7eed30be56521cc27a174f61147870b7",
+  "latency.svg": "4746384187235b34cc481f97b93f9416a7bca08433fd909352238277dfe8f93e",
+  "metrics.csv": "3e95c9f0815a02145f8aea85c11045ee5db40b8f2c6570480a8f428c6b704fe3",
+  "report.md": "b07edcc66469f27b3de29d0a6e94c354cf7cf7c05eb228ceec4ad42b7a54c8b5",
+  "result.json": "f95ee2055a9048559162cf8417a63f31682e5bf23dd724e0813b38e197cd003c",
+  "run_manifest.json": "8812c7c0031f53627c22fce8be8cadad7cd9f5624c8c5efeace0fac43e0839ce"
+ },
+ "note": "result.json, run_manifest.json and config.json are written by the runner; report.md, metrics.csv, contrasts.csv and latency.svg by token-lab report from result.json. Runtime Ollama 0.40.6 (owner option a, DL-015)."
+}

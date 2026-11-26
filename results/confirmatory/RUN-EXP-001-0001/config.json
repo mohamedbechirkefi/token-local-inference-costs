@@ -1,0 +1,52 @@
+{
+ "arms": [
+  {
+   "arm_id": "A0",
+   "model": "phi4-mini:3.8b"
+  },
+  {
+   "arm_id": "A1",
+   "model": "llama3.1:8b"
+  },
+  {
+   "arm_id": "A2",
+   "model": "ministral-3:8b"
+  }
+ ],
+ "backend": {
+  "base_url": "http://127.0.0.1:11434",
+  "name": "ollama",
+  "timeout_s": 120
+ },
+ "baseline_arm": "A0",
+ "decoding": {
+  "num_ctx": 2048,
+  "num_predict": 8,
+  "temperature": 0
+ },
+ "description": "EXP-001 confirmatory matrix per research/experiments/EXP-001/protocol.md (v1.0, frozen by the owner 2026-11-24). Items: ARC-Challenge test (regenerate with scripts/fetch_arc.py); the file and the 300-item subset are checked against the frozen SHA-256 and item IDs before any request.",
+ "exp_id": "EXP-001",
+ "items": {
+  "path": "results/raw/arc/ARC-Challenge-test.jsonl",
+  "source_sha256": "86ccaace4cd159b5c02b6b3339ebe8a7022a54f1b488e433c060b3bc38ac1f63",
+  "subset_ids_path": "data/arc_challenge_test_subset_ids.json",
+  "subset_seed": 20261124,
+  "subset_size": 300,
+  "synthetic": false
+ },
+ "max_retries": 2,
+ "memory_sample_hz": 10,
+ "mode": "confirmatory",
+ "order_seed_base": 1000,
+ "process_match": "ollama",
+ "repetitions": 5,
+ "runtime_seeds": [
+  0,
+  1,
+  2,
+  3,
+  4
+ ],
+ "template": "T1",
+ "warmup": true
+}
