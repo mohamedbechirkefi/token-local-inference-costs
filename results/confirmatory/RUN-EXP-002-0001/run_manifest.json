@@ -1,0 +1,141 @@
+{
+ "arm_runtime": {
+  "A0": {
+   "format": "gguf",
+   "model": "phi4-mini:3.8b",
+   "modelfile_sha256": "c2413937533c1a6cd2d69372127e73b728458473999f342dacadbca7eb8b54ec",
+   "parameter_size": "3.8B",
+   "parameters_sha256": null,
+   "quantization_level": "Q4_K_M",
+   "system_sha256": null,
+   "template_sha256": "813f53fdc6e58d35bb1c3853c93266380e9ca918a993e8eab193e8ede5d3a603"
+  },
+  "A1": {
+   "format": "gguf",
+   "model": "llama3.1:8b",
+   "modelfile_sha256": "05e50568037cecbcc0d684dd53ba6cac46b925e9920e265bbfa7b3cfb71f8627",
+   "parameter_size": "8.0B",
+   "parameters_sha256": "2801e61a8848e505a6e20beeaea63cca1600200f6720e5f916ba7d6da5c3ba39",
+   "quantization_level": "Q4_K_M",
+   "system_sha256": null,
+   "template_sha256": "948af2743fc78a328dcb3b0f5a31b3d75f415840fdb699e8b1235978392ecf85"
+  },
+  "A2": {
+   "format": "gguf",
+   "model": "ministral-3:8b",
+   "modelfile_sha256": "bfc40cd3fe399ba3f2502bf7a165b6a46f88d9ed8842b843ed3d7f485e9ac4cf",
+   "parameter_size": "8.9B",
+   "parameters_sha256": "e96fd3cee0f18f63a5df2dc1115f0bdf681fd2c9f75aa0f082f840f974111b9a",
+   "quantization_level": "Q4_K_M",
+   "system_sha256": null,
+   "template_sha256": "5b74c26b9e0b6358e73d0a7eb2f955105097e7bd10b45fa0d2a50f0a906e0798"
+  }
+ },
+ "backend": {
+  "name": "ollama",
+  "runtime_version": "0.40.6",
+  "simulated": false
+ },
+ "cold_warm": {
+  "arm_order": [
+   "A0",
+   "A1",
+   "A2"
+  ],
+  "arm_order_seed": 2002,
+  "fixed_item_id": "Mercury_192290",
+  "n_invalid_state": 0,
+  "stopped_by_wall_cap": false,
+  "trial_states": [
+   "cold",
+   "warm",
+   "cold",
+   "warm",
+   "cold",
+   "warm",
+   "cold",
+   "warm",
+   "cold",
+   "warm",
+   "cold",
+   "warm",
+   "cold",
+   "warm",
+   "cold",
+   "warm",
+   "cold",
+   "warm",
+   "cold",
+   "warm"
+  ],
+  "trials_per_state": 10,
+  "wall_cap_s": 3600.0
+ },
+ "config_sha256": "6885e5f527df271897d6d2ba8f324fc73fd5135d250e92c8bd8dc94f4c3081cf",
+ "design": "cold_warm",
+ "end_utc": "2026-11-26T13:08:56Z",
+ "exp_id": "EXP-002",
+ "git": {
+  "dirty": false,
+  "revision": "eadcedd7e959af12d40df967f842528a0cbde954"
+ },
+ "harness_peak_rss_mib": 44.578125,
+ "host": {
+  "after": {
+   "cpu": "Apple M1 Pro",
+   "cpu_count_logical": 10,
+   "load_avg_1_5_15": [
+    1.33154296875,
+    1.27001953125,
+    1.23828125
+   ],
+   "machine": "arm64",
+   "memory_total_bytes": 17179869184,
+   "os": "macOS-15.3.1-arm64-arm-64bit",
+   "os_release": "15.3.1",
+   "power": {
+    "raw": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=7340131)\t100%; charged; 0:00 remaining present: true",
+    "source": "ac"
+   }
+  },
+  "before": {
+   "cpu": "Apple M1 Pro",
+   "cpu_count_logical": 10,
+   "load_avg_1_5_15": [
+    1.1474609375,
+    1.17919921875,
+    1.203125
+   ],
+   "machine": "arm64",
+   "memory_total_bytes": 17179869184,
+   "os": "macOS-15.3.1-arm64-arm-64bit",
+   "os_release": "15.3.1",
+   "power": {
+    "raw": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=7340131)\t100%; charged; 0:00 remaining present: true",
+    "source": "ac"
+   }
+  }
+ },
+ "label": "confirmatory",
+ "n_failures": 0,
+ "n_requests": 60,
+ "packages": {
+  "jsonschema": "4.25.1",
+  "numpy": "2.3.4",
+  "psutil": "7.1.0",
+  "python": "3.12.1",
+  "token-lab": "0.1.0"
+ },
+ "protocol_sha256": "54d46696e6b479c83235c789839ae3acaaaeeac1f38eccc6ef7c399d191c011e",
+ "run_id": "RUN-EXP-002-0001",
+ "runtime_s": 99.31320600002073,
+ "schema_version": "1.0.0",
+ "seeds": {
+  "order_seed_base": 1000,
+  "runtime": [
+   0
+  ],
+  "subset_seed": 20261124
+ },
+ "start_utc": "2026-11-26T13:07:16Z"
+}

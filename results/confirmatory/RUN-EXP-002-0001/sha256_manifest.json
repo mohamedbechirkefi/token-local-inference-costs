@@ -1,0 +1,17 @@
+{
+ "run_id": "RUN-EXP-002-0001",
+ "exp_id": "EXP-002",
+ "label": "confirmatory",
+ "algorithm": "sha256",
+ "files": {
+  "cold_warm.csv": "ff8d60a2a9f38f8688a4f4eefcec1ada49f24a0792259398afaa9fe65989c51c",
+  "cold_warm.svg": "5bf390493cab42fdbd132ebff726e23cf1e02da6162357cab5ea29234c991ca2",
+  "config.json": "d5cd7da87052097ce018ebcf2dfd88e853bd00c768a272d787fea57873eabad8",
+  "latency.svg": "68fbd27c79d82af82a348a3cdb4efa6534338ae1f4a46b17a89e25462e5d50f8",
+  "metrics.csv": "3a96ba0e548391a172de43db24187d3e16a577ba3b3141b5928f054731580b92",
+  "report.md": "d421697dd553d136fc78eaaaf3331bacfd1e7a023f9f3816dc10e34a8999dba2",
+  "result.json": "d93a17aa3cf17dfcfebe335ab8ec0a23da89571f41e468963eb717cf831803da",
+  "run_manifest.json": "ca4afcf693ec4daaee37b2d35e41618ad12360bf705f2228622d47a487daaffd"
+ },
+ "note": "result.json, run_manifest.json and config.json are written by the runner; report.md, metrics.csv, latency.svg, cold_warm.csv and cold_warm.svg by token-lab report from result.json. Runtime Ollama 0.40.6 (owner option a, DL-015)."
+}
