@@ -1,7 +1,7 @@
 <!-- SPDX-License-Identifier: LicenseRef-TOKEN-NC-Research-1.0 -->
 # Supplementary material
 
-**Status: independent research manuscript / preprint draft, not peer-reviewed (M4, 2026-11-25; EXP-001 and EXP-002 entries updated 2026-11-26 after the owner-approved rerun on Ollama 0.40.6, DL-015, DL-016).** Companion to `research/paper/manuscript.md`. Every value maps to a committed file through `research/publication/artifact_manifest.json`.
+**Status: independent research manuscript / preprint draft, not peer-reviewed (M4, 2026-11-25; EXP-001 and EXP-002 entries updated 2026-11-26 after the owner-approved rerun on Ollama 0.40.6, DL-015, DL-016, and the owner-instructed repeat of EXP-001 blocks 3 and 11, DL-017, DL-018).** Title of the manuscript (owner, 2026-11-26): "Quantization cost, model size and cold-start latency of local models on one laptop: a preregistered study with a runtime upgrade". Companion to `research/paper/manuscript.md`. Every value maps to a committed file through `research/publication/artifact_manifest.json`.
 
 ## S1. Complete experimental matrix
 
@@ -13,9 +13,11 @@
 | EXP-001 attempt 1 (confirmatory, Ollama 0.9.6) | A0 phi4-mini:3.8b, A1 llama3.1:8b, A2 ministral-3:8b (Q4_K_M) | 300 test items | 5 | 4,500 | 0 | failed before any request (JRN-0007) | `research/experiments/EXP-001/report.md` |
 | EXP-002 attempt 1 (confirmatory, Ollama 0.9.6) | A0, A1, A2 | 1 validation item (Mercury_192290) | 10 cold, 10 warm per arm | 60 | 0 | failed before any request (JRN-0007) | `research/experiments/EXP-002/report.md` |
 | Smoke on 0.40.6 (exploratory) | A0, A1, A2 | 10 validation items | 2 | 60 | 60 | RUN-SMOKE-0007, JRN-0010 (0 failures) | `results/exploratory/RUN-SMOKE-0007/report.md` |
-| EXP-001 attempt 2 (confirmatory, Ollama 0.40.6) | A0, A1, A2 (Q4_K_M) | 300 test items | 5 | 4,500 | 4,500 | matrix complete, RUN-EXP-001-0001 (JRN-0011); stopping criterion met at block 11, exclusion criterion at blocks 3 and 11, not enforced; status pending owner | `research/experiments/EXP-001/report.md` |
+| EXP-001 attempt 2 (confirmatory, Ollama 0.40.6) | A0, A1, A2 (Q4_K_M) | 300 test items | 5 | 4,500 | 4,500 | matrix complete, RUN-EXP-001-0001 (JRN-0011); stopping criterion met at block 11, exclusion criterion at blocks 3 and 11, not enforced by that runner; both blocks repeated (next row) | `research/experiments/EXP-001/report.md` |
+| EXP-001 block repeat (confirmatory, Ollama 0.40.6, frozen rules enforced) | block 3 (A1, repetition 0), block 11 (A0, repetition 3) | 300 test items | 1 per block | 600 | 600 | RUN-EXP-001-0002 (JRN-0014); neither block met a criterion; combined with RUN-EXP-001-0001, EXP-001 complete under the frozen rules | `results/confirmatory/RUN-EXP-001-0002/combined/report.md` |
 | EXP-002 attempt 2 (confirmatory, Ollama 0.40.6) | A0, A1, A2 | 1 validation item (Mercury_192290) | 10 cold, 10 warm per arm | 60 | 60 | complete, RUN-EXP-002-0001 (JRN-0012) | `research/experiments/EXP-002/report.md` |
 | RERUN-EXPL-0001 (exploratory) | checks of RUN-EXP-001-0001 | 300 | none (no requests) | 0 | 0 | JRN-0013 | `results/exploratory/RERUN-EXPL-0001/` |
+| REPEAT-EXPL-0001 (exploratory) | the same checks on the combined input | 300 | none (no requests) | 0 | 0 | JRN-0015 | `results/exploratory/REPEAT-EXPL-0001/` |
 | EXP-003 (confirmatory) | llama3.1:8b Q4_K_M, llama3.1:8b-instruct-q8_0 | 300 test items | 5 | 3,000 | 3,000 | complete, RUN-EXP-003-0001 (JRN-0008) | `research/experiments/EXP-003/report.md` |
 | M4-EXPL-0001 (exploratory) | re-analysis of RUN-EXP-003-0001 | 300 | none (no requests) | 0 | 0 | JRN-0009 | `results/exploratory/M4-EXPL-0001/` |
 
@@ -39,10 +41,13 @@ The simulated harness runs RUN-SMOKE-0001 to RUN-SMOKE-0004 (JRN-0003) used no m
 | RUN-EXP-001-0001 `result.json` | f95ee2055a9048559162cf8417a63f31682e5bf23dd724e0813b38e197cd003c |
 | RUN-EXP-002-0001 `result.json` | d93a17aa3cf17dfcfebe335ab8ec0a23da89571f41e468963eb717cf831803da |
 | RERUN-EXPL-0001 `exploratory_exp001.json` | a11b99d4d471dd757ea0b894779c538d403419e04017686be0c45d9a957443de |
+| RUN-EXP-001-0002 `result.json` (block repeat) | be35b70bd32b640ad80f65b11e8f8e0705fa7e3f7873cccbb0cfb4dd61977238 |
+| RUN-EXP-001-0002 `combined/result.json` (analysis input) | 4743f2d78c49019fea63857a59c731c8f8917bb6dc3465fea02e242c34b2c7a4 |
+| REPEAT-EXPL-0001 `exploratory_exp001.json` | f7839017ab2311266072ba2c97ec9635c4b4761037a8a26122b753d0b2f1a394 |
 | Ollama 0.40.6 `ollama-darwin.tgz` | b2b55434865a668decb494110d7fd970eed3ecc8837be2872f672ccbb95df974 |
 | Ollama 0.40.6 `ollama` binary | 69fcb23ae7b95af30b5184998751f6158df84d0071f930670ee5c22db667c2ff |
 
-Code revision of all M3 runs: 57f6187e7b450fea05eedbbee8c663943596a699. Rerun revisions (clean tree): ca3a08fb536fbb80196354b5bdc0b3c26b38aa56 (RUN-EXP-001-0001) and eadcedd7e959af12d40df967f842528a0cbde954 (RUN-EXP-002-0001); against 57f6187, the runner, analysis code, protocols and frozen configs are unchanged; `src/token_lab/report.py` gained the M6 PDF-builder changes (DL-014, Markdown, CSV and SVG outputs byte-identical) and the exploratory config `experiments/smoke-cold-warm.json` was committed at M3; the rest are records, reports, the demo and release files. Fixed settings of the matrix design: template T1, temperature 0, num_predict 8, num_ctx 2048, runtime seeds 0 to 4, order seed 1000 + repetition, one discarded warm-up per block, at most 2 retries, 10 Hz memory sampling. Per-arm `/api/show` hashes for EXP-003 (run manifest): chat template 948af274... (both arms), parameters 2801e61a... (both arms), no default system prompt (both arms), Modelfile 05e50568... (Q4_K_M) and eb2088ee... (Q8_0). Per-arm hashes for EXP-001 and EXP-002 on 0.40.6: A0 template 813f53fd..., Modelfile c2413937...; A1 template 948af274..., parameters 2801e61a..., Modelfile 05e50568...; A2 template 5b74c26b..., parameters e96fd3ce..., Modelfile bfc40cd3...; no default system prompt field for any arm (A2's template contains its own default system text).
+Code revision of all M3 runs: 57f6187e7b450fea05eedbbee8c663943596a699. Rerun revisions (clean tree): ca3a08fb536fbb80196354b5bdc0b3c26b38aa56 (RUN-EXP-001-0001) and eadcedd7e959af12d40df967f842528a0cbde954 (RUN-EXP-002-0001); block repeat c7d1ba666b258450c6780df755362b81d0e218ef (RUN-EXP-001-0002, clean tree; the runner then enforced the frozen block rules, DL-017); against 57f6187, the runner, analysis code, protocols and frozen configs are unchanged; `src/token_lab/report.py` gained the M6 PDF-builder changes (DL-014, Markdown, CSV and SVG outputs byte-identical) and the exploratory config `experiments/smoke-cold-warm.json` was committed at M3; the rest are records, reports, the demo and release files. Fixed settings of the matrix design: template T1, temperature 0, num_predict 8, num_ctx 2048, runtime seeds 0 to 4, order seed 1000 + repetition, one discarded warm-up per block, at most 2 retries, 10 Hz memory sampling. Per-arm `/api/show` hashes for EXP-003 (run manifest): chat template 948af274... (both arms), parameters 2801e61a... (both arms), no default system prompt (both arms), Modelfile 05e50568... (Q4_K_M) and eb2088ee... (Q8_0). Per-arm hashes for EXP-001 and EXP-002 on 0.40.6: A0 template 813f53fd..., Modelfile c2413937...; A1 template 948af274..., parameters 2801e61a..., Modelfile 05e50568...; A2 template 5b74c26b..., parameters e96fd3ce..., Modelfile bfc40cd3...; no default system prompt field for any arm (A2's template contains its own default system text).
 
 ## S3. Extended tables (EXP-003)
 
@@ -77,7 +82,7 @@ Code revision of all M3 runs: 57f6187e7b450fea05eedbbee8c663943596a699. Rerun re
 
 ## S5. Experiment report links
 
-- EXP-001: `research/experiments/EXP-001/report.md` (attempt 1 failed; attempt 2 matrix complete, stopping criterion met, status pending owner), run report `results/confirmatory/RUN-EXP-001-0001/report.md`
+- EXP-001: `research/experiments/EXP-001/report.md` (attempt 1 failed; attempt 2 complete under the frozen rules after the repeat of blocks 3 and 11), run reports `results/confirmatory/RUN-EXP-001-0001/report.md` (pre-repeat), `results/confirmatory/RUN-EXP-001-0002/report.md` (the two repeated blocks only) and `results/confirmatory/RUN-EXP-001-0002/combined/report.md` (the frozen analysis)
 - EXP-002: `research/experiments/EXP-002/report.md` (attempt 1 failed; attempt 2 complete), run report `results/confirmatory/RUN-EXP-002-0001/report.md`
 - EXP-003: `research/experiments/EXP-003/report.md` (complete), run report `results/confirmatory/RUN-EXP-003-0001/report.md`
 - Evidence audit: `research/publication/evidence_audit.md`; second review pass: `research/publication/review_pass_2.md`
@@ -89,11 +94,11 @@ Code revision of all M3 runs: 57f6187e7b450fea05eedbbee8c663943596a699. Rerun re
 | EXP-001 and EXP-002 aborted before any request (A2 template incompatible with Ollama 0.9.6) | failure | DL-011 deviation 1, JRN-0007 |
 | Owner choice for EXP-001 and EXP-002 (a upgrade, b re-freeze, c keep failed) | decided 2026-11-26: option (a) (R-TOKEN-1) | DL-015 |
 | Runtime version 0.9.6 -> 0.40.6 for EXP-001 and EXP-002 | dated deviation, owner-approved | DL-015 |
-| EXP-001 blocks 3 and 11 meet the exclusion criterion and block 11 the stopping rule; not enforced, run not stopped, blocks not repeated | deviation found after the run; **pending owner** | DL-016, JRN-0011, JRN-0013 |
+| EXP-001 blocks 3 and 11 meet the exclusion criterion and block 11 the stopping rule; not enforced, run not stopped, blocks not repeated | deviation found after the run; owner, 2026-11-26: "Repeat blocks 3 and 11"; repeated once under the enforced rules, no criterion met, EXP-001 complete | DL-016, DL-017, DL-018, JRN-0011, JRN-0013, JRN-0014 |
 | Peak RSS on 0.40.6 excludes the runner process (`llama-server`) | instrumentation finding, frozen config not changed | DL-016, JRN-0010 |
 | EXP-003 manifest `dirty: true` (journal appended during the run) | record deviation | DL-011 deviation 2 |
 | Latency-ratio interval not implemented; definition open | gap; owner chose none, both readings stay shown (R-TOKEN-2) | DL-011 gap 1, DL-015; exploratory values in S4 and S7 |
-| Block exclusion and repeat, 4-hour cap and memory abort not implemented in the runner | gap; nothing depended on it in RUN-EXP-003-0001 or RUN-EXP-002-0001; RUN-EXP-001-0001 met two criteria | DL-011 gap 2, DL-016 |
+| Block exclusion and repeat, 4-hour cap and memory abort not implemented in the runner | gap until 2026-11-26; nothing depended on it in RUN-EXP-003-0001 or RUN-EXP-002-0001; RUN-EXP-001-0001 met two criteria; implemented for the matrix design and committed before the block repeat (revision c7d1ba6) | DL-011 gap 2, DL-016, DL-017 |
 | S1 to S4 without frozen configs; S2 and S3 reported from the committed analysis, S1 and S4 not run | gap | DL-011 gap 3, DL-012 |
 | Warm-up request repeats the block's first item | implementation finding, not fixed | DL-012 decision 5, JRN-0009 E3 |
 | Protocol section 13 and item 21 command texts differ from the implemented CLI | documentation mismatch, left unchanged (not an approved amendment) | DL-008, `research/freeze.json` |
@@ -101,13 +106,13 @@ Code revision of all M3 runs: 57f6187e7b450fea05eedbbee8c663943596a699. Rerun re
 
 ## S7. EXP-001 and EXP-002 rerun details (Ollama 0.40.6)
 
-**EXP-001 blocks (`RUN-EXP-001-0001/result.json` blocks; JRN-0013 B).** Block order and swap growth: 1 A0 rep 0 (0.0 MiB), 2 A2 rep 0 (0.0), 3 A1 rep 0 (734.1, exclusion criterion), 4 A2 rep 1 (0.0), 5 A1 rep 1 (0.0), 6 A0 rep 1 (0.0), 7 A0 rep 2 (0.0), 8 A2 rep 2 (0.0), 9 A1 rep 2 (-8.0), 10 A2 rep 3 (0.0), 11 A0 rep 3 (2,778.1, exclusion criterion and stopping rule), 12 A1 rep 3 (-374.2), 13 A0 rep 4 (-48.0), 14 A1 rep 4 (-120.1), 15 A2 rep 4 (-1,608.8). Block wall times 25.7 to 155.0 s.
+**EXP-001 blocks (`RUN-EXP-001-0001/result.json` blocks; JRN-0013 B).** Block order and swap growth: 1 A0 rep 0 (0.0 MiB), 2 A2 rep 0 (0.0), 3 A1 rep 0 (734.1, exclusion criterion), 4 A2 rep 1 (0.0), 5 A1 rep 1 (0.0), 6 A0 rep 1 (0.0), 7 A0 rep 2 (0.0), 8 A2 rep 2 (0.0), 9 A1 rep 2 (-8.0), 10 A2 rep 3 (0.0), 11 A0 rep 3 (2,778.1, exclusion criterion and stopping rule), 12 A1 rep 3 (-374.2), 13 A0 rep 4 (-48.0), 14 A1 rep 4 (-120.1), 15 A2 rep 4 (-1,608.8). Block wall times 25.7 to 155.0 s. **Block repeat (`RUN-EXP-001-0002/result.json`; JRN-0014).** Block 3 A1 rep 0: 147.6 s, swap growth 426.3 MiB, no model loaded before; block 11 A0 rep 3: 80.6 s, swap growth -8.0 MiB, llama3.1:8b loaded before. AC power and runtime 0.40.6 before and after both; responses identical to the excluded blocks (300 of 300 each). In the combined input no block meets a criterion (JRN-0015 B).
 
-**EXP-001 per-repetition accuracy (JRN-0013 R).** Strict: A0 0.560, A1 0.720, A2 0.893 in all five repetitions; lenient: 0.813, 0.720, 0.897 in all five.
+**EXP-001 per-repetition accuracy (JRN-0013 R; unchanged in JRN-0015 R).** Strict: A0 0.560, A1 0.720, A2 0.893 in all five repetitions; lenient: 0.813, 0.720, 0.897 in all five.
 
-**EXP-001 per-block median prefill (JRN-0013 P).** A0 about 191 ms in repetitions 0, 1, 3 and 4 and 22.0 ms in repetition 2 (the block after A0 repetition 1); A1 388.5 to 390.2 ms; A2 422.2 to 422.5 ms.
+**EXP-001 per-block median prefill (JRN-0013 P; combined input JRN-0015 P).** A0 about 191 ms in repetitions 0, 1, 3 and 4 and 22.0 ms in repetition 2 (the block after A0 repetition 1); A1 388.5 to 390.2 ms before the repeat and 388.5 to 391.0 ms in the combined input (repeated block 3: 391.0 ms); A2 422.2 to 422.5 ms.
 
-**EXP-001 latency ratios to A0, both readings (exploratory, JRN-0013 E1).** A1/A0: ratio of medians 1.962 [1.767, 1.968], median of per-item ratios 1.977 [1.973, 1.980]. A2/A0: 2.151 [1.937, 2.157] and 2.162 [2.156, 2.166]. Bootstrap over items, 10,000 resamples, seed 7.
+**EXP-001 latency ratios to A0, both readings (exploratory).** Combined input (JRN-0015 E1): A1/A0 ratio of medians 1.964 [1.776, 1.970], median of per-item ratios 1.980 [1.975, 1.982]; A2/A0 2.151 [1.945, 2.157] and 2.163 [2.156, 2.166]. Pre-repeat, RUN-EXP-001-0001 alone (JRN-0013 E1): A1/A0 1.962 [1.767, 1.968] and 1.977 [1.973, 1.980]; A2/A0 2.151 [1.937, 2.157] and 2.162 [2.156, 2.166]. Bootstrap over items, 10,000 resamples, seed 7.
 
 **EXP-001 strict format failures (JRN-0013 F).** A0 520 records on 104 items; A1 10 on 2; A2 5 on 1.
 

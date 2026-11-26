@@ -92,10 +92,12 @@ def test_every_registered_experiment_is_exported_with_status_verdict_and_claims(
     for e in exported.values():
         assert e["status"] and e["verdict"] and e["claim_ids"]
         assert set(e["claim_ids"]) <= claim_ids
-    # EXP-001: failure under the stopping rule as written, status pending the owner (DL-016);
-    # EXP-002: complete on the rerun, H1 supported under the frozen rule.
-    assert exported["EXP-001"]["outcome"] == "failed"
-    assert "pending owner decision" in exported["EXP-001"]["verdict"]
+    # EXP-001: complete under the frozen rules after the owner-instructed repeat of blocks 3 and 11
+    # (DL-017, DL-018); EXP-002: complete on the rerun, H1 supported under the frozen rule.
+    assert exported["EXP-001"]["outcome"] == "positive"
+    assert "complete under the frozen rules" in exported["EXP-001"]["status"]
+    assert exported["EXP-001"]["verdict"].startswith("H0 rejected for both arms")
+    assert "pending" not in exported["EXP-001"]["verdict"]
     assert exported["EXP-002"]["outcome"] == "positive"
     assert exported["EXP-002"]["verdict"].startswith("H1 supported")
     assert exported["EXP-003"]["verdict"] == "H0 not rejected: no detected difference, not equivalence"
@@ -103,10 +105,11 @@ def test_every_registered_experiment_is_exported_with_status_verdict_and_claims(
 
 def test_pending_owner_decisions_are_shown_with_every_reading():
     pend = {p["id"]: p for p in _data()["pending_owner_decisions"]}
-    assert set(pend) == {"TOKEN-EXP-001-STATUS", "TOKEN-TITLE"}
+    # the EXP-001 status and the title were decided on 2026-11-26 (DL-017, DL-018)
+    assert set(pend) == {"TOKEN-S1-S4", "TOKEN-LATENCY-RATIO"}
     assert all(p["status"] == "pending owner decision" for p in pend.values())
-    assert len(pend["TOKEN-EXP-001-STATUS"]["readings"]) == 3
-    assert len(pend["TOKEN-TITLE"]["readings"]) == 2
+    assert len(pend["TOKEN-S1-S4"]["readings"]) == 2
+    assert len(pend["TOKEN-LATENCY-RATIO"]["readings"]) == 3
 
 
 def test_no_timestamp_and_sources_hashed():

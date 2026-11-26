@@ -127,21 +127,21 @@ function Published({ r }: { r: Results }) {
           Three experiments were preregistered and frozen by the owner before any model output was seen. On Ollama 0.9.6, two
           failed before sending any request, because that runtime cannot render the chat template of one required model.
           With the owner's approval they were run again unchanged on Ollama 0.40.6: the cold-start study (EXP-002) completed,
-          and the model-size comparison (EXP-001) ran in full but met a frozen stopping criterion after the fact, so its
-          status is the owner's decision. The third experiment (EXP-003, Ollama 0.9.6) compared Llama 3.1 8B at Q8_0 and
+          and the model-size comparison (EXP-001) ran in full; two of its blocks met frozen memory criteria, and after the
+          rules were implemented the owner had both repeated once, so EXP-001 is complete under the frozen rules. The third experiment (EXP-003, Ollama 0.9.6) compared Llama 3.1 8B at Q8_0 and
           Q4_K_M on 300 ARC-Challenge items and detected no accuracy difference; it is not evidence of equivalence. No
           latency comparison is made across runtime versions.
         </p>
         <ul className="legend" aria-label="Labels used on this page">
-          <li><span className="tag tag-measured">measured</span> committed results of RUN-EXP-003-0001, RUN-EXP-001-0001 and RUN-EXP-002-0001</li>
-          <li><span className="tag tag-exploratory">exploratory</span> re-analysis of committed records (JRN-0009, JRN-0013), no confirmatory weight</li>
+          <li><span className="tag tag-measured">measured</span> committed results of RUN-EXP-003-0001, RUN-EXP-001-0001 with blocks 3 and 11 from RUN-EXP-001-0002, and RUN-EXP-002-0001</li>
+          <li><span className="tag tag-exploratory">exploratory</span> re-analysis of committed records (JRN-0009, JRN-0013, JRN-0015), no confirmatory weight</li>
           <li><span className="tag tag-failed">no result</span> a failed attempt that produced no data</li>
           <li><span className="tag tag-modelled">modelled, illustrative</span> computed from a value you enter, not a measurement</li>
           <li><span className="tag tag-sandbox">sandbox, illustrative</span> produced in your browser, not a research result</li>
         </ul>
         <p className="pending-banner">
-          <strong>Pending owner decisions:</strong> the status of EXP-001 after its stopping criterion was met, and the
-          manuscript title. Both are listed under <a href="#pending">Pending decisions</a> with every reading; this page
+          <strong>Pending owner decisions:</strong> configs for the sensitivity analyses S1 and S4, and the definition of the
+          latency-ratio interval. Both are listed under <a href="#pending">Pending decisions</a> with every reading; this page
           chooses none. Both readings of the latency-ratio interval stay shown, as the owner decided.
         </p>
       </section>

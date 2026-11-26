@@ -70,13 +70,13 @@
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same}
 \hypersetup{
-  pdftitle={Quantization cost and accuracy of a local 8B model on one laptop: a preregistered study with two failed experiments},
+  pdftitle={Quantization cost, model size and cold-start latency of local models on one laptop: a preregistered study with a runtime upgrade},
   pdfauthor={{[}OWNER PLACEHOLDER: author line. Freeze decision C3 (2026-11-24) recorded ``Mohamed Bechir Kefi'', no affiliation; the owner confirms the final line before any release.{]}},
   hidelinks,
   pdfcreator={LaTeX via pandoc}}
 
-\title{Quantization cost and accuracy of a local 8B model on one laptop:
-a preregistered study with two failed experiments}
+\title{Quantization cost, model size and cold-start latency of local
+models on one laptop: a preregistered study with a runtime upgrade}
 \author{{[}OWNER PLACEHOLDER: author line. Freeze decision C3
 (2026-11-24) recorded ``Mohamed Bechir Kefi'', no affiliation; the owner
 confirms the final line before any release.{]}}
@@ -91,14 +91,11 @@ file; \texttt{research/publication/artifact\_manifest.json} maps each
 one to its experiment, run, metric definition, result path, generator,
 hash and code revision. Values labelled \emph{exploratory} come from
 re-analyses of committed records after the confirmatory analysis
-(JRN-0009, JRN-0013) and carry no confirmatory weight.
+(JRN-0009, JRN-0013, JRN-0015) and carry no confirmatory weight.
 
-\textbf{Note on the title (for the owner).} The title was approved as
-written and is kept. It says ``two failed experiments''. After the rerun
-of 2026-11-26 this describes the first attempts of EXP-001 and EXP-002
-(Ollama 0.9.6); on the second attempt EXP-002 is complete and EXP-001
-ran its full matrix but met a frozen stopping criterion after the fact
-(Section 5.1). Whether the title changes is the owner's decision.
+\textbf{Note on the title.} On 2026-11-26 the owner replaced the earlier
+approved title, which said ``two failed experiments'', by the present
+one (DL-017).
 
 \section{Abstract}\label{abstract}
 
@@ -121,25 +118,28 @@ ministral-3:8b, an ordering by file size that the frozen rule counts as
 support, although ministral-3:8b also received a prompt about seven
 times longer. The primary comparison of model sizes (EXP-001) ran all
 4,500 requests, but two blocks met frozen memory criteria that the
-runner does not enforce, one of them the stopping rule, so its
-confirmatory status is left to the owner. Its frozen strict analysis
-gives +16.00 percentage points {[}+9.67, +22.33{]} for llama3.1:8b and
-+33.33 {[}+27.67, +39.33{]} for ministral-3:8b over phi4-mini:3.8b;
-under lenient extraction the llama3.1:8b difference reverses (-9.33),
-because phi4-mini:3.8b often added text after the label. The third
-experiment (EXP-003, on 0.9.6) compared Llama 3.1 8B at Q8\_0 and
-Q4\_K\_M on a fixed random subset of 300 ARC-Challenge test items, five
-greedy repetitions each (3,000 requests, no failures). Strict accuracy
-was 0.733 against 0.717: a difference of +1.67 percentage points, 95 \%
-paired bootstrap interval {[}-1.00, +4.33{]}, exact McNemar p = 0.332.
-No difference was detected; because no equivalence margin was frozen,
-this is not evidence of equivalence. Q8\_0 used 56 \% more
-runtime-reported model memory (9,162.4 against 5,872.0 MiB) and decoded
-more slowly (40.1 against 53.9 tokens/s), yet its median end-to-end
-latency was lower (437.7 against 477.5 ms), because these two-token
-answers are dominated by prefill. No latency comparison is made across
-runtime versions. The findings hold for this machine, these runtime
-versions, this benchmark and this prompt template only.
+runner did not then enforce, one of them the stopping rule. The frozen
+block rules were then implemented in the runner and, on the owner's
+instruction, the two blocks were repeated once; neither met a criterion
+on repeat, so EXP-001 is complete under the frozen rules. Its frozen
+strict analysis gives +16.00 percentage points {[}+9.67, +22.33{]} for
+llama3.1:8b and +33.33 {[}+27.67, +39.33{]} for ministral-3:8b over
+phi4-mini:3.8b; under lenient extraction the llama3.1:8b difference
+reverses (-9.33), because phi4-mini:3.8b often added text after the
+label. The third experiment (EXP-003, on 0.9.6) compared Llama 3.1 8B at
+Q8\_0 and Q4\_K\_M on a fixed random subset of 300 ARC-Challenge test
+items, five greedy repetitions each (3,000 requests, no failures).
+Strict accuracy was 0.733 against 0.717: a difference of +1.67
+percentage points, 95 \% paired bootstrap interval {[}-1.00, +4.33{]},
+exact McNemar p = 0.332. No difference was detected; because no
+equivalence margin was frozen, this is not evidence of equivalence.
+Q8\_0 used 56 \% more runtime-reported model memory (9,162.4 against
+5,872.0 MiB) and decoded more slowly (40.1 against 53.9 tokens/s), yet
+its median end-to-end latency was lower (437.7 against 477.5 ms),
+because these two-token answers are dominated by prefill. No latency
+comparison is made across runtime versions. The findings hold for this
+machine, these runtime versions, this benchmark and this prompt template
+only.
 
 \section{Keywords}\label{keywords}
 
@@ -196,8 +196,10 @@ such:
   experiments failed before any request because of a runtime and
   model-template incompatibility; after the owner approved a runtime
   upgrade as the only change, EXP-002 completed and EXP-001 ran its full
-  matrix but met a frozen stopping criterion that the runner does not
-  enforce (EXP-001, EXP-002).
+  matrix; two of its blocks met frozen memory criteria that the runner
+  did not then enforce, and after the rules were implemented both blocks
+  were repeated once on the owner's instruction and EXP-001 completed
+  under the frozen rules (EXP-001, EXP-002).
 \item
   An evidence pipeline in which every number in this manuscript maps to
   a committed result file, including an exploratory re-analysis that
@@ -312,7 +314,13 @@ EXP-001 and EXP-002 matrices unchanged, runtime version recorded''
 runtime version is the only change, recorded as a dated deviation
 (DL-015); protocols, configs, seeds, item order, template, decoding
 parameters and code are unchanged, and the first attempts stay recorded
-as failed.
+as failed. After that rerun the owner instructed: ``Repeat blocks 3 and
+11'', with the frozen block exclusion and stopping rules (main protocol
+section 9) implemented in the runner first, tested on the simulated
+backend and committed before any new confirmatory output
+(\texttt{labs/\_shared/owner-approvals-2026-11-26.md}, follow-up
+answers; DL-017). The rules were committed at revision c7d1ba6 and the
+two blocks were repeated with that code (DL-018).
 
 \subsection{4.2 Data}\label{data}
 
@@ -335,13 +343,14 @@ All arms ran in Ollama on 127.0.0.1. EXP-003 and the failed first
 attempts of EXP-001 and EXP-002 used Homebrew Ollama 0.9.6; the second
 attempts of EXP-001 and EXP-002 used the official Ollama 0.40.6 darwin
 build (tarball SHA-256 b2b55434\ldots f974, binary SHA-256
-69fcb23a\ldots c2ff; JRN-0010), started by the rerun session with no
-other client. The three EXP-001 model files were verified without any
-download: each weights blob matched its content digest, and the A0 and
-A1 template, parameter and Modelfile hashes were the same on both
-runtimes. EXP-001 and EXP-002 used A0 phi4-mini:3.8b (baseline, 2.49
-GB), A1 llama3.1:8b (4.92 GB) and A2 ministral-3:8b (6.02 GB), all GGUF
-Q4\_K\_M. EXP-003 used \texttt{llama3.1:8b} (Q4\_K\_M, baseline) and
+69fcb23a\ldots c2ff; JRN-0010), started by the rerun session (and again
+by the block-repeat session) with no other client. The three EXP-001
+model files were verified without any download: each weights blob
+matched its content digest, and the A0 and A1 template, parameter and
+Modelfile hashes were the same on both runtimes. EXP-001 and EXP-002
+used A0 phi4-mini:3.8b (baseline, 2.49 GB), A1 llama3.1:8b (4.92 GB) and
+A2 ministral-3:8b (6.02 GB), all GGUF Q4\_K\_M. EXP-003 used
+\texttt{llama3.1:8b} (Q4\_K\_M, baseline) and
 \texttt{llama3.1:8b-instruct-q8\_0} (Q8\_0, pulled 2026-11-25, manifest
 digest b158ded7\ldots, 8,540,789,934 bytes of layers; JRN-0005).
 qwen3.5:4b was excluded by the owner (F4). The owner accepted the Llama
@@ -414,6 +423,13 @@ eadcedd7e959af12d40df967f842528a0cbde954 (EXP-002), both with a clean
 tree; tables and figures come from \texttt{token-lab\ report}, and the
 exploratory checks from
 \texttt{.venv/bin/python\ -I\ scripts/rerun\_exploratory\_exp001.py\ -\/-repo\ .}.
+The EXP-001 block repeat used
+\texttt{.venv/bin/token-lab\ repeat-blocks\ -\/-config\ experiments/EXP-001.json\ -\/-source\ results/confirmatory/RUN-EXP-001-0001\ -\/-blocks\ 3,11}
+at revision c7d1ba666b258450c6780df755362b81d0e218ef (clean tree), then
+\texttt{token-lab\ combine\ -\/-source\ results/confirmatory/RUN-EXP-001-0001\ -\/-repeat\ results/confirmatory/RUN-EXP-001-0002\ -\/-out\ results/confirmatory/RUN-EXP-001-0002/combined}
+and \texttt{token-lab\ report} on the combined input; the exploratory
+checks on it use the same script with
+\texttt{-\/-result\ results/confirmatory/RUN-EXP-001-0002/combined/result.json\ -\/-out\ results/exploratory/REPEAT-EXPL-0001}.
 
 \section{5. Results}\label{results}
 
@@ -444,9 +460,11 @@ Status
 EXP-001, attempt 1 (Ollama 0.9.6) & A0, A1, A2 (Q4\_K\_M) & 4,500 & 0 &
 failed before any request \\
 EXP-001, attempt 2 (Ollama 0.40.6) & A0, A1, A2 (Q4\_K\_M) & 4,500 &
-4,500 & matrix complete, 0 request errors; stopping criterion met at
-block 11 of 15 and exclusion criterion at blocks 3 and 11, not enforced;
-status pending owner decision \\
+4,500, plus 600 in the repeat of blocks 3 and 11 & complete under the
+frozen rules after the block repeat; 0 request errors; blocks 3 and 11
+of RUN-EXP-001-0001 met the exclusion criterion (block 11 also the
+stopping criterion) and were repeated once (RUN-EXP-001-0002), meeting
+no criterion \\
 EXP-002, attempt 1 (Ollama 0.9.6) & A0, A1, A2, cold and warm & 60 & 0 &
 failed before any request \\
 EXP-002, attempt 2 (Ollama 0.40.6) & A0, A1, A2, cold and warm & 60 & 60
@@ -457,8 +475,8 @@ complete, 0 request errors, 0 excluded blocks \\
 \end{longtable}
 
 \subsection{5.1 EXP-001 (primary): first attempt failed; second attempt
-complete, stopping criterion met after the
-fact}\label{exp-001-primary-first-attempt-failed-second-attempt-complete-stopping-criterion-met-after-the-fact}
+complete after a block
+repeat}\label{exp-001-primary-first-attempt-failed-second-attempt-complete-after-a-block-repeat}
 
 \textbf{First attempt (2026-11-25, Ollama 0.9.6): failed, no result.}
 The run passed the freeze guard and the item checks, then aborted at the
@@ -478,23 +496,37 @@ All 4,500 requests completed without a request error; determinism was
 repetitions. An exploratory smoke run on the new runtime
 (RUN-SMOKE-0007, JRN-0010) ran all three arms beforehand.
 
-\textbf{Status under the frozen rules.} The runner does not enforce the
-block exclusion rule or the stopping rules (DL-011 gap 2), so every
-block was checked after the run (JRN-0013). Block 3 (A1, repetition 0)
-and block 11 (A0, repetition 3) had swap growth of 734.1 and 2,778.1
-MiB, above the 512 MiB exclusion threshold, and block 11 also exceeded
-the stopping rule's 2 GiB (``abort on any sign of memory exhaustion
-\ldots; report as a failure'', main protocol section 9). Under that rule
-as written, EXP-001 is a failure; the run did not stop and neither block
-was repeated. Because accuracy was identical in every repetition, the
-two blocks change no accuracy value; their timing and memory readings
-were taken under memory pressure. The analysis below is the frozen
-analysis computed on the complete matrix, and \textbf{whether it counts
-as confirmatory is the owner's decision} (DL-016).
+\textbf{Status under the frozen rules.} The runner of the second attempt
+did not enforce the block exclusion rule or the stopping rules (DL-011
+gap 2), so every block was checked after the run (JRN-0013). Block 3
+(A1, repetition 0) and block 11 (A0, repetition 3) had swap growth of
+734.1 and 2,778.1 MiB, above the 512 MiB exclusion threshold, and block
+11 also exceeded the stopping rule's 2 GiB (``abort on any sign of
+memory exhaustion \ldots; report as a failure'', main protocol section
+9); the run did not stop and neither block was repeated. In both blocks
+the runtime still held ministral-3:8b from the preceding block. The
+owner then instructed that both blocks be repeated (DL-017). The frozen
+rules were implemented in the runner, tested and committed first; the
+repeat run RUN-EXP-001-0002 (2026-11-26, 14:12:03Z, 1-minute load
+average 1.67, AC power, no model loaded, 228.4 s; JRN-0014) re-executed
+both blocks once with their original seed, item order and warm-up, under
+the rules. Block 3 had a swap growth of 426.3 MiB and block 11 of -8.0
+MiB, so neither met a criterion and the one repeat each block is allowed
+is spent. As the protocol defines, the repeated blocks replace the
+excluded ones: in the combined analysis input every one of the 15 blocks
+is free of the frozen criteria, and \textbf{EXP-001 is complete under
+the frozen rules} (DL-018). The repeated blocks returned the same 600
+responses as the excluded ones, so every accuracy value and contrast is
+identical to the pre-repeat analysis of RUN-EXP-001-0001 alone; only the
+timing and memory readings of the two blocks changed. The status of the
+failure under the stopping rule follows the owner's instruction to
+repeat the block in which it was met.
 
 \textbf{Table 6. EXP-001 paired accuracy contrasts against A0
-phi4-mini:3.8b (RUN-EXP-001-0001, \texttt{contrasts.csv}; Holm over the
-two contrasts within each extraction rule).}
+phi4-mini:3.8b (RUN-EXP-001-0001 with blocks 3 and 11 replaced by
+RUN-EXP-001-0002, \texttt{RUN-EXP-001-0002/combined/contrasts.csv};
+identical to the pre-repeat analysis; Holm over the two contrasts within
+each extraction rule).}
 
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{(\linewidth - 14\tabcolsep) * \real{0.1250}}
@@ -549,10 +581,10 @@ A0. By the frozen S2 text, format compliance rather than knowledge
 drives the strict A1 versus A0 difference. A2 is ahead of A0 under both
 rules (+33.33 and +8.33 points).
 
-\textbf{Table 7. EXP-001 per-arm costs (RUN-EXP-001-0001,
-\texttt{metrics.csv}; descriptive).} Latency is summarised over the 300
-per-item medians; time to first token and throughputs are medians over
-the 1,500 records of each arm.
+\textbf{Table 7. EXP-001 per-arm costs (combined input,
+\texttt{RUN-EXP-001-0002/combined/metrics.csv}; descriptive).} Latency
+is summarised over the 300 per-item medians; time to first token and
+throughputs are medians over the 1,500 records of each arm.
 
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
@@ -574,8 +606,8 @@ A2 ministral-3:8b
 \bottomrule\noalign{}
 \endlastfoot
 Median of per-item median latency {[}Q1, Q3{]} (ms) & 221.6 {[}218.2,
-307.7{]} & 434.8 {[}430.9, 555.2{]} & 476.8 {[}470.9, 606.9{]} \\
-Median time to first token (ms) & 195.2 & 393.6 & 430.4 \\
+306.9{]} & 435.3 {[}431.4, 555.6{]} & 476.8 {[}470.9, 606.9{]} \\
+Median time to first token (ms) & 195.2 & 394.0 & 430.4 \\
 Median decode throughput (tokens/s) & 88.6 & 49.1 & 45.7 \\
 Median prompt length (prompt\_eval\_count, tokens) & 84 & 91.5 & 636 \\
 Runtime-reported model memory (MiB) & 2,698.6 & 4,777.5 & 5,113.6 \\
@@ -584,9 +616,13 @@ Strict format failures (records of 1,500) & 520 & 10 & 5 \\
 
 Both larger arms were slower than A0 on every item. The latency ratio to
 A0 is shown under both readings of protocol section 8, as the owner
-decided (R-TOKEN-2; exploratory, JRN-0013): A1/A0 1.962 {[}1.767,
-1.968{]} as a ratio of medians and 1.977 {[}1.973, 1.980{]} as a median
-of per-item ratios; A2/A0 2.151 {[}1.937, 2.157{]} and 2.162 {[}2.156,
+decided (R-TOKEN-2; exploratory, on the combined input, JRN-0015): A1/A0
+1.964 {[}1.776, 1.970{]} as a ratio of medians and 1.980 {[}1.975,
+1.982{]} as a median of per-item ratios; A2/A0 2.151 {[}1.945, 2.157{]}
+and 2.163 {[}2.156, 2.166{]}. Before the repeat (RUN-EXP-001-0001 alone;
+JRN-0013) A1's median latency was 434.8 ms {[}430.9, 555.2{]}, A0's
+quartiles 218.2 and 307.7 ms, and the ratios 1.962 {[}1.767, 1.968{]},
+1.977 {[}1.973, 1.980{]}, 2.151 {[}1.937, 2.157{]} and 2.162 {[}2.156,
 2.166{]}. On 0.40.6 the ministral-3:8b template adds a default system
 text, so A2's prompts are about seven times longer than A0's and A1's;
 A2's latency includes this text. Peak RSS on this runtime does not
@@ -597,9 +633,10 @@ shows the per-item latency distributions.
 \centering
 \pandocbounded{\includesvg[keepaspectratio]{../experiments/EXP-001/figures/FIG-002-exp001-latency.svg}}
 \caption{FIG-002. Per-item median end-to-end latency per arm in EXP-001
-(RUN-EXP-001-0001, Ollama 0.40.6). Each dot is one item (n = 300 per
-arm); the red bar is the median over items, in ms. Generated by
-\texttt{token-lab\ report} from \texttt{result.json}.}
+(RUN-EXP-001-0001 with blocks 3 and 11 replaced by RUN-EXP-001-0002,
+Ollama 0.40.6). Each dot is one item (n = 300 per arm); the red bar is
+the median over items, in ms. Generated by \texttt{token-lab\ report}
+from the combined \texttt{result.json}.}
 \end{figure}
 
 \subsection{5.2 EXP-002: first attempt failed; second attempt
@@ -843,8 +880,8 @@ failed \\
 EXP-001 Delta\_A1, Delta\_A2, attempt 2 (strict) & H1: Delta\_k != 0
 (nondirectional) & +16.00 pp {[}+9.67, +22.33{]} and +33.33 pp
 {[}+27.67, +39.33{]}, Holm p below 0.05 & H0 rejected for both arms by
-the decision rule; stopping criterion met at block 11, so the
-confirmatory status is the owner's decision \\
+the decision rule (complete under the frozen rules after the repeat of
+blocks 3 and 11) \\
 EXP-001 S2, attempt 2 & if conclusions differ, format compliance drives
 accuracy & A1: -9.33 pp {[}-14.67, -4.33{]}; A2: +8.33 pp {[}+4.00,
 +12.67{]} & the A1 conclusion differs: attributed to format compliance;
@@ -954,8 +991,7 @@ only change allowed the frozen matrices to run, at the price of two
 runtime versions in one study, so no latency comparison is made between
 EXP-003 and the other two experiments.
 
-\textbf{What EXP-001 supports.} If the owner counts the accuracy
-analysis as confirmatory, A2 ministral-3:8b answered more items
+\textbf{What EXP-001 supports.} A2 ministral-3:8b answered more items
 correctly than A0 phi4-mini:3.8b under both extraction rules, while the
 strict A1 advantage over A0 is a format-compliance effect: with lenient
 extraction A1 was below A0. The configurations differ in parameter
@@ -968,7 +1004,9 @@ the memory criteria are a reminder that system-wide swap on a shared 16
 GB laptop is not under the experiment's control; the runtime kept the
 previous arm's model loaded when the next arm's model was loaded in some
 blocks (for example block 11, where ministral-3:8b stayed listed beside
-phi4-mini:3.8b).
+phi4-mini:3.8b). Repeated under the enforced rules, the same blocks
+stayed below the exclusion threshold (426.3 and -8.0 MiB) and returned
+the same responses.
 
 \textbf{What EXP-002 supports.} Runtime-cold requests cost between about
 1.2 and 6.0 s more than warm ones on this laptop, and the penalty grew
@@ -986,12 +1024,17 @@ important:
 \begin{itemize}
 \tightlist
 \item
-  \textbf{Primary result pending the owner.} On Ollama 0.9.6 EXP-001 and
-  EXP-002 failed. On 0.40.6 EXP-002 completed, and EXP-001 ran its full
-  matrix but met the frozen memory-exhaustion stopping criterion in one
-  block and the exclusion criterion in two, neither of which the runner
-  enforces; its confirmatory status is the owner's decision. No accuracy
-  value depends on those blocks.
+  \textbf{Primary result after a block repeat.} On Ollama 0.9.6 EXP-001
+  and EXP-002 failed. On 0.40.6 EXP-002 completed, and EXP-001 ran its
+  full matrix, in which two blocks met the frozen exclusion criterion
+  and one the memory-exhaustion stopping criterion, which the runner did
+  not then enforce. After the rules were implemented, the owner had both
+  blocks repeated once; neither met a criterion, and EXP-001 is complete
+  under the frozen rules with the repeated blocks in place. A reader who
+  holds that the stopping rule should have ended the first run at block
+  11 can read EXP-001 as a failure; the accuracy values are the same
+  either way. The cap is counted as the two runs' summed wall-clock time
+  (2,077.5 s), not the 70 minutes between them.
 \item
   \textbf{Two runtime versions.} EXP-003 ran on 0.9.6 and EXP-001 and
   EXP-002 on 0.40.6. No latency, throughput or memory comparison is made
@@ -1068,15 +1111,14 @@ primary comparison of model sizes and the cold-start experiment first
 failed because of a runtime and template incompatibility; rerun
 unchanged on Ollama 0.40.6 with the owner's approval, the cold-start
 penalty grew with file size (1,246.4 to 6,039.8 ms, confounded with
-prompt length), and the size comparison gave strict differences of
-+16.00 and +33.33 points over phi4-mini:3.8b, the first of which
-reverses under lenient extraction, with a frozen stopping criterion met
-after the fact. Feasible next steps, each needing the owner: decide the
-EXP-001 status under the stopping rule and whether blocks 3 and 11 are
-repeated; implement the exclusion and stopping rules in the runner; fix
-the definition of the latency-ratio interval; freeze configs for S1 and
-an S4 power range; and, if smaller accuracy differences matter,
-preregister an equivalence margin and a larger item set.
+prompt length), and the size comparison, complete under the frozen rules
+after a repeat of two blocks that had met frozen memory criteria, gave
+strict differences of +16.00 and +33.33 points over phi4-mini:3.8b, the
+first of which reverses under lenient extraction. Feasible next steps,
+each needing the owner: fix the definition of the latency-ratio
+interval; freeze configs for S1 and an S4 power range; and, if smaller
+accuracy differences matter, preregister an equivalence margin and a
+larger item set.
 
 \section{10. Data and code
 availability}\label{data-and-code-availability}

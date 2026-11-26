@@ -1,0 +1,21 @@
+{
+ "run_id": "RUN-EXP-001-0002",
+ "exp_id": "EXP-001",
+ "label": "confirmatory",
+ "algorithm": "sha256",
+ "files": {
+  "combined/contrasts.csv": "bf08f26fdc4b7a34107b80dc5627a8bf7eed30be56521cc27a174f61147870b7",
+  "combined/latency.svg": "ab48fc4b730b33ca341122336d83391084310b85d9d41b3753de55c5a93a2e2d",
+  "combined/metrics.csv": "9b1eca02d943578406a39d97438bfa143dd301eaeb80eabee5851847b12d462b",
+  "combined/report.md": "049a4b67a80db9ddec517b2e0087c1f4ff6763f39041dbcdf395d0a1e2a4150a",
+  "combined/result.json": "4743f2d78c49019fea63857a59c731c8f8917bb6dc3465fea02e242c34b2c7a4",
+  "config.json": "50d50735d8e0ba0fc5d4cd28e7cfea9abd1bcd83952ff30f568ba533603993d2",
+  "contrasts.csv": "022e01a0e0ffdf0870b844db362492e9664c94fc46a29a002895611abe762ff8",
+  "latency.svg": "2010d61428fc7a46b2247754b0330d236d4bf8f8309fc092b1831c03bc5cd9e4",
+  "metrics.csv": "0393841b3df23b3ae0b9c587d35db2529f2947c1fe6324a00d8362178163b3b1",
+  "report.md": "05586d3c411a0ec79d36ff6cb762cf0d828af580e3843df1d92ef5c746d93280",
+  "result.json": "be35b70bd32b640ad80f65b11e8f8e0705fa7e3f7873cccbb0cfb4dd61977238",
+  "run_manifest.json": "1882f0672fa714310231ec4e7a2370befc7e75d42d3df6bdf388b966a0b5ee7b"
+ },
+ "note": "Block repeat of RUN-EXP-001-0001 blocks 3 and 11 (owner, 2026-11-26, \"Repeat blocks 3 and 11\"; DL-017, DL-018). result.json, run_manifest.json and config.json are written by the runner (token-lab repeat-blocks); report.md, metrics.csv, contrasts.csv and latency.svg by token-lab report from result.json. combined/result.json is written by token-lab combine (RUN-EXP-001-0001 with blocks 3 and 11 replaced by this run) and combined/report.md, metrics.csv, contrasts.csv and latency.svg by token-lab report from it. RUN-EXP-001-0001 is unchanged (result.json SHA-256 f95ee2055a9048559162cf8417a63f31682e5bf23dd724e0813b38e197cd003c). Runtime Ollama 0.40.6 (owner option a, DL-015). The per-run report.md, metrics.csv and contrasts.csv of this folder cover only the two repeated blocks (A1 repetition 0, A0 repetition 3) and are not an analysis of EXP-001; the frozen analysis is in combined/."
+}

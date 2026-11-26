@@ -36,30 +36,96 @@
   "runtime_version": "0.40.6",
   "simulated": false
  },
+ "block_rules": {
+  "exclusions": [],
+  "n_excluded_blocks": 0,
+  "n_excluded_records": 0,
+  "quoted": {
+   "controls": "no other Ollama client active and no foreign model loaded (`ollama ps` checked before and after each arm)",
+   "exclusion": "A run (arm x repetition block) is excluded and repeated once if: a foreign model was loaded, the machine was on battery, swap grew by more than 512 MiB, or the runtime version changed. Exclusions are logged with the reason and never silently dropped.",
+   "memory_abort": "Abort on any sign of memory exhaustion (runner killed or swap growth above 2 GiB); report as a failure.",
+   "wall_cap": "Wall-clock cap of 4 hours per experiment. If reached, the run stops, the completed blocks are kept and reported, and the experiment is marked incomplete."
+  },
+  "status": "complete",
+  "status_reason": null,
+  "thresholds": {
+   "swap_abort_mib": 2048.0,
+   "swap_exclude_mib": 512.0,
+   "wall_cap_s": 12550.8706885
+  },
+  "version": "protocol-v1.0-section-9"
+ },
+ "combination": {
+  "blocks_missing": [],
+  "n_blocks": 15,
+  "n_planned_blocks": 15,
+  "repeat_git": {
+   "dirty": false,
+   "revision": "c7d1ba666b258450c6780df755362b81d0e218ef"
+  },
+  "repeat_run_id": "RUN-EXP-001-0002",
+  "repeat_window": [
+   "2026-11-26T14:12:03Z",
+   "2026-11-26T14:15:52Z"
+  ],
+  "replaced_blocks": [
+   {
+    "arm": "A1",
+    "block_index": 3,
+    "repetition": 0,
+    "source_exclusion": [
+     "swap grew by 734.1 MiB (more than 512 MiB)"
+    ],
+    "source_stopping": null
+   },
+   {
+    "arm": "A0",
+    "block_index": 11,
+    "repetition": 3,
+    "source_exclusion": [
+     "swap grew by 2778.1 MiB (more than 512 MiB)"
+    ],
+    "source_stopping": "swap growth 2778.1 MiB above 2 GiB (memory exhaustion)"
+   }
+  ],
+  "rule": "the repeated blocks replace the excluded ones (protocol section 9)",
+  "runtime_s_total": 2077.487566416996,
+  "source_git": {
+   "dirty": false,
+   "revision": "ca3a08fb536fbb80196354b5bdc0b3c26b38aa56"
+  },
+  "source_result_sha256": "f95ee2055a9048559162cf8417a63f31682e5bf23dd724e0813b38e197cd003c",
+  "source_run_id": "RUN-EXP-001-0001",
+  "source_window": [
+   "2026-11-26T12:31:06Z",
+   "2026-11-26T13:01:55Z"
+  ],
+  "status": "complete"
+ },
  "config_sha256": "355d86f1cd3bc28373bef6e3e36c32828337583b0893d2b87d4c33fa48c7913e",
  "design": "matrix",
- "end_utc": "2026-11-26T13:01:55Z",
+ "end_utc": "2026-11-26T14:15:52Z",
  "exp_id": "EXP-001",
  "git": {
   "dirty": false,
-  "revision": "ca3a08fb536fbb80196354b5bdc0b3c26b38aa56"
+  "revision": "c7d1ba666b258450c6780df755362b81d0e218ef"
  },
- "harness_peak_rss_mib": 46.71875,
+ "harness_peak_rss_mib": 58.5625,
  "host": {
   "after": {
    "cpu": "Apple M1 Pro",
    "cpu_count_logical": 10,
    "load_avg_1_5_15": [
-    1.49365234375,
-    1.03662109375,
-    1.17822265625
+    2.48681640625,
+    1.86865234375,
+    1.791015625
    ],
    "machine": "arm64",
    "memory_total_bytes": 17179869184,
    "os": "macOS-15.3.1-arm64-arm-64bit",
    "os_release": "15.3.1",
    "power": {
-    "raw": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=7340131)\t100%; charged; 0:00 remaining present: true",
+    "raw": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=7340131)\t96%; AC attached; not charging present: true",
     "source": "ac"
    }
   },
@@ -92,8 +158,35 @@
   "token-lab": "0.1.0"
  },
  "protocol_sha256": "1997317c931cf95d04c271ab2414aef82306f5976f1eea7262eb1e4d54fee8e4",
- "run_id": "RUN-EXP-001-0001",
- "runtime_s": 1849.1293115000008,
+ "repeat_of": {
+  "note": "Each named block runs once with its original runtime seed, item order and warm-up; the source run is not modified. A repeated block that meets a criterion again is not repeated again.",
+  "replaced_blocks": [
+   {
+    "arm": "A1",
+    "block_index": 3,
+    "repetition": 0,
+    "source_exclusion": [
+     "swap grew by 734.1 MiB (more than 512 MiB)"
+    ],
+    "source_stopping": null
+   },
+   {
+    "arm": "A0",
+    "block_index": 11,
+    "repetition": 3,
+    "source_exclusion": [
+     "swap grew by 2778.1 MiB (more than 512 MiB)"
+    ],
+    "source_stopping": "swap growth 2778.1 MiB above 2 GiB (memory exhaustion)"
+   }
+  ],
+  "source_result": "results/confirmatory/RUN-EXP-001-0001/result.json",
+  "source_result_sha256": "f95ee2055a9048559162cf8417a63f31682e5bf23dd724e0813b38e197cd003c",
+  "source_run_id": "RUN-EXP-001-0001",
+  "source_runtime_version": "0.40.6"
+ },
+ "run_id": "RUN-EXP-001-0002",
+ "runtime_s": 2077.487566416996,
  "schema_version": "1.0.0",
  "seeds": {
   "order_seed_base": 1000,

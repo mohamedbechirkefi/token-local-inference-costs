@@ -61,3 +61,13 @@ No box was ticked. The owner decided on 2026-11-26 (`labs/_shared/owner-approval
 - **Article drafts:** `articles/medium.md` and `articles/linkedin.md` now carry a dated note that they predate the rerun; their text is not revised.
 - **PDFs:** after the coordinator installs the two report texts, `scripts/build_pdfs.py` rebuilds the five PDFs; the manuscript and supplementary PDFs in this commit were rebuilt and inspected by the rerun session.
 - **Placeholder lines moved:** manuscript repository URL now at line 282, funding at 286, competing interests at 288; `articles/medium.md` repository URL at 36, author line at 38; `articles/linkedin.md` placeholder at 16.
+
+## Added after the EXP-001 block repeat (2026-11-26)
+
+No box was ticked. The owner decided on 2026-11-26 (follow-up answers in `labs/_shared/owner-approvals-2026-11-26.md`): "Repeat blocks 3 and 11", and the new manuscript title. Both were carried out (DL-017, DL-018): the frozen block rules were implemented in the runner and committed (c7d1ba6) before the repeat; both blocks were repeated once and met no criterion; EXP-001 is complete under the frozen rules. The EXP-001 status, manuscript title and runner-rules items of the previous addendum are therefore settled. Still open:
+
+- **S1 and S4** configs (manuscript Table 4 and section 9) and the **latency-ratio interval** definition (both readings stay shown, R-TOKEN-2).
+- **Block 11 reading:** RUN-EXP-001-0001 met the stopping rule at block 11, which as written ends the run as a failure; the repeat followed the owner's instruction, and the manuscript (limitation 1), limitations 30 and the EXP-001 report disclose this. The owner may wish to confirm the wording.
+- **Article drafts** still predate the rerun and the repeat (dated note only).
+- **PDFs:** after the coordinator installs the EXP-001 report text, `scripts/build_pdfs.py` rebuilds its PDF; the manuscript and supplementary PDFs in this commit were rebuilt and inspected by the block-repeat session.
+- **Placeholder lines:** unchanged (manuscript repository URL at line 282, funding at 286, competing interests at 288).

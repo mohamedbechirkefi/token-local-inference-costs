@@ -3,11 +3,11 @@
 # The SPDX "license" field is intentionally omitted because the licence is not on the SPDX list.
 cff-version: 1.2.0
 message: "If you use this work, please cite it as below."
-title: "TOKEN: local inference economics"
+title: "Quantization cost, model size and cold-start latency of local models on one laptop: a preregistered study with a runtime upgrade"
 type: software
 authors:
   - family-names: Kefi
     given-names: Mohamed Bechir
 # No affiliation. An AI system was used as a research and development assistant; it is not an author.
 version: "0.1.0-rc1"
-abstract: "Independent research manuscript / preprint draft, not peer-reviewed. Protocol frozen by the owner on 2026-11-24. One confirmatory experiment complete (EXP-003: Llama 3.1 8B Q8_0 minus Q4_K_M strict accuracy +1.67 pp, 95 % CI [-1.00, +4.33], exact McNemar p = 0.332; no detected difference, not equivalence); EXP-001 and EXP-002 failed before any request on Ollama 0.9.6 and were rerun unchanged on Ollama 0.40.6 with the owner's approval (EXP-002 complete; EXP-001 ran in full but met a frozen stopping criterion after the fact, status pending the owner). Repository URL: [OWNER PLACEHOLDER: repository URL, not published]."
+abstract: "Independent research manuscript / preprint draft, not peer-reviewed. Protocol frozen by the owner on 2026-11-24. One confirmatory experiment complete (EXP-003: Llama 3.1 8B Q8_0 minus Q4_K_M strict accuracy +1.67 pp, 95 % CI [-1.00, +4.33], exact McNemar p = 0.332; no detected difference, not equivalence); EXP-001 and EXP-002 failed before any request on Ollama 0.9.6 and were rerun unchanged on Ollama 0.40.6 with the owner's approval (EXP-002 complete; EXP-001 complete under the frozen rules after two blocks that met frozen memory criteria were repeated once on the owner's instruction: strict accuracy difference +16.00 pp [+9.67, +22.33] for llama3.1:8b and +33.33 pp [+27.67, +39.33] for ministral-3:8b over phi4-mini:3.8b, the first reversing under lenient extraction). Repository URL: [OWNER PLACEHOLDER: repository URL, not published]."

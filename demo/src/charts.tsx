@@ -41,7 +41,7 @@ export function FrontierChart({ arms, notMeasured }: { arms: FrontierArm[]; notM
   const desc =
     `Strict accuracy against ${M.name.toLowerCase()} for the two measured EXP-003 arms. ` +
     arms.map((a) => `${a.quantization}: accuracy ${a.accuracy_display}, ${xText(a, metric)}`).join("; ") +
-    ". The EXP-001 arms have no result and are not plotted.";
+    ". The EXP-001 arms ran on a different runtime version and are not plotted.";
   return (
     <figure className="chart">
       <div className="toggle" role="group" aria-label="Cost shown on the horizontal axis">

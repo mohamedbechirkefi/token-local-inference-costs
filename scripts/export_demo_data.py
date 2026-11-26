@@ -4,8 +4,9 @@
 Writes ``demo/public/data/results.json`` in the shared lab demo schema
 (``lab-demo-results`` 1.0.0) from committed files only: the confirmatory EXP-003
 result, its ``metrics.csv`` and ``contrasts.csv``, the M4 exploratory re-analysis,
-the EXP-001 and EXP-002 rerun tables (``contrasts.csv``, ``metrics.csv``,
-``cold_warm.csv``) and the rerun exploratory checks (DL-015, DL-016),
+the EXP-002 rerun table (``cold_warm.csv``), the EXP-001 tables of the combined
+analysis input after the block repeat (``contrasts.csv``, ``metrics.csv``; DL-017,
+DL-018) and their exploratory checks (DL-015, DL-016, DL-018),
 the freeze record, the experiment registry, the claims register, the artifact
 manifest and the manuscript. No inference runs and no runtime is contacted.
 
@@ -38,9 +39,10 @@ OUT = ROOT / "demo/public/data/results.json"
 RUN = "RUN-EXP-003-0001"
 RUN_DIR = f"results/confirmatory/{RUN}"
 EXPL = "results/exploratory/M4-EXPL-0001/exploratory_exp003.json"
-RUN1 = "results/confirmatory/RUN-EXP-001-0001"
+# EXP-001: RUN-EXP-001-0001 with blocks 3 and 11 replaced by RUN-EXP-001-0002 (DL-018)
+RUN1 = "results/confirmatory/RUN-EXP-001-0002/combined"
 RUN2 = "results/confirmatory/RUN-EXP-002-0001"
-EXPL1 = "results/exploratory/RERUN-EXPL-0001/exploratory_exp001.json"
+EXPL1 = "results/exploratory/REPEAT-EXPL-0001/exploratory_exp001.json"
 
 SOURCES = [
     f"{RUN_DIR}/result.json",
@@ -377,24 +379,28 @@ def build() -> dict:
                    ck.text("0 of 60 requests", "0 of 60 requests"),
                    interval_kind="no result exists", unit="requests", manifest_ids=["N-019"])
 
-    # EXP-001 and EXP-002, attempt 2 (Ollama 0.40.6, owner option a; DL-015, DL-016)
+    # EXP-001 and EXP-002, attempt 2 (Ollama 0.40.6, owner option a; DL-015, DL-016); EXP-001 after the
+    # owner-instructed repeat of blocks 3 and 11 (DL-017, DL-018)
     c1 = {(r["arm"], r["extraction"]): r for r in _csv(f"{RUN1}/contrasts.csv")}
     m1 = {r["arm"]: r for r in _csv(f"{RUN1}/metrics.csv")}
     x1 = _json(EXPL1)
-    if x1["B_blocks"]["first_stopping_rule_block"] != 11 or x1["B_blocks"]["n_blocks_meeting_a_criterion"] != 2:
-        raise ExportError("EXP-001 block check differs from the recorded status (DL-016)")
+    if x1["B_blocks"]["first_stopping_rule_block"] is not None or x1["B_blocks"]["n_blocks_meeting_a_criterion"] != 0:
+        raise ExportError("EXP-001 block check differs from the recorded status (DL-018)")
+    comb = _json(f"{RUN1}/result.json")["manifest"]["combination"]
+    if comb["status"] != "complete" or comb["blocks_missing"] or comb["n_blocks"] != 15:
+        raise ExportError("EXP-001 combined input is not complete under the frozen rules (DL-018)")
     reps = x1["R_accuracy_per_repetition"]
     for arm in ("A0", "A1", "A2"):
         vals = {round(v["strict"], 12) for k, v in reps.items() if k.startswith(arm)}
         if len(vals) != 1 or not close(vals.pop(), float(m1[arm]["accuracy_strict"])):
             raise ExportError(f"{arm}: accuracy is not identical across repetitions")
-    pending_001 = ("Pending owner decision (DL-016): under the frozen stopping rule as written this experiment is a "
-                   "failure; the frozen analysis of the complete matrix is shown with that status. The owner decides "
-                   "whether it counts as confirmatory and whether blocks 3 and 11 are repeated. This page chooses none.")
     exp001_est = [sent_001,
                   est("Attempt 2 (Ollama 0.40.6): requests sent of planned", "confirmatory run, measured", 4500,
                       ck.text("4,500", "4,500", ("N-024",)), interval_kind="count", unit="requests",
-                      manifest_ids=["N-024"])]
+                      manifest_ids=["N-024"]),
+                  est("Attempt 2, repeat of blocks 3 and 11 under the enforced rules: requests sent", "confirmatory run, measured",
+                      600, ck.text("600", "600", ("N-034",)), interval_kind="count", unit="requests",
+                      manifest_ids=["N-034"])]
     for arm, name, ext, exp_d, exp_ci, exp_p in (
         ("A1", "llama3.1:8b", "strict", "+16.00", "[+9.67, +22.33]", "2.1e-06"),
         ("A2", "ministral-3:8b", "strict", "+33.33", "[+27.67, +39.33]", "3.3e-23"),
@@ -407,7 +413,7 @@ def build() -> dict:
         exp001_est.append(est(
             f"Attempt 2: {ext} accuracy difference, {name} minus phi4-mini:3.8b"
             + (" (primary)" if ext == "strict" else " (S2)") + f"; Holm p {ck.text(pe(float(r['holm_p'])), exp_p, (mid,))}",
-            "confirmatory analysis, status pending owner decision", float(r["delta_pp"]),
+            "confirmatory analysis", float(r["delta_pp"]),
             ck.text(pp(float(r["delta_pp"])), exp_d, (mid,)), ci=(lo, hi), ci_level=0.95,
             interval_kind="95 % paired bootstrap interval over items (10,000 resamples, seed 7)",
             interval_display=ck.text(iv(lo, hi, pp), exp_ci, (mid,)), unit="percentage points", manifest_ids=[mid]))
@@ -420,7 +426,7 @@ def build() -> dict:
                               unit="proportion of 300 items", manifest_ids=["N-027"]))
     sizes1 = x1["M_runtime_model_mib"]
     for arm, name, exp_lat, exp_mem in (("A0", "phi4-mini:3.8b", "221.6", "2,698.6"),
-                                        ("A1", "llama3.1:8b", "434.8", "4,777.5"),
+                                        ("A1", "llama3.1:8b", "435.3", "4,777.5"),
                                         ("A2", "ministral-3:8b", "476.8", "5,113.6")):
         v = float(m1[arm]["latency_ms_median"])
         exp001_est.append(est(f"Attempt 2: median of per-item median latency, {name}", "confirmatory run, measured, descriptive",
@@ -455,19 +461,21 @@ def build() -> dict:
     experiments = [
         {"id": "EXP-001", **{k: v for k, v in reg("EXP-001").items() if k != "registry_status"},
          "status": ("attempt 1 (Ollama 0.9.6) failed before any request; attempt 2 (Ollama 0.40.6, owner option a): "
-                    "4,500 of 4,500 requests, frozen stopping criterion met at block 11 of 15 after the fact"),
-         "outcome": "failed",
-         "verdict": ("failure under the stopping rule as written; the frozen analysis of the complete matrix rejects H0 "
-                     "for both arms under strict extraction, and S2 reverses the A1 sign; status pending owner decision"),
+                    "4,500 of 4,500 requests, then blocks 3 and 11 repeated once under the enforced frozen rules; "
+                    "complete under the frozen rules"),
+         "outcome": "positive",
+         "verdict": ("H0 rejected for both arms under strict extraction (primary); S2 reverses the A1 sign, so the "
+                     "A1 difference is attributed to format compliance; A2 leads under both rules"),
          "estimates": exp001_est, "claim_ids": claims["EXP-001"],
          "notes": ["Attempt 1 aborted at the per-arm /api/show fingerprint (F8): Ollama 0.9.6 cannot render the chat "
                    "template of ministral-3:8b (HTTP 500, function currentDate not defined). No generation request was sent.",
                    "Attempt 2 ran unchanged on Ollama 0.40.6. Blocks 3 and 11 had swap growth above 512 MiB and block 11 "
-                   "above 2 GiB; the runner enforces neither rule, so the run did not stop. Accuracy was identical in all "
-                   "five repetitions, so no accuracy value depends on these blocks. A0 phi4-mini:3.8b wrote text after "
-                   "the label in 520 of 1,500 records; under lenient extraction (S2) the llama3.1:8b difference is negative. "
-                   "On 0.40.6 ministral-3:8b receives a prompt about seven times longer.",
-                   pending_001]},
+                   "above 2 GiB; that runner enforced neither rule, so the run did not stop. On the owner's instruction "
+                   "the rules were implemented and both blocks repeated once (swap growth 426.3 and -8.0 MiB, no "
+                   "criterion met); the repeated blocks replace the excluded ones, and they returned the same responses, "
+                   "so every accuracy value is unchanged. A0 phi4-mini:3.8b wrote text after the label in 520 of 1,500 "
+                   "records; under lenient extraction (S2) the llama3.1:8b difference is negative. On 0.40.6 "
+                   "ministral-3:8b receives a prompt about seven times longer."]},
         {"id": "EXP-002", **{k: v for k, v in reg("EXP-002").items() if k != "registry_status"},
          "status": ("attempt 1 (Ollama 0.9.6) failed before any request; attempt 2 (Ollama 0.40.6, owner option a) "
                     "complete: 60 of 60 trials, 0 invalid start states, 0 excluded blocks"),
@@ -540,17 +548,18 @@ def build() -> dict:
     if len(sens) < 4:
         raise ExportError("sensitivity table too short")
 
+    # The EXP-001 status and the title were decided on 2026-11-26 (DL-017, DL-018); the items below remain open.
     pending = [
-        {"id": "TOKEN-EXP-001-STATUS", "title": "Status of EXP-001 after the stopping criterion met in block 11",
+        {"id": "TOKEN-S1-S4", "title": "Sensitivity analyses S1 (prompt template) and S4 (modelled energy) have no frozen config",
          "status": "pending owner decision",
-         "readings": ["report EXP-001 as a failure under the stopping rule as written",
-                      "count the frozen accuracy analysis of the complete matrix, with the criteria disclosed",
-                      "repeat blocks 3 and 11 or the experiment (a further run)"],
-         "source": "DL-016; manuscript section 5.1"},
-        {"id": "TOKEN-TITLE", "title": "Manuscript title, approved as written, says \"two failed experiments\"",
+         "readings": ["freeze a config for S1 and a power range for S4, then run them",
+                      "keep S1 and S4 reported as not run"],
+         "source": "manuscript Table 4 and section 9"},
+        {"id": "TOKEN-LATENCY-RATIO", "title": "Definition of the frozen latency-ratio interval",
          "status": "pending owner decision",
-         "readings": ["keep the approved title", "change it to describe the rerun"],
-         "source": "DL-016; manuscript note on the title"},
+         "readings": ["ratio of the medians of per-item medians", "median of per-item ratios",
+                      "keep both readings shown (the owner's current choice, R-TOKEN-2)"],
+         "source": "DL-011 gap 1; manuscript section 4.5"},
     ]
     for p in (f"ratio of medians: {f3(e1['ratio_of_medians'])} {iv(*e1['ratio_of_medians_ci'], f3)}",
               f"median of per-item ratios: {f3(e1['median_of_item_ratios'])} {iv(*e1['median_of_item_ratios_ci'], f3)}"):
@@ -558,7 +567,7 @@ def build() -> dict:
 
     assumptions = [
         {"name": "Runtime and machine", "value": "Ollama 0.9.6 (EXP-003) and Ollama 0.40.6 (EXP-001 and EXP-002, attempt 2) on one Apple M1 Pro laptop (16 GB), AC power",
-         "source": "measured setting, run manifests of RUN-EXP-003-0001, RUN-EXP-001-0001 and RUN-EXP-002-0001; DL-015"},
+         "source": "measured setting, run manifests of RUN-EXP-003-0001, RUN-EXP-001-0001, RUN-EXP-001-0002 and RUN-EXP-002-0001; DL-015"},
         {"name": "Decoding", "value": "template T1, temperature 0, num_predict 8, num_ctx 2048, runtime seeds 0 to 4",
          "source": "frozen EXP-003 config"},
         {"name": "Benchmark subset", "value": "300 ARC-Challenge test items drawn once with seed 20261124",
@@ -580,8 +589,8 @@ def build() -> dict:
         "question": "How do local model configurations trade off quality, latency and resource use?",
         "status_label": ("Independent research manuscript / preprint draft, not peer-reviewed. EXP-003 complete (null "
                          "result, Ollama 0.9.6). EXP-001 and EXP-002 failed on Ollama 0.9.6 and were rerun unchanged on "
-                         "0.40.6 with the owner's approval: EXP-002 complete; EXP-001 ran in full but met a frozen "
-                         "stopping criterion after the fact. Owner decisions pending."),
+                         "0.40.6 with the owner's approval: EXP-002 complete; EXP-001 complete under the frozen rules "
+                         "after two blocks that met frozen memory criteria were repeated on the owner's instruction."),
         "code_revision": _revision(),
         "run_code_revision": doc["manifest"]["git"]["revision"],
         "run_wall_s": wall,
