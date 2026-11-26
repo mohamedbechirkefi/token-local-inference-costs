@@ -227,6 +227,8 @@ def test_runner_runtime_down_writes_nothing(repo, tmp_path, dead_url):
 
 def test_runner_against_stub_ollama(repo, tmp_path, stub_ollama):
     cfg = parse_config(base_config(repetitions=1, runtime_seeds=[0], backend={"name": "ollama"}))
+    # an arm model, so the block rules see no foreign model (see test_block_rules.py)
+    stub_ollama.ps_models = [{"name": "phi4-mini:3.8b", "size": 123, "size_vram": 100}]
     doc, _ = execute(cfg, repo, backend=OllamaBackend(stub_ollama.url, 5), out_root=tmp_path)
     assert not doc["backend"]["simulated"] and doc["backend"]["runtime_version"] == "stub-0.0"
     assert all(r["eval_count"] == 2 and r["response"] == "B." for r in doc["records"])

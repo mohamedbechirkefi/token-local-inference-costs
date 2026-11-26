@@ -35,6 +35,7 @@ class StubState:
         self.show_calls = 0
         self.show_mode = "ok"  # ok | error
         self.bodies = []  # every POST /api/generate body, in order
+        self.ps_models = [{"name": "m", "size": 123, "size_vram": 100}]  # what /api/ps lists
 
 
 @pytest.fixture
@@ -55,7 +56,7 @@ def stub_ollama():
             if self.path == "/api/version":
                 self._send(json.dumps({"version": "stub-0.0"}).encode())
             elif self.path == "/api/ps":
-                self._send(json.dumps({"models": [{"name": "m", "size": 123, "size_vram": 100}]}).encode())
+                self._send(json.dumps({"models": state.ps_models}).encode())
             else:
                 self._send(b"{}", 404)
 
@@ -112,3 +113,46 @@ def dead_url():
     port = s.getsockname()[1]
     s.close()  # nothing listens on this port now
     return f"http://127.0.0.1:{port}"
+
+
+class FakeMachine:
+    """Neutral machine readings for the frozen block rules (AC power, constant swap,
+    a clock that starts at 0). Tests change ``power``, ``swap`` or ``now`` to trigger
+    a rule; the real readings are tested separately (test_block_rules.py)."""
+
+    def __init__(self):
+        self.power = "ac"
+        self.swap = 1024 * 2**20
+        self.now = 0.0
+        self.tick = 0.0  # added to ``now`` at every clock read
+        self.battery_reads = 0  # while positive, power readings say battery (one per read)
+
+    def probes(self):
+        from token_lab.runner import Probes
+
+        def clock():
+            self.now += self.tick
+            return self.now
+
+        def power():
+            if self.battery_reads > 0:
+                self.battery_reads -= 1
+                return "battery"
+            return self.power
+
+        return Probes(power_source=power, swap_used_bytes=lambda: self.swap, clock=clock)
+
+
+@pytest.fixture
+def machine():
+    return FakeMachine()
+
+
+@pytest.fixture(autouse=True)
+def _neutral_machine(monkeypatch, machine):
+    # Every test sees the neutral machine unless it passes its own probes, so a
+    # test run on battery or under swap pressure does not trip the block rules.
+    from token_lab import runner
+
+    monkeypatch.setattr(runner, "default_probes", machine.probes)
+    yield

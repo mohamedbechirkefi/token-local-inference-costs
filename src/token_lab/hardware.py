@@ -76,6 +76,11 @@ def host_info() -> dict:
     }
 
 
+def swap_used_bytes() -> int:
+    """System swap in use (bytes), as psutil reports it (``vm.swapusage`` on macOS)."""
+    return int(psutil.swap_memory().used)
+
+
 def harness_peak_rss_bytes() -> int:
     """Peak RSS of this Python process (ru_maxrss: bytes on macOS, KiB on Linux)."""
     import resource
@@ -110,6 +115,10 @@ class MemorySampler:
     swap_end_bytes: int = 0
     samples: int = 0
     rediscover_s: float = 1.0
+    # Injectable for tests; the default reads system swap. ``peak_swap_growth_bytes``
+    # is the largest (swap used - swap used at entry) seen by any sample.
+    swap_reader: Callable[[], int] = swap_used_bytes
+    peak_swap_growth_bytes: int = 0
     _pids: list = field(default_factory=list)
     _last_discovery: float = float("-inf")
     _stop: threading.Event = field(default_factory=threading.Event)
@@ -140,7 +149,12 @@ class MemorySampler:
         if seen:
             self.peak_rss_bytes = max(self.peak_rss_bytes or 0, total)
         self.peak_system_used_bytes = max(self.peak_system_used_bytes, int(psutil.virtual_memory().used))
+        self.peak_swap_growth_bytes = max(self.peak_swap_growth_bytes, self.swap_growth_bytes())
         self.samples += 1
+
+    def swap_growth_bytes(self) -> int:
+        """Swap used now minus swap used when the sampler was entered."""
+        return int(self.swap_reader()) - self.swap_start_bytes
 
     def _loop(self) -> None:
         period = 1.0 / self.hz
@@ -149,7 +163,7 @@ class MemorySampler:
             self._stop.wait(period)
 
     def __enter__(self) -> "MemorySampler":
-        self.swap_start_bytes = int(psutil.swap_memory().used)
+        self.swap_start_bytes = int(self.swap_reader())
         self._sample()
         self._thread = threading.Thread(target=self._loop, daemon=True)
         self._thread.start()
@@ -160,13 +174,14 @@ class MemorySampler:
         if self._thread is not None:
             self._thread.join(timeout=5)
         self._sample()
-        self.swap_end_bytes = int(psutil.swap_memory().used)
+        self.swap_end_bytes = int(self.swap_reader())
 
     def summary(self) -> dict:
         return {
             "peak_rss_mib": None if self.peak_rss_bytes is None else self.peak_rss_bytes / 2**20,
             "peak_system_used_mib": self.peak_system_used_bytes / 2**20,
             "swap_delta_mib": (self.swap_end_bytes - self.swap_start_bytes) / 2**20,
+            "peak_swap_growth_mib": self.peak_swap_growth_bytes / 2**20,
             "samples": self.samples,
         }
 

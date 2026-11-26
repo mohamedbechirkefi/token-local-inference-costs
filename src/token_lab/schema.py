@@ -70,7 +70,26 @@ BLOCK_SCHEMA = {
         "memory": {"type": "object"},
         "loaded_before": {"type": ["array", "null"]},
         "loaded_after": {"type": ["array", "null"]},
+        # frozen block rules (protocol section 9; DL-017), optional and additive
+        "block_index": {"type": "integer", "minimum": 1},
+        "attempt": {"type": "integer", "minimum": 1},
+        "power_before": {"type": ["string", "null"]},
+        "power_after": {"type": ["string", "null"]},
+        "runtime_version_after": {"type": ["string", "null"]},
+        "status": {"enum": ["included", "excluded", "cap", "aborted"]},
+        "exclusion_reasons": {"type": "array", "items": {"type": "string"}},
+        "abort_reason": {"type": "string"},
+        "origin": {"type": "string", "pattern": r"^RUN-(EXP-\d{3}|SMOKE)-\d{4}$"},
     },
+}
+
+# Records of excluded, aborted or cap-interrupted blocks (kept, never used by the analysis)
+EXCLUDED_RECORD_SCHEMA = {
+    **RECORD_SCHEMA,
+    "required": RECORD_SCHEMA["required"] + ["block_index", "attempt"],
+    "properties": {**RECORD_SCHEMA["properties"],
+                   "block_index": {"type": "integer", "minimum": 1},
+                   "attempt": {"type": "integer", "minimum": 1}},
 }
 
 RESULT_SCHEMA = {
@@ -110,6 +129,8 @@ RESULT_SCHEMA = {
         "records": {"type": "array", "items": RECORD_SCHEMA},
         "blocks": {"type": "array", "items": BLOCK_SCHEMA},
         "failures": {"type": "array", "items": {"type": "object"}},
+        "excluded_records": {"type": "array", "items": EXCLUDED_RECORD_SCHEMA},
+        "excluded_blocks": {"type": "array", "items": BLOCK_SCHEMA},
         "manifest": {"type": "object", "required": ["config_sha256", "git", "packages", "host",
                                                     "start_utc", "end_utc", "runtime_s"]},
     },

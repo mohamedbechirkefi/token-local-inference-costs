@@ -123,6 +123,49 @@ def cold_warm_svg(rows: list[dict], title: str) -> str:
     return "\n".join(parts) + "\n"
 
 
+def _rules_lines(doc: dict) -> list[str]:
+    """Block-rule provenance (protocol section 9; DL-017). Empty for runs made
+    before the rules were enforced, so their reports regenerate unchanged."""
+    m = doc["manifest"]
+    br, ro, comb = m.get("block_rules"), m.get("repeat_of"), m.get("combination")
+    if not (br or ro or comb):
+        return []
+    out = ["## Block rules (protocol section 9)", ""]
+    if comb:
+        rb = ", ".join(f"block {b['block_index']} ({b['arm']}, repetition {b['repetition']})"
+                       for b in comb["replaced_blocks"])
+        out += [f"- Combined analysis input: {comb['source_run_id']} with {rb} replaced by the repeat run "
+                f"{comb['repeat_run_id']} ({comb['rule']}). Source result SHA-256 `{comb['source_result_sha256']}`.",
+                f"- Blocks in the analysis: {comb['n_blocks']} of {comb['n_planned_blocks']} planned; missing: "
+                f"{', '.join(str(k) for k in comb['blocks_missing']) or 'none'}. Status: **{comb['status']}**. "
+                f"Total runtime of both runs: {comb['runtime_s_total']:.1f} s."]
+    elif ro:
+        rb = ", ".join(f"block {b['block_index']} ({b['arm']}, repetition {b['repetition']})"
+                       for b in ro["replaced_blocks"])
+        out += [f"- Block repeat of {ro['source_run_id']} (SHA-256 `{ro['source_result_sha256']}`): {rb}."]
+        for b in ro["replaced_blocks"]:
+            crit = "; ".join(b["source_exclusion"] + ([b["source_stopping"]] if b["source_stopping"] else []))
+            out.append(f"- Source block {b['block_index']} criteria: {crit}.")
+    if br:
+        out.append(f"- Rule outcome: **{br['status']}**" + (f" ({br['status_reason']})" if br["status_reason"] else "")
+                   + f". Thresholds: swap growth above {br['thresholds']['swap_exclude_mib']:.0f} MiB excludes, "
+                   f"above {br['thresholds']['swap_abort_mib']:.0f} MiB aborts; wall-clock cap "
+                   f"{br['thresholds']['wall_cap_s']:.0f} s.")
+        for e in br["exclusions"]:
+            out.append(f"- Block {e['block_index']} ({e['arm']}, repetition {e['repetition']}, attempt {e['attempt']}): "
+                       f"{e['outcome']}; {'; '.join(e['reasons']) or 'no criterion'}.")
+    out += ["", "| Block | Arm | Repetition | Origin | Status | Swap delta (MiB) | Peak swap growth (MiB) | "
+            "Loaded before | Loaded after |", "|---|---|---|---|---|---|---|---|---|"]
+    for pos, b in enumerate(doc["blocks"] + doc.get("excluded_blocks", []), start=1):
+        mem = b["memory"]
+        names = lambda lst: ", ".join(x.get("name") or "?" for x in (lst or [])) or "none"  # noqa: E731
+        pk = mem.get("peak_swap_growth_mib")
+        out.append(f"| {b.get('block_index', pos)} | {b['arm']} | {b['repetition']} | {b.get('origin', doc['run_id'])} | "
+                   f"{b.get('status', 'included (rules not enforced)')} | {mem.get('swap_delta_mib', 0.0):.1f} | "
+                   f"{'n/a' if pk is None else f'{pk:.1f}'} | {names(b['loaded_before'])} | {names(b['loaded_after'])} |")
+    return out + [""]
+
+
 def build_report(result_path: str | Path, out_dir: str | Path | None = None, pdf: bool = False) -> dict:
     doc = import_result(result_path)  # fail closed on malformed input
     rp = Path(result_path)
@@ -184,6 +227,7 @@ def build_report(result_path: str | Path, out_dir: str | Path | None = None, pdf
         f"- Start {m['start_utc']}, end {m['end_utc']}, runtime {m['runtime_s']:.3f} s, "
         f"{m['n_requests']} requests, {m['n_failures']} failures",
         f"- Harness peak RSS: {m['harness_peak_rss_mib']:.1f} MiB", "",
+        *_rules_lines(doc),
         "## Per-arm metrics", "",
         "Accuracy: per-item mean over repetitions, then mean over items. Latency: per-item median "
         "over repetitions, then median [Q1, Q3] over items (ms).", "",
