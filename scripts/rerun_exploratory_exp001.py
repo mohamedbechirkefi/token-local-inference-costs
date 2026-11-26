@@ -20,6 +20,13 @@ Checks (journal JRN-0013, decisions DL-015 and DL-016):
       blocks of the same arm);
   F   strict format failures per arm and the most frequent failing responses.
 
+A second file, ``prompts_and_rss.json``, adds descriptive values read from
+``RUN-EXP-002-0001`` and ``RUN-SMOKE-0005`` as well:
+  L   prompt length (prompt_eval_count) per arm, median and range, EXP-001 and
+      EXP-002; EXP-002 cold and warm prefill medians of valid trials;
+  S   peak RSS per block (minimum and maximum) per run, to show which runtime
+      process the frozen process filter covers.
+
 Usage: .venv/bin/python -I scripts/rerun_exploratory_exp001.py --repo .
 """
 
@@ -36,6 +43,8 @@ import numpy as np
 N_BOOT = 10_000
 SEED = 7
 RESULT = "results/confirmatory/RUN-EXP-001-0001/result.json"
+RESULT_002 = "results/confirmatory/RUN-EXP-002-0001/result.json"
+SMOKE_096 = "results/exploratory/RUN-SMOKE-0005/result.json"
 OUT = "results/exploratory/RERUN-EXPL-0001"
 SWAP_EXCLUDE_MIB = 512
 SWAP_ABORT_MIB = 2048
@@ -155,6 +164,32 @@ def main() -> None:
     (dest / "exploratory_exp001.json").write_text(text, encoding="utf-8")
     print(json.dumps({"written": f"{OUT}/exploratory_exp001.json",
                       "sha256": hashlib.sha256(text.encode()).hexdigest()}))
+
+    # L and S: second file
+    doc2 = json.loads((repo / RESULT_002).read_bytes())
+    smoke = json.loads((repo / SMOKE_096).read_bytes())
+    sec: dict = {"label": "exploratory (descriptive values from committed records)",
+                 "sources": {p: hashlib.sha256((repo / p).read_bytes()).hexdigest() for p in (RESULT, RESULT_002, SMOKE_096)},
+                 "generator": "scripts/rerun_exploratory_exp001.py"}
+    lens = {}
+    for name, d in (("EXP-001", doc), ("EXP-002", doc2)):
+        for arm in arm_models:
+            v = [r["prompt_eval_count"] for r in d["records"] if r["arm"] == arm and r["prompt_eval_count"] is not None]
+            lens[f"{name}_{arm}"] = {"median": float(np.median(v)), "min": int(min(v)), "max": int(max(v))}
+    sec["L_prompt_eval_count"] = lens
+    sec["L_exp002_prefill_ms_median"] = {
+        f"{arm}_{state}": float(np.median([r["prompt_eval_duration_ns"] / 1e6 for r in doc2["records"]
+                                           if r["arm"] == arm and r["start_state"] == state and r["state_valid"]]))
+        for arm in arm_models for state in ("cold", "warm")}
+    sec["S_peak_rss_mib_per_block"] = {
+        run: {"min": min(b["memory"]["peak_rss_mib"] for b in d["blocks"]),
+              "max": max(b["memory"]["peak_rss_mib"] for b in d["blocks"]),
+              "runtime_version": d["manifest"]["backend"]["runtime_version"]}
+        for run, d in (("RUN-EXP-001-0001", doc), ("RUN-EXP-002-0001", doc2), ("RUN-SMOKE-0005", smoke))}
+    text2 = json.dumps(sec, indent=1, sort_keys=True) + "\n"
+    (dest / "prompts_and_rss.json").write_text(text2, encoding="utf-8")
+    print(json.dumps({"written": f"{OUT}/prompts_and_rss.json",
+                      "sha256": hashlib.sha256(text2.encode()).hexdigest()}))
 
 
 if __name__ == "__main__":

@@ -1,0 +1,66 @@
+{
+ "L_exp002_prefill_ms_median": {
+  "A0_cold": 202.4515,
+  "A0_warm": 22.419,
+  "A1_cold": 403.0075,
+  "A1_warm": 40.8605,
+  "A2_cold": 2716.335,
+  "A2_warm": 44.061
+ },
+ "L_prompt_eval_count": {
+  "EXP-001_A0": {
+   "max": 179,
+   "median": 84.0,
+   "min": 50
+  },
+  "EXP-001_A1": {
+   "max": 186,
+   "median": 91.5,
+   "min": 57
+  },
+  "EXP-001_A2": {
+   "max": 729,
+   "median": 636.0,
+   "min": 600
+  },
+  "EXP-002_A0": {
+   "max": 81,
+   "median": 81.0,
+   "min": 81
+  },
+  "EXP-002_A1": {
+   "max": 88,
+   "median": 88.0,
+   "min": 88
+  },
+  "EXP-002_A2": {
+   "max": 631,
+   "median": 631.0,
+   "min": 631
+  }
+ },
+ "S_peak_rss_mib_per_block": {
+  "RUN-EXP-001-0001": {
+   "max": 28.046875,
+   "min": 26.53125,
+   "runtime_version": "0.40.6"
+  },
+  "RUN-EXP-002-0001": {
+   "max": 29.171875,
+   "min": 27.96875,
+   "runtime_version": "0.40.6"
+  },
+  "RUN-SMOKE-0005": {
+   "max": 1313.40625,
+   "min": 718.75,
+   "runtime_version": "0.9.6"
+  }
+ },
+ "generator": "scripts/rerun_exploratory_exp001.py",
+ "label": "exploratory (descriptive values from committed records)",
+ "sources": {
+  "results/confirmatory/RUN-EXP-001-0001/result.json": "f95ee2055a9048559162cf8417a63f31682e5bf23dd724e0813b38e197cd003c",
+  "results/confirmatory/RUN-EXP-002-0001/result.json": "d93a17aa3cf17dfcfebe335ab8ec0a23da89571f41e468963eb717cf831803da",
+  "results/exploratory/RUN-SMOKE-0005/result.json": "c653f95f179a224d56d213a03124e0b422ecaa9e5769b1cf961705fb9cfd14a7"
+ }
+}
