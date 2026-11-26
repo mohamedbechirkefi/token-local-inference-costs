@@ -28,6 +28,12 @@ A second file, ``prompts_and_rss.json``, adds descriptive values read from
       process the frozen process filter covers.
 
 Usage: .venv/bin/python -I scripts/rerun_exploratory_exp001.py --repo .
+
+After the block repeat (DL-017, DL-018) the same checks run on the combined
+analysis input, written to a new folder (the RERUN-EXPL-0001 outputs are kept):
+  .venv/bin/python -I scripts/rerun_exploratory_exp001.py --repo . \
+      --result results/confirmatory/RUN-EXP-001-0002/combined/result.json --out results/exploratory/REPEAT-EXPL-0001
+With a non-default ``--result`` only ``exploratory_exp001.json`` is written.
 """
 
 from __future__ import annotations
@@ -57,15 +63,19 @@ def pct_ci(v) -> list[float]:
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--repo", default=".")
-    repo = Path(ap.parse_args().repo)
-    raw = (repo / RESULT).read_bytes()
+    ap.add_argument("--result", default=RESULT)
+    ap.add_argument("--out", default=OUT)
+    args = ap.parse_args()
+    repo = Path(args.repo)
+    result, out_dir = args.result, args.out
+    raw = (repo / result).read_bytes()
     doc = json.loads(raw)
     recs = doc["records"]
     arm_models = {a["arm_id"]: a["model"] for a in doc["config"]["arms"]}
     out: dict = {
         "label": "exploratory",
         "note": "Checks of committed records only; no inference and no timing measurement were run. Does not change the frozen EXP-001 analysis or verdict.",
-        "source": RESULT,
+        "source": result,
         "source_sha256": hashlib.sha256(raw).hexdigest(),
         "generator": "scripts/rerun_exploratory_exp001.py",
         "bootstrap": {"n_boot": N_BOOT, "seed": SEED, "interval": "percentile 95 %", "unit": "item"},
@@ -158,12 +168,16 @@ def main() -> None:
                   "most_frequent": Counter(fails).most_common(5)}
     out["F_strict_format_failures"] = f
 
-    dest = repo / OUT
+    if "combination" in doc["manifest"]:
+        out["combination"] = doc["manifest"]["combination"]
+    dest = repo / out_dir
     dest.mkdir(parents=True, exist_ok=True)
     text = json.dumps(out, indent=1, sort_keys=True) + "\n"
     (dest / "exploratory_exp001.json").write_text(text, encoding="utf-8")
-    print(json.dumps({"written": f"{OUT}/exploratory_exp001.json",
+    print(json.dumps({"written": f"{out_dir}/exploratory_exp001.json",
                       "sha256": hashlib.sha256(text.encode()).hexdigest()}))
+    if result != RESULT:
+        return
 
     # L and S: second file
     doc2 = json.loads((repo / RESULT_002).read_bytes())

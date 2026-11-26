@@ -135,7 +135,12 @@ def _rules_lines(doc: dict) -> list[str]:
         rb = ", ".join(f"block {b['block_index']} ({b['arm']}, repetition {b['repetition']})"
                        for b in comb["replaced_blocks"])
         out += [f"- Combined analysis input: {comb['source_run_id']} with {rb} replaced by the repeat run "
-                f"{comb['repeat_run_id']} ({comb['rule']}). Source result SHA-256 `{comb['source_result_sha256']}`.",
+                f"{comb['repeat_run_id']}; {comb['rule']}. Source result SHA-256 `{comb['source_result_sha256']}`.",
+                f"- Windows: {comb['source_run_id']} {comb['source_window'][0]} to {comb['source_window'][1]} "
+                f"(revision `{comb['source_git'].get('revision')}`); {comb['repeat_run_id']} {comb['repeat_window'][0]} "
+                f"to {comb['repeat_window'][1]} (revision `{comb['repeat_git'].get('revision')}`). Start, end and "
+                "runtime under Provenance span both runs (runtime is the sum); the git revision, harness RSS and "
+                "the rule outcome below are the repeat run's.",
                 f"- Blocks in the analysis: {comb['n_blocks']} of {comb['n_planned_blocks']} planned; missing: "
                 f"{', '.join(str(k) for k in comb['blocks_missing']) or 'none'}. Status: **{comb['status']}**. "
                 f"Total runtime of both runs: {comb['runtime_s_total']:.1f} s."]
@@ -147,7 +152,7 @@ def _rules_lines(doc: dict) -> list[str]:
             crit = "; ".join(b["source_exclusion"] + ([b["source_stopping"]] if b["source_stopping"] else []))
             out.append(f"- Source block {b['block_index']} criteria: {crit}.")
     if br:
-        out.append(f"- Rule outcome: **{br['status']}**" + (f" ({br['status_reason']})" if br["status_reason"] else "")
+        out.append(f"- Rule outcome{' of the repeat run' if (comb or ro) else ''}: **{br['status']}**" + (f" ({br['status_reason']})" if br["status_reason"] else "")
                    + f". Thresholds: swap growth above {br['thresholds']['swap_exclude_mib']:.0f} MiB excludes, "
                    f"above {br['thresholds']['swap_abort_mib']:.0f} MiB aborts; wall-clock cap "
                    f"{br['thresholds']['wall_cap_s']:.0f} s.")
@@ -197,7 +202,9 @@ def build_report(result_path: str | Path, out_dir: str | Path | None = None, pdf
                 wr.writerow({k: r.get(k) for k in COLD_WARM_COLUMNS})
         cw_title = f"{doc['run_id']}: cold and warm TTFT" + (" (SIMULATED backend)" if sim else "")
         (out / "cold_warm.svg").write_text(cold_warm_svg(cw_rows, cw_title), encoding="utf-8")
-    fig_title = f"{doc['run_id']}: per-item latency" + (" (SIMULATED backend)" if sim else "")
+    comb = doc["manifest"].get("combination")
+    fig_id = f"{comb['source_run_id']} + {doc['run_id']} (combined)" if comb else doc["run_id"]
+    fig_title = f"{fig_id}: per-item latency" + (" (SIMULATED backend)" if sim else "")
     (out / "latency.svg").write_text(latency_svg(sums, fig_title), encoding="utf-8")
 
     banner = [f"**Label: {doc['label'].upper()}.**"]
@@ -211,7 +218,8 @@ def build_report(result_path: str | Path, out_dir: str | Path | None = None, pdf
     m = doc["manifest"]
     lines = [
         "<!-- SPDX-License-Identifier: LicenseRef-TOKEN-NC-Research-1.0 -->",
-        f"# Run report {doc['run_id']}", "",
+        (f"# Combined analysis {doc['manifest']['combination']['source_run_id']} + {doc['run_id']}"
+         if "combination" in doc["manifest"] else f"# Run report {doc['run_id']}"), "",
         " ".join(banner), "",
         "## Provenance", "",
         f"- Experiment: {doc['exp_id']}; run: {doc['run_id']}; schema {doc['schema_version']}",

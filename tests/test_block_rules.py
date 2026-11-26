@@ -384,6 +384,11 @@ def test_combine_replaces_exactly_the_repeated_blocks(repo, tmp_path, machine):
     info = build_report(p, out)
     text = open(info["report_md"]).read()
     assert "Combined analysis input: RUN-SMOKE-0001 with block 3" in text and "Status: **complete**" in text
+    assert text.splitlines()[1] == "# Combined analysis RUN-SMOKE-0001 + RUN-SMOKE-0002"
+    assert "RUN-SMOKE-0001 + RUN-SMOKE-0002 (combined): per-item latency" in open(out / "latency.svg").read()
+    m = back["manifest"]
+    assert m["start_utc"] == src["manifest"]["start_utc"] and m["end_utc"] == rep["manifest"]["end_utc"]
+    assert m["runtime_s"] == pytest.approx(src["manifest"]["runtime_s"] + rep["manifest"]["runtime_s"])
     # a run made before the rules regenerates with no block-rules section
     legacy = build_report(path, tmp_path / "legacy")
     assert "Block rules" not in open(legacy["report_md"]).read()

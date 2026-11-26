@@ -717,12 +717,19 @@ def combine_repeat(source: dict, repeat: dict) -> dict:
     status = rules["status"]
     if status == "complete" and (missing or len(blocks) != n_planned):
         status = "incomplete"
-    manifest = dict(repeat["manifest"])
+    sm, rm = source["manifest"], repeat["manifest"]
+    manifest = dict(rm)
     manifest.update({
+        # provenance spans both runs: source start to repeat end, summed runtime
+        "start_utc": sm["start_utc"], "end_utc": rm["end_utc"],
+        "runtime_s": float(sm["runtime_s"]) + float(rm["runtime_s"]),
+        "host": {"before": sm["host"]["before"], "after": rm["host"]["after"]},
         "n_requests": len(records),
         "combination": {
             "source_run_id": source["run_id"], "repeat_run_id": repeat["run_id"],
             "source_result_sha256": ro["source_result_sha256"],
+            "source_git": sm["git"], "repeat_git": rm["git"],
+            "source_window": [sm["start_utc"], sm["end_utc"]], "repeat_window": [rm["start_utc"], rm["end_utc"]],
             "replaced_blocks": ro["replaced_blocks"], "blocks_missing": missing,
             "n_blocks": len(blocks), "n_planned_blocks": n_planned, "status": status,
             "rule": "the repeated blocks replace the excluded ones (protocol section 9)",
