@@ -33,6 +33,6 @@ One laptop (Apple M1 Pro, 16 GB), one runtime version, one benchmark subset, one
 
 ## Reproducibility
 
-Code, protocols, item IDs, results, the manuscript and the reports: `[OWNER PLACEHOLDER: repository URL, not published]`.
+Code, protocols, item IDs, results, the manuscript and the reports: <https://github.com/mohamedbechirkefi/token-local-inference-costs> (results page: <https://token-local-inference-costs.kefimohamedbechir.workers.dev>).
 
-*AI assistance: an AI system was used as a research and development assistant under the owner's direction; it is not an author. Author line: [OWNER PLACEHOLDER: author line].*
+*AI assistance: an AI system was used as a research and development assistant under the owner's direction; it is not an author. Author: Mohamed Bechir Kefi, independent researcher.*

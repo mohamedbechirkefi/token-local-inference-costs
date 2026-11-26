@@ -53,7 +53,7 @@ No step failed in the clean clone. The confirmatory timing values themselves can
 3. **Supplementary tables overlapped** (64-character hashes and an eight-column matrix in equal-width columns). Fixed with relative column widths in `supplementary.md` and the 9 pt table text.
 4. **Experiment reports: three lists rendered as raw Markdown** (no blank line before the list). Blank lines added in the EXP-001, EXP-002 and EXP-003 reports; no wording changed.
 5. **FIG-001 clips the start of the lower arm label** ("Q8 llama3.1:8b-instruct-q8_0"). The figure is a committed result (hash in the artifact manifest), so it is not edited; the manuscript caption now names both rows.
-6. **Absolute home-directory paths** in README, demo README, feasibility audit and the builder's tool defaults replaced by `~/research/...` or a path relative to the repository; see section 4.
+6. **Absolute home-directory paths** in README, demo README, feasibility audit and the builder's tool defaults replaced by home-relative (`~`) forms or a path relative to the repository; see section 4. The `~` forms were replaced by repository-relative paths on 2026-11-26 (section 7).
 
 The repository after these fixes was re-checked in a second fresh clone; see section 5.
 
@@ -72,7 +72,7 @@ Scope: the 168 tracked or new files (`git ls-files` plus untracked, not ignored)
 
 - E-mail addresses: 0 (the only address-like string is the AI co-author trailer `noreply@anthropic.com` in `CLAUDE.md`, a fixed non-personal address).
 - Tokens, keys, private-key headers: 0. `.env` files: 0.
-- Absolute home-directory paths: 21 hits in 7 files before the fixes; after: 0 in current README, demo README, feasibility audit and source code. Remaining: 8 in `CLAUDE.md` (session instructions that name the shared tool locations; kept because they are operating instructions for this machine) and 3 in the append-only `progress.md` and `research/decision_log.md` (not edited; a note is appended).
+- Absolute home-directory paths: 21 hits in 7 files before the fixes; after: 0 in current README, demo README, feasibility audit and source code. Remaining at M6: 8 in `CLAUDE.md` (session instructions that name the shared tool locations; replaced by repository-relative paths on 2026-11-26, section 7) and 3 in the append-only `progress.md` and `research/decision_log.md` (not edited; a note is appended).
 - Personal identifiers: the owner's name appears where the freeze decision C3 recorded it (author line placeholder, report identification sections, `CITATION.cff`). The final author line is an open owner decision.
 - PDF metadata: title set in all five PDFs; no e-mail address and no local path in metadata or text.
 - Dependency licences: `research/publication/dependency_licences.md` (14 Python distributions, 53 npm packages). Flags: numpy's wheel bundles libgfortran (GPL-3.0-or-later WITH GCC-exception-3.1); lightningcss is MPL-2.0 (build only). Nothing unknown.
@@ -94,3 +94,11 @@ Scope: the 168 tracked or new files (`git ls-files` plus untracked, not ignored)
 ## 6. Third fresh clone (after the fix, commit e5d0801)
 
 `uv sync --frozen --all-groups --all-extras`: success. `.venv/bin/python -m pytest -q`: `162 passed in 10.81s`. Export re-run (`export_demo_data.py`, `export_sandbox_fixture.py`) then `git status --short`: 0 lines. Demo: `npm ci --prefer-offline`: `added 53 packages in 635ms`; `npm test`: `Test Files 2 passed (2)`, `Tests 21 passed (21)`; `npm run build`: `built in 270ms`; `node tools/a11y_check.mjs dist`: `A11Y-CHECK PASS`. The clone was then deleted.
+
+## 7. Owner answers round (2026-11-26, DL-019)
+
+Wording and configuration only (owner, 2026-11-26, decision sheet); no result, configuration, seed, protocol, hash or checksummed output changed, and Ollama was not started or contacted. The repository is public at https://github.com/mohamedbechirkefi/token-local-inference-costs since 2026-11-25.
+
+**Home paths (B9).** `CLAUDE.md`, README, `demo/README.md` and `research/feasibility.md` now name the shared tools by paths relative to the repository root (`../.tools/py/bin/uv`, `../.tools/pandoc`, `../.tools/py/bin/python`; Node as `helix/.tools/node/bin` under the research root). Checked from the repository root: `../.tools/py/bin/uv --version` printed `uv 0.9.5 (d5f39331a 2025-10-21)`, `../.tools/pandoc --version` printed `pandoc 3.6.3`, the typst package imported as 0.15.0, and `../../helix/.tools/node/bin` lists `node`, `npm`, `npx`, `corepack`. The builder's defaults in `src/token_lab/report.py` were already relative to the repository. Remaining absolute or home-relative paths in text files, all left untouched by rule: `progress.md` 3 lines (M0 entry, append-only) and `research/decision_log.md` 1 line (DL-002, append-only). None remains in frozen protocols, run logs, checksummed result files or the PDFs (a byte search found matches only inside compressed streams; pypdf text and metadata contain none).
+
+**Builds and checks.** `scripts/build_pdfs.py`: manuscript 20 pages, EXP-001 report 16, EXP-002 7, EXP-003 5 (sources changed: author line, URLs, funding and competing-interest statements); `supplementary.pdf` rebuilt by the script and restored with `git checkout` (source unchanged). Pages 1 and 18 to 19 of the manuscript and page 1 of each report were rendered to PNG at 60 ppi and inspected. `pytest`: 184 passed. Demo: `npm test` 21 passed; `npm run build` writes `dist/`; `node tools/a11y_check.mjs dist`: 9 PASS lines and `A11Y-CHECK PASS`. The built page loads only same-origin files (`./assets/...`); the only external address in its code is the repository link in the footer, which is not loaded. `scripts/check_links.py .`: 24 relative links, 0 broken.

@@ -1,12 +1,12 @@
 <!-- SPDX-License-Identifier: LicenseRef-TOKEN-NC-Research-1.0 -->
 # Owner review checklist (prepared at M6; awaiting the owner)
 
-- [ ] Authorship and affiliation metadata approved (no affiliation)
+- [ ] Authorship and affiliation metadata approved ("Mohamed Bechir Kefi, independent researcher", owner, 2026-11-26, B3)
 - [ ] Protocols frozen by the owner, with hashes recorded
 - [ ] Claims register reviewed
 - [ ] AI assistance disclosure reviewed and accurate
 - [ ] Data and model licence statements reviewed (Llama 3.1 Community License terms; ARC CC BY-SA 4.0)
-- [ ] Publication approved (G-PUBLIC); nothing is pushed or published before this
+- [ ] Publication approved (G-PUBLIC); the repository is public since 2026-11-25 on the owner's word, and no release, tag, DOI or preprint is made before this
 
 Only the owner ticks these boxes. At M6 no box was ticked, so no box had to be unticked.
 
@@ -38,6 +38,8 @@ Only the owner ticks these boxes. At M6 no box was ticked, so no box had to be u
 - **Publication (G-PUBLIC)**: decide whether and when to release, tag, deposit or publish anything; M6 releases nothing.
 
 ### Remaining owner placeholders (file and line)
+
+Update (2026-11-26): every placeholder below was filled from the owner's answers (section "Owner answers recorded (2026-11-26)"); none remains. The list is kept as the M6 state.
 
 - `research/paper/manuscript.md:3`: author line.
 - `research/paper/manuscript.md:226`: repository URL.
@@ -71,3 +73,23 @@ No box was ticked. The owner decided on 2026-11-26 (follow-up answers in `labs/_
 - **Article drafts** still predate the rerun and the repeat (dated note only).
 - **PDFs:** after the coordinator installs the EXP-001 report text, `scripts/build_pdfs.py` rebuilds its PDF; the manuscript and supplementary PDFs in this commit were rebuilt and inspected by the block-repeat session.
 - **Placeholder lines:** unchanged (manuscript repository URL at line 282, funding at 286, competing interests at 288).
+
+## Owner answers recorded (2026-11-26)
+
+Source: owner, 2026-11-26, decision sheet (`labs/_shared/owner-decision-sheet-2026-11-26.md`, answers in `labs/_shared/owner-approvals-2026-11-26.md`). Applied in DL-019. No box was ticked.
+
+- **A1.** The repository is public at https://github.com/mohamedbechirkefi/token-local-inference-costs since 2026-11-25; out-of-date sentences in this file, `release_checklist.md`, the README and `CLAUDE.md` corrected. Append-only records are unchanged.
+- **B1.** Repository URL filled in the manuscript (section 10), README, `CITATION.cff` (abstract and `repository-code`), the articles and the page footer.
+- **B2.** Demo URL https://token-local-inference-costs.kefimohamedbechir.workers.dev filled (manuscript section 10, README, articles, page footer); `demo/wrangler.jsonc` declares the built `dist/` folder as static assets with no Worker script; deployment by the coordinator.
+- **B3.** Author line "Mohamed Bechir Kefi, independent researcher" in the manuscript, the three report identification sections, README, articles and page footer; `CITATION.cff` `affiliation: "Independent researcher"`. The report sections kept as written (attempt 1 of EXP-001 and EXP-002, the pre-repeat analysis of EXP-001) keep their original wording.
+- **B4.** Funding: "No funding was received." Competing interests: "The author declares no competing interests."
+- **B5.** The AI-use statement (manuscript section 11) is owner-approved as drafted.
+- **B6, B7.** The manuscript title is owner-approved (the follow-up answer replaced the B6 title for TOKEN); `CITATION.cff` carries it.
+- **B8.** `0.1.0-rc1`, no `date-released`; at the release the version becomes `0.1.0` and `date-released` the release day (recorded in `release_checklist.md`).
+- **B9.** Home paths scrubbed from editable files; what remains is listed in `reproducibility_report.md` section 7.
+- **B10, B11, B13.** PDFs stay committed; FIG-001 kept with its clipped label; both noted in the release notes draft in `release_checklist.md`.
+- **B14.** The source-level labels of `research/literature_review.md` are accepted.
+- **R-TOKEN-1 and R-TOKEN-2.** Option (a) carried out (DL-015 to DL-018); both latency-ratio readings stay shown.
+- **R-TOKEN-3.** Not decided: S1 and S4 stay "not run".
+
+Still open for the owner: B15 (article drafts and their titles), B16 (full-text review of the manuscript and sign-off of this checklist), B18 (release, tag, optional DOI or preprint), S1 and S4 configs (R-TOKEN-3), and the block 11 wording noted above. No owner placeholder remains.

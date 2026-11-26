@@ -1,6 +1,6 @@
 ---
 title: "Quantization cost, model size and cold-start latency of local models on one laptop: a preregistered study with a runtime upgrade"
-author: "[OWNER PLACEHOLDER: author line. Freeze decision C3 (2026-11-24) recorded \"Mohamed Bechir Kefi\", no affiliation; the owner confirms the final line before any release.]"
+author: "Mohamed Bechir Kefi, independent researcher"
 status: "Independent research manuscript / preprint draft, not peer-reviewed. M4 synthesis, 2026-11-25; EXP-001 and EXP-002 sections updated 2026-11-26 after the owner-approved rerun on Ollama 0.40.6 (DL-015, DL-016) and the owner-instructed repeat of EXP-001 blocks 3 and 11 (DL-017, DL-018). Protocol v1.0 frozen 2026-11-24 (research/freeze.json)."
 ---
 
@@ -279,13 +279,13 @@ On one Apple M1 Pro laptop with Ollama 0.9.6, Llama 3.1 8B at Q8_0 showed no det
 
 # 10. Data and code availability
 
-Code, configs, protocols, item IDs, result files and this manuscript are in the project repository at `[OWNER PLACEHOLDER: repository URL, not published]`. Paths in this manuscript are relative to the repository root. The ARC-Challenge texts are regenerated with `scripts/fetch_arc.py` from the pinned Hugging Face revision; models are pulled from the Ollama registry by tag and verified by manifest digest. Commands are in Section 4.6; `research/publication/artifact_manifest.json` maps every number to its source.
+Code, configs, protocols, item IDs, result files and this manuscript are in the project repository at <https://github.com/mohamedbechirkefi/token-local-inference-costs>. The static results page is hosted at <https://token-local-inference-costs.kefimohamedbechir.workers.dev>. Paths in this manuscript are relative to the repository root. The ARC-Challenge texts are regenerated with `scripts/fetch_arc.py` from the pinned Hugging Face revision; models are pulled from the Ollama registry by tag and verified by manifest digest. Commands are in Section 4.6; `research/publication/artifact_manifest.json` maps every number to its source.
 
 # 11. Funding, competing interests and AI assistance
 
-**Funding:** `[OWNER PLACEHOLDER: funding statement]`.
+**Funding:** No funding was received.
 
-**Competing interests:** `[OWNER PLACEHOLDER: competing interests statement]`.
+**Competing interests:** The author declares no competing interests.
 
 **AI assistance:** An AI system (Claude, Anthropic) was used as a research and development assistant for drafting protocols, code, tests, analyses and text under the owner's direction; it is not an author. The owner took every decision on the protocol, its freeze, the model download and any publication. Human verification of this draft is pending the owner's review (`research/publication/author_review.md`). The AI's internal review passes (`research/publication/review_pass_2.md`) are quality control, not peer review.
 

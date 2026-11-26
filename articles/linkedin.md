@@ -13,4 +13,7 @@ The one that ran: Llama 3.1 8B at Q8_0 versus Q4_K_M on 300 ARC-Challenge items.
 
 Caveat: one machine, one runtime, one benchmark subset, short answers.
 
-Repository and interactive page: [OWNER PLACEHOLDER: repository URL, not published]
+Repository: https://github.com/mohamedbechirkefi/token-local-inference-costs
+Interactive page: https://token-local-inference-costs.kefimohamedbechir.workers.dev
+
+Mohamed Bechir Kefi, independent researcher

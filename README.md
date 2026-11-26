@@ -1,11 +1,13 @@
 <!-- SPDX-License-Identifier: LicenseRef-TOKEN-NC-Research-1.0 -->
 # TOKEN: local inference economics
 
+**Author.** Mohamed Bechir Kefi, independent researcher.
+
 **Manuscript title (owner-approved, 2026-11-26).** Quantization cost, model size and cold-start latency of local models on one laptop: a preregistered study with a runtime upgrade.
 
 **Question.** How do local model configurations trade off quality, latency and resource use?
 
-**Status: M6 release candidate prepared, 2026-11-25, awaiting owner review and G-PUBLIC; nothing is released.** Protocol v1.0 frozen by the owner on 2026-11-24. EXP-003 complete (null result, Ollama 0.9.6). EXP-001 and EXP-002 failed before any request on Ollama 0.9.6 and were rerun unchanged on Ollama 0.40.6 on 2026-11-26 with the owner's approval (DL-015): EXP-002 complete; EXP-001 ran in full, two of its blocks met frozen memory criteria that the runner did not then enforce, and after the rules were implemented both blocks were repeated once on the owner's instruction: EXP-001 is complete under the frozen rules (DL-016 to DL-018). The manuscript draft is `research/paper/manuscript.md` (independent research manuscript / preprint draft, not peer-reviewed). Full-text owner review of the manuscript is pending (`research/publication/author_review.md`). PDFs: `research/paper/manuscript.pdf`, `research/paper/supplementary.pdf` and one report PDF per experiment, built with `.venv/bin/python -I scripts/build_pdfs.py`. Repository and demo URL: `[OWNER PLACEHOLDER: repository URL, not published]`.
+**Status: M6 release candidate prepared, 2026-11-25, awaiting owner review and G-PUBLIC; nothing is released.** Protocol v1.0 frozen by the owner on 2026-11-24. EXP-003 complete (null result, Ollama 0.9.6). EXP-001 and EXP-002 failed before any request on Ollama 0.9.6 and were rerun unchanged on Ollama 0.40.6 on 2026-11-26 with the owner's approval (DL-015): EXP-002 complete; EXP-001 ran in full, two of its blocks met frozen memory criteria that the runner did not then enforce, and after the rules were implemented both blocks were repeated once on the owner's instruction: EXP-001 is complete under the frozen rules (DL-016 to DL-018). The manuscript draft is `research/paper/manuscript.md` (independent research manuscript / preprint draft, not peer-reviewed). Full-text owner review of the manuscript is pending (`research/publication/author_review.md`). PDFs: `research/paper/manuscript.pdf`, `research/paper/supplementary.pdf` and one report PDF per experiment, built with `.venv/bin/python -I scripts/build_pdfs.py`. The repository is public at <https://github.com/mohamedbechirkefi/token-local-inference-costs> since 2026-11-25 (pushed on the owner's word); no tag or release exists. Results page: <https://token-local-inference-costs.kefimohamedbechir.workers.dev>.
 
 ![Top of the TOKEN results page: the research question, the status label, the labels used for measured, exploratory, modelled and sandbox values, the pending owner decisions banner, and the three experiment panels.](docs/demo.png)
 
@@ -48,9 +50,11 @@ Each item is a pending owner decision; nothing in this repository chooses among 
 
 ## Quick start (development)
 
+From the repository root (the shared tools sit one folder up, in `../.tools/`):
+
 ```
-~/research/labs/.tools/py/bin/uv sync
-~/research/labs/.tools/py/bin/uv run pytest
+../.tools/py/bin/uv sync
+../.tools/py/bin/uv run pytest
 ```
 
 ## Demo quick start

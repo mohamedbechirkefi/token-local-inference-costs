@@ -28,14 +28,14 @@ Then run `git status` and inspect existing files. Never overwrite the owner's ch
 ## 3. Rules (all sessions)
 
 ### Gates
-- Never push, add a remote, create a GitHub repository or publish anything (G-PUBLIC).
+- Never push, add a remote, create a GitHub repository or publish anything (G-PUBLIC). The repository is public at https://github.com/mohamedbechirkefi/token-local-inference-costs since 2026-11-25; pushes and the demo deployment are done by the coordinator on the owner's recorded word, never by a session.
 - No paid service of any kind. No paid APIs, inference, data, compute or hosting. The coding subscription is never an inference backend.
 - Never freeze a protocol yourself. Freezing is the owner's decision (G-FREEZE). Until the owner freezes a protocol, every run is exploratory and labelled as such.
 - No confirmatory experiments before the owner freezes the protocol. A tiny exploratory toolchain smoke check is allowed and labelled exploratory.
 
 ### Scope
-- Work only inside this repository. Tools outside it are used read-only: `/usr/local/bin/python3`, `/Users/bechir/research/labs/.tools/py/bin/` (uv, typst, pypdf, pillow), `/Users/bechir/research/labs/.tools/pandoc`, `/Users/bechir/research/helix/.tools/node/bin` (never modify that folder), git.
-- Do not touch any other folder under `/Users/bechir/research` (hive, helix, cogkt, trading, the other labs).
+- Work only inside this repository. Tools outside it are used read-only: `/usr/local/bin/python3`, `../.tools/py/bin/` (uv, typst, pypdf, pillow), `../.tools/pandoc`, `../../helix/.tools/node/bin` (paths relative to the repository root; never modify that folder), git.
+- Do not touch any other folder under the research root (hive, helix, cogkt, trading, the other labs).
 - Ollama on this machine serves the owner's other projects. Do not start, stop, pull, remove or reconfigure Ollama or its models unless the owner explicitly authorises it for a given session. Confirmatory timing runs need an owner-scheduled exclusive window.
 - Never kill processes you did not start. Never delete anything you did not create in the current session.
 
@@ -57,9 +57,12 @@ Then run `git status` and inspect existing files. Never overwrite the owner's ch
 
 ## 4. Development commands
 
-- Lock dependencies: `/Users/bechir/research/labs/.tools/py/bin/uv lock`
-- Create the environment: `/Users/bechir/research/labs/.tools/py/bin/uv sync`
-- Tests: `/Users/bechir/research/labs/.tools/py/bin/uv run pytest` (or `uv run token-lab test`)
+Run from the repository root.
+
+
+- Lock dependencies: `../.tools/py/bin/uv lock`
+- Create the environment: `../.tools/py/bin/uv sync`
+- Tests: `../.tools/py/bin/uv run pytest` (or `uv run token-lab test`)
 - Smoke (exploratory only): `uv run token-lab smoke --config experiments/smoke-simulated.json`; against a running, idle Ollama: `--config experiments/smoke-ollama.json`
 - Run: `uv run token-lab run --config experiments/EXP-001.json` (refused until the owner freezes the protocol)
 - Report: `uv run token-lab report --result results/<label>/<RUN-ID>/result.json [--pdf]`
@@ -71,9 +74,9 @@ There is no TeX distribution on this machine. PDFs are produced as Markdown to T
 Build commands (verified on the M0 skeleton):
 
 ```
-/Users/bechir/research/labs/.tools/pandoc research/paper/manuscript.md -s -t typst -V mainfont="Libertinus Serif" -o <scratch>/manuscript.typ
-/Users/bechir/research/labs/.tools/py/bin/python -c "import typst; typst.compile('<scratch>/manuscript.typ', output='research/paper/manuscript.pdf')"
-/Users/bechir/research/labs/.tools/pandoc research/paper/manuscript.md -s -t latex -o research/paper/manuscript.tex
+../.tools/pandoc research/paper/manuscript.md -s -t typst -V mainfont="Libertinus Serif" -o <scratch>/manuscript.typ
+../.tools/py/bin/python -c "import typst; typst.compile('<scratch>/manuscript.typ', output='research/paper/manuscript.pdf')"
+../.tools/pandoc research/paper/manuscript.md -s -t latex -o research/paper/manuscript.tex
 ```
 
 A PDF is committed only after it is generated from validated content and visually inspected.

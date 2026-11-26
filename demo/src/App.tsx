@@ -70,8 +70,12 @@ export function App() {
             contacts no model runtime or other service.
           </p>
           <p>
-            Author line: [OWNER PLACEHOLDER: author line]. Repository and demo URL: [OWNER PLACEHOLDER: repository URL, not
-            published]. Licence: TOKEN Source-Available Non-Commercial Research License v1.0.
+            Mohamed Bechir Kefi, independent researcher. Repository:{" "}
+            <a href="https://github.com/mohamedbechirkefi/token-local-inference-costs">
+              github.com/mohamedbechirkefi/token-local-inference-costs
+            </a>
+            . Page: token-local-inference-costs.kefimohamedbechir.workers.dev. Licence: TOKEN Source-Available Non-Commercial
+            Research License v1.0.
           </p>
         </div>
       </footer>

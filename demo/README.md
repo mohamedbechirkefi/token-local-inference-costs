@@ -17,7 +17,7 @@ No visitor data is collected or stored, and the page makes no request to any hos
 
 ## Commands
 
-Node from `~/research/helix/.tools/node/bin`; Python from the repository's `.venv`.
+Node from `helix/.tools/node/bin` under the research root (`../../../helix/.tools/node/bin` from `demo/`); Python from the repository's `.venv`.
 
     ../.venv/bin/python ../scripts/export_demo_data.py        # writes public/data/results.json from committed results
     ../.venv/bin/python ../scripts/export_sandbox_fixture.py  # writes src/engine.fixture.json (Python engine output)
@@ -25,6 +25,10 @@ Node from `~/research/helix/.tools/node/bin`; Python from the repository's `.ven
     node tools/a11y_check.mjs dist --screenshots <dir>
 
 `npm run preview` serves the built `dist/` folder on 127.0.0.1. The built folder can also be opened from any static file server.
+
+## Hosting
+
+The built page is hosted at <https://token-local-inference-costs.kefimohamedbechir.workers.dev> as Cloudflare Workers static assets on the free plan (owner, 2026-11-26, decision sheet, B2). `wrangler.jsonc` declares assets only (the `dist/` folder written by `npm run build`), with no Worker script. The deployment is done by the coordinator, not by any script of this repository.
 
 ## Provenance
 

@@ -7,7 +7,7 @@
 
 - Experiment: EXP-003. Run: RUN-EXP-003-0001. Date: 2026-11-25. Protocol v1.0, frozen 2026-11-24 (owner, G-FREEZE), SHA-256 8196740a07ce6b0d0e254a23729aa18e5866e0b72b7ac3dd97b779e23a024068; main protocol ea86d0bb2d1864f69ac545bde1c8dd263276c8dbd9d1b3fee5b7a49b8dd4d2c3.
 - Config `experiments/EXP-003.json`, canonical SHA-256 3ebe5b2a60e4ddb6ae1c8e1e35f3d316f35f0fd56272f90299b992e702065560.
-- Code revision 57f6187e7b450fea05eedbbee8c663943596a699. Authorship: Mohamed Bechir Kefi (C3); the AI was used as a research and development assistant.
+- Code revision 57f6187e7b450fea05eedbbee8c663943596a699. Authorship: Mohamed Bechir Kefi, independent researcher (C3; owner, 2026-11-26, decision sheet, B3); the AI was used as a research and development assistant.
 
 ## 2. Executive summary
 

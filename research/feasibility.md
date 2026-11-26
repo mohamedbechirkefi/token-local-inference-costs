@@ -21,19 +21,19 @@ The brief's expected values (M1 Pro, 10 cores, 16 GB, macOS 15.3.1, about 127 GB
 | Tool | Version | Location | Status |
 |---|---|---|---|
 | Python | 3.12.1 | `/usr/local/bin/python3` | confirmed |
-| uv | 0.9.5 | `~/research/labs/.tools/py/bin/uv` | confirmed |
-| typst (Python package) | 0.15.0 | `~/research/labs/.tools/py/bin/python` | confirmed by import; there is no `typst` executable in that folder, the package is the compiler |
+| uv | 0.9.5 | `../.tools/py/bin/uv` (relative to the repository) | confirmed |
+| typst (Python package) | 0.15.0 | `../.tools/py/bin/python` | confirmed by import; there is no `typst` executable in that folder, the package is the compiler |
 | pypdf | 6.20.0 | same environment | confirmed |
 | pillow | 11.3.0 | same environment | confirmed |
-| pandoc | 3.6.3 | `~/research/labs/.tools/pandoc` | confirmed |
-| Node | 22.23.3 | `~/research/helix/.tools/node/bin` (read-only) | confirmed |
+| pandoc | 3.6.3 | `../.tools/pandoc` | confirmed |
+| Node | 22.23.3 | `helix/.tools/node/bin` under the research root (read-only) | confirmed |
 | git | 2.42.1 | system | confirmed |
 | TeX | none | `which tex pdflatex xelatex tectonic` | absent; see DL-002 |
 | powermetrics | present at `/usr/bin/powermetrics` | requires elevated privileges | not used (DL-005) |
 
 ## 3. Local inference runtime and models (read-only inventory)
 
-The owner runs Ollama for other projects. This session did not start, stop or pull anything. Commands used: `which ollama`, `ollama --version`, `ollama list`, and reading the manifest JSON files under `~/.ollama/models/manifests/registry.ollama.ai/library/` plus their config and licence blobs.
+The owner runs Ollama for other projects. This session did not start, stop or pull anything. Commands used: `which ollama`, `ollama --version`, `ollama list`, and reading the manifest JSON files under `.ollama/models/manifests/registry.ollama.ai/library/` in the owner's home folder plus their config and licence blobs.
 
 - `ollama` binary: `/opt/homebrew/bin/ollama`, client version 0.9.6.
 - Server: not running at audit time ("could not connect to a running Ollama instance"). Its version could not be read.

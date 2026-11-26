@@ -340,3 +340,16 @@ Listed in `research/publication/author_review.md` ("Prepared for the owner (M6, 
 - Repeat RUN-EXP-001-0002: block 3 swap growth 426.3 MiB, block 11 -8.0 MiB, both included, repeat spent; EXP-001 complete under the frozen rules; contrasts unchanged.
 - Coordinator: `cmp` of `RUN-EXP-001-0002/combined/contrasts.csv` against `RUN-EXP-001-0001/contrasts.csv` identical; combined `metrics.csv` values and both `result.json` SHA-256 (be35b70b..., 4743f2d7...) match the report; installed the EXP-001 report (pre-repeat attempt-2 text kept with headings one level lower and its figure replaced by a path); rebuilt PDFs (EXP-001 16 pages; the other four restored, sources unchanged); inspected pages 4 and 5 as PNG renders. `pytest`: "184 passed". Ollama not running.
 - Next action: the cross-repository wording, URL and Cloudflare round (owner decision sheet of 2026-11-26), then push on the owner's recorded word.
+
+## 2026-11-26: owner answers of 2026-11-26 applied (DL-019)
+
+- Authority: owner, 2026-11-26, decision sheet (`labs/_shared/owner-approvals-2026-11-26.md`); brief `labs/_shared/OWNER-ANSWERS-brief.md`. Starting state: `git status` clean at 752b364. Ollama not started or contacted; no inference, no benchmark; no result changed.
+- Applied (details in DL-019 and `research/publication/author_review.md`, "Owner answers recorded (2026-11-26)"): A1, B1 to B9, B10, B11, B13, B14 wording; `demo/wrangler.jsonc` (assets `./dist`); home paths in `CLAUDE.md`, README, `demo/README.md`, `research/feasibility.md` made repository-relative.
+- Relative tool paths tested from the repository root: `../.tools/py/bin/uv --version` "uv 0.9.5 (d5f39331a 2025-10-21)"; `../.tools/pandoc --version` "pandoc 3.6.3"; typst import "0.15.0"; `../../helix/.tools/node/bin` lists node, npm, npx, corepack.
+- `.venv/bin/python -I scripts/build_pdfs.py`: "built research/paper/manuscript.pdf: 20 pages", supplementary 7, EXP-001 16, EXP-002 7, EXP-003 5, "wrote research/paper/manuscript.tex"; `git checkout research/paper/supplementary.pdf` (source unchanged). pypdf: manuscript author metadata "Mohamed Bechir Kefi, independent researcher"; statements and URLs on page 18. PNG renders (60 ppi, scratch) inspected: manuscript pages 1, 18, 19; page 1 of each report.
+- `scripts/export_demo_data.py`: "wrote demo/public/data/results.json (99137 bytes)" (one line changed); `scripts/export_sandbox_fixture.py`: no change.
+- `.venv/bin/python -m pytest -q`: "184 passed in 13.51s".
+- Demo (Node from the helix tools, npm cache in scratch): `npm ci --prefer-offline` "added 53 packages in 6s"; `npm test` "Test Files 2 passed (2)", "Tests 21 passed (21)"; `npm run build` "built in 253ms"; `node tools/a11y_check.mjs dist`: 9 PASS lines and "A11Y-CHECK PASS" (keyboard 25 of 25). Built page loads only `./assets/...`.
+- `scripts/check_links.py .`: "relative links checked: 24; broken: 0".
+- Remaining home paths: 3 lines in this file and 1 in `research/decision_log.md` (append-only). Remaining owner placeholders: none.
+- Next action: the coordinator deploys the demo and pushes on the owner's recorded word; the owner's B15, B16, B18 and R-TOKEN-3. No push, no deploy, no box ticked.

@@ -10,7 +10,7 @@
 
 - Experiment: EXP-002. Run: RUN-EXP-002-0001. Date: 2026-11-26. Protocol v1.0, frozen 2026-11-24, SHA-256 54d46696e6b479c83235c789839ae3acaaaeeac1f38eccc6ef7c399d191c011e.
 - Config `experiments/EXP-002.json`, canonical SHA-256 6885e5f527df271897d6d2ba8f324fc73fd5135d250e92c8bd8dc94f4c3081cf (unchanged). Penalty analysis as committed before any EXP-002 data (DL-010).
-- Code revision eadcedd7e959af12d40df967f842528a0cbde954, clean tree (`dirty: false`). Authorship: Mohamed Bechir Kefi (C3); the AI was used as a research and development assistant.
+- Code revision eadcedd7e959af12d40df967f842528a0cbde954, clean tree (`dirty: false`). Authorship: Mohamed Bechir Kefi, independent researcher (C3; owner, 2026-11-26, decision sheet, B3); the AI was used as a research and development assistant.
 - **Dated deviation (owner-approved): runtime version 0.9.6 -> 0.40.6, owner option a** (owner, 2026-11-26, R-TOKEN-1; DL-015). Nothing else changed.
 
 ## 2. Executive summary

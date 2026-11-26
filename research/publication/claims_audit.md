@@ -18,3 +18,5 @@ Full record: `research/publication/evidence_audit.md`. Manifest: `research/publi
 - [x] Every new number traces to a committed result file or a stated derivation (evidence audit section 9).
 - [x] The EXP-001 claims carry the pending status (frozen stopping criterion met after the fact, DL-016); S2's reversal of the A1 sign is reported beside the primary strict result.
 - [ ] Owner decision on the EXP-001 status and on the manuscript title (`author_review.md`).
+
+Note (2026-11-26, DL-019): the EXP-001 status was settled by the owner's instruction to repeat blocks 3 and 11 (DL-017, DL-018) and the manuscript title by the owner's follow-up answer; the box above is left for the owner.
