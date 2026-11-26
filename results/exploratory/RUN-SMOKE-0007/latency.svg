@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="300" viewBox="0 0 640 300" font-family="Helvetica, Arial, sans-serif" font-size="12">
+<title>RUN-SMOKE-0007: per-item latency</title>
+<rect width="640" height="300" fill="white"/>
+<text x="150" y="24" font-size="13">RUN-SMOKE-0007: per-item latency</text>
+<line x1="150" y1="250" x2="610" y2="250" stroke="#333"/>
+<line x1="150.0" y1="250" x2="150.0" y2="254" stroke="#333"/>
+<text x="150.0" y="268" text-anchor="middle">0</text>
+<line x1="242.0" y1="250" x2="242.0" y2="254" stroke="#333"/>
+<text x="242.0" y="268" text-anchor="middle">155</text>
+<line x1="334.0" y1="250" x2="334.0" y2="254" stroke="#333"/>
+<text x="334.0" y="268" text-anchor="middle">310</text>
+<line x1="426.0" y1="250" x2="426.0" y2="254" stroke="#333"/>
+<text x="426.0" y="268" text-anchor="middle">466</text>
+<line x1="518.0" y1="250" x2="518.0" y2="254" stroke="#333"/>
+<text x="518.0" y="268" text-anchor="middle">621</text>
+<line x1="610.0" y1="250" x2="610.0" y2="254" stroke="#333"/>
+<text x="610.0" y="268" text-anchor="middle">776</text>
+<text x="380.0" y="290" text-anchor="middle">per-item median latency (ms)</text>
+<text x="140" y="84" text-anchor="end">A0 phi4-mini:3.8b</text>
+<circle cx="228.9" cy="80" r="3" fill="#1f4e79" fill-opacity="0.6"/>
+<circle cx="229.6" cy="80" r="3" fill="#1f4e79" fill-opacity="0.6"/>
+<circle cx="314.0" cy="80" r="3" fill="#1f4e79" fill-opacity="0.6"/>
+<circle cx="245.6" cy="80" r="3" fill="#1f4e79" fill-opacity="0.6"/>
+<circle cx="281.0" cy="80" r="3" fill="#1f4e79" fill-opacity="0.6"/>
+<circle cx="349.1" cy="80" r="3" fill="#1f4e79" fill-opacity="0.6"/>
+<circle cx="279.2" cy="80" r="3" fill="#1f4e79" fill-opacity="0.6"/>
+<circle cx="286.3" cy="80" r="3" fill="#1f4e79" fill-opacity="0.6"/>
+<circle cx="279.3" cy="80" r="3" fill="#1f4e79" fill-opacity="0.6"/>
+<circle cx="281.2" cy="80" r="3" fill="#1f4e79" fill-opacity="0.6"/>
+<line x1="280.1" y1="68" x2="280.1" y2="92" stroke="#b03a2e" stroke-width="2"/>
+<text x="140" y="144" text-anchor="end">A1 llama3.1:8b</text>
+<circle cx="302.1" cy="140" r="3" fill="#1f4e79" fill-opacity="0.6"/>
+<circle cx="304.2" cy="140" r="3" fill="#1f4e79" fill-opacity="0.6"/>
+<circle cx="481.5" cy="140" r="3" fill="#1f4e79" fill-opacity="0.6"/>
+<circle cx="336.7" cy="140" r="3" fill="#1f4e79" fill-opacity="0.6"/>
+<circle cx="407.3" cy="140" r="3" fill="#1f4e79" fill-opacity="0.6"/>
+<circle cx="552.0" cy="140" r="3" fill="#1f4e79" fill-opacity="0.6"/>
+<circle cx="407.5" cy="140" r="3" fill="#1f4e79" fill-opacity="0.6"/>
+<circle cx="405.0" cy="140" r="3" fill="#1f4e79" fill-opacity="0.6"/>
+<circle cx="406.6" cy="140" r="3" fill="#1f4e79" fill-opacity="0.6"/>
+<circle cx="408.9" cy="140" r="3" fill="#1f4e79" fill-opacity="0.6"/>
+<line x1="406.9" y1="128" x2="406.9" y2="152" stroke="#b03a2e" stroke-width="2"/>
+<text x="140" y="204" text-anchor="end">A2 ministral-3:8b</text>
+<circle cx="318.6" cy="200" r="3" fill="#1f4e79" fill-opacity="0.6"/>
+<circle cx="321.2" cy="200" r="3" fill="#1f4e79" fill-opacity="0.6"/>
+<circle cx="511.6" cy="200" r="3" fill="#1f4e79" fill-opacity="0.6"/>
+<circle cx="354.1" cy="200" r="3" fill="#1f4e79" fill-opacity="0.6"/>
+<circle cx="435.4" cy="200" r="3" fill="#1f4e79" fill-opacity="0.6"/>
+<circle cx="588.1" cy="200" r="3" fill="#1f4e79" fill-opacity="0.6"/>
+<circle cx="430.2" cy="200" r="3" fill="#1f4e79" fill-opacity="0.6"/>
+<circle cx="350.4" cy="200" r="3" fill="#1f4e79" fill-opacity="0.6"/>
+<circle cx="430.5" cy="200" r="3" fill="#1f4e79" fill-opacity="0.6"/>
+<circle cx="434.5" cy="200" r="3" fill="#1f4e79" fill-opacity="0.6"/>
+<line x1="430.4" y1="188" x2="430.4" y2="212" stroke="#b03a2e" stroke-width="2"/>
+</svg>
