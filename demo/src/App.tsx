@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: LicenseRef-TOKEN-NC-Research-1.0
 import { useEffect, useState } from "react";
-import { ContrastChart, FrontierChart, LatencyStrip } from "./charts";
+import { ContrastChart, FrontierChart, LatencyStrip, MemoryBars } from "./charts";
+import { Hero } from "./Hero";
 import { Energy } from "./Energy";
 import { fmtEstimate, fmtInterval, loadResults, ResultsError, type Estimate, type Experiment, type Results } from "./results";
 import { Sandbox } from "./Sandbox";
@@ -35,23 +36,26 @@ export function App() {
   return (
     <>
       <a className="skip" href="#main">Skip to content</a>
-      <header className="site">
-        <div className="wrap">
-          <p className="kicker">TOKEN · a preregistered measurement study on one laptop</p>
-          <h1>How do local model configurations trade off quality, latency and resource use?</h1>
+      <header className="bar">
+        <div className="bar-in">
+          <a className="brand" href="#main" aria-label="TOKEN, back to the top">
+            <img src="brand/token-lockup-dark.svg" alt="" width={112} height={32} />
+          </a>
           <nav aria-label="Sections">
-            <a href="#overview">Overview</a>
-            <a href="#results">Results</a>
+            <a href="#overview">Result</a>
+            <a href="#results">Experiments</a>
             <a href="#frontier">Frontier</a>
             <a href="#assumptions">Assumptions</a>
-            <a href="#method">Method and limitations</a>
-            <a href="#pending">Pending decisions</a>
-            <a href="#energy">Modelled energy</a>
+            <a href="#method">Method</a>
+            <a href="#pending">Decisions</a>
+            <a href="#energy">Energy</a>
             <a href="#sandbox">Sandbox</a>
+            <a href="#reproduce">Reproduce</a>
           </nav>
         </div>
       </header>
       <main id="main" className="wrap">
+        <Hero r={state.kind === "ready" ? state.results : null} />
         {state.kind === "loading" && <p role="status">Loading the published results.</p>}
         {state.kind === "error" && (
           <div role="alert" className="panel error">
@@ -62,21 +66,46 @@ export function App() {
         )}
         {state.kind === "ready" && <Published r={state.results} />}
         <Sandbox results={state.kind === "ready" ? state.results : null} />
+        <section id="reproduce" aria-labelledby="h-reproduce">
+          <h2 id="h-reproduce">Reproduce</h2>
+          <p>
+            Every number on this page is read from <code>public/data/results.json</code>, which a script writes from the
+            committed results; nothing is typed in by hand. From the repository root:
+          </p>
+          <pre className="cmd"><code>{`../.tools/py/bin/uv sync
+../.tools/py/bin/uv run pytest
+.venv/bin/python scripts/export_demo_data.py
+cd demo && npm ci && npm test && npm run build`}</code></pre>
+          <p>
+            Re-running the experiments needs Ollama and the same models on an idle machine; the frozen protocol is{" "}
+            <code>research/protocol.md</code> and each run's manifest sits next to its result.
+          </p>
+        </section>
       </main>
       <footer className="site">
-        <div className="wrap">
-          <p>
-            Runs offline after the first load. No data about visitors is collected, stored or sent anywhere, and the page
-            contacts no model runtime or other service.
-          </p>
-          <p>
-            Mohamed Bechir Kefi, independent researcher. Repository:{" "}
-            <a href="https://github.com/mohamedbechirkefi/token-local-inference-costs">
-              github.com/mohamedbechirkefi/token-local-inference-costs
-            </a>
-            . Page: token-local-inference-costs.kefimohamedbechir.workers.dev. Licence: TOKEN Source-Available Non-Commercial
-            Research License v1.0.
-          </p>
+        <div className="wrap foot">
+          <img src="brand/token-mark-dark.svg" alt="" width={40} height={40} className="foot-mark" />
+          <div>
+            <p className="foot-name">TOKEN, by Mohamed Bechir Kefi, independent researcher.</p>
+            <ul className="foot-links">
+              <li><a href="https://github.com/mohamedbechirkefi/token-local-inference-costs">Source repository on GitHub</a></li>
+              <li><a href="https://github.com/mohamedbechirkefi/token-local-inference-costs/blob/main/research/paper/manuscript.md">Manuscript (preprint draft, not peer-reviewed)</a></li>
+              <li><a href="https://labs.kefimohamedbechir.workers.dev">All lab studies</a></li>
+            </ul>
+            <p>
+              Runs offline after the first load. No data about visitors is collected, stored or sent anywhere, and the page
+              contacts no model runtime or other service. Page: token-local-inference-costs.kefimohamedbechir.workers.dev.
+            </p>
+            <p>Licence: TOKEN Source-Available Non-Commercial Research License v1.0.</p>
+            <p>
+              AI assistance: an AI system (Claude, Anthropic) was used as a research and development assistant under the
+              owner's direction; it is not an author.
+            </p>
+            <p>
+              Type: Chakra Petch (Cadson Demak) and IBM Plex Sans (IBM), both under the SIL Open Font License 1.1,
+              served from this site.
+            </p>
+          </div>
         </div>
       </footer>
     </>
@@ -125,7 +154,8 @@ function Published({ r }: { r: Results }) {
   return (
     <>
       <section id="overview" aria-labelledby="h-overview">
-        <h2 id="h-overview">Overview</h2>
+        <h2 id="h-overview">What the laptop showed</h2>
+        <MemoryBars arms={r.frontier.arms} />
         <p className="status-label"><strong>Status:</strong> {r.status_label}</p>
         <p>
           Three experiments were preregistered and frozen by the owner before any model output was seen. On Ollama 0.9.6, two
@@ -136,6 +166,7 @@ function Published({ r }: { r: Results }) {
           Q4_K_M on 300 ARC-Challenge items and detected no accuracy difference; it is not evidence of equivalence. No
           latency comparison is made across runtime versions.
         </p>
+        <h3>How to read the labels</h3>
         <ul className="legend" aria-label="Labels used on this page">
           <li><span className="tag tag-measured">measured</span> committed results of RUN-EXP-003-0001, RUN-EXP-001-0001 with blocks 3 and 11 from RUN-EXP-001-0002, and RUN-EXP-002-0001</li>
           <li><span className="tag tag-exploratory">exploratory</span> re-analysis of committed records (JRN-0009, JRN-0013, JRN-0015), no confirmatory weight</li>
@@ -160,7 +191,7 @@ function Published({ r }: { r: Results }) {
         </p>
         <div className="exp-grid">
           {r.experiments.map((e) => (
-            <article key={e.id} className={`panel outcome-${e.outcome.replace(" ", "-")}`} aria-labelledby={`h-${e.id}`}>
+            <article key={e.id} className={`panel outcome-${e.outcome.replace(" ", "-")}${e.id !== "EXP-003" && e.estimates.length > 8 ? " wide" : ""}`} aria-labelledby={`h-${e.id}`}>
               <h3 id={`h-${e.id}`}>
                 {e.id}: {e.title}
               </h3>
@@ -168,19 +199,22 @@ function Published({ r }: { r: Results }) {
                 <span className="badge">{OUTCOME_TEXT[e.outcome]}</span> <span className="meta">{e.status}</span>
               </p>
               <p><strong>Verdict under the frozen rule:</strong> {e.verdict}</p>
-              {e.id !== "EXP-003" &&
-                e.estimates.map((x) => (
+              {e.id !== "EXP-003" && (
+                <div className="lines">
+                {e.estimates.map((x) => (
                   <p key={x.label} className="failed-line">
                     {kindTag(x.kind)} {x.label}: <strong>{fmtEstimate(x)}</strong>{" "}
                     <span className="meta">({x.interval_kind ?? "no interval"})</span>
                   </p>
                 ))}
+                </div>
+              )}
               {e.notes.map((n, i) => (
                 <p key={i} className={n.startsWith("Pending owner decision") ? "pending-note" : "note"}>{n}</p>
               ))}
               <p className="meta">
                 Report: <code>{e.report_path}</code>
-                {e.claim_ids.length > 0 && <> · Claims: {e.claim_ids.join(", ")}</>}
+                {e.claim_ids.length > 0 && <>; claims: {e.claim_ids.join(", ")}</>}
               </p>
             </article>
           ))}

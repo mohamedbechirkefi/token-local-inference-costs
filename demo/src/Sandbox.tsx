@@ -135,8 +135,9 @@ export function Sandbox({ results }: { results: Results | null }) {
           </label>
         </p>
       )}
-      <p aria-live="polite" className="sandbox-out">{out}</p>
+      <p aria-live="polite" className="sandbox-out">{out && <span key={out} className="fresh">{out}</span>}</p>
       {out && ref && <p className="meta">{ref}</p>}
+      {!out && !running && items && <p className="meta">Choose the settings and run the re-analysis; the output is labelled as sandbox output.</p>}
     </section>
   );
 }

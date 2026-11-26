@@ -32,4 +32,11 @@ The built page is hosted at <https://token-local-inference-costs.kefimohamedbech
 
 ## Provenance
 
-Started from the shared lab demo template (`labs/_shared/demo-template/`, CC0-1.0, verified 2026-11-25), including `tools/a11y_check.mjs`. Pinned versions are unchanged and no dependency was added.
+Started from the shared lab demo template (`labs/_shared/demo-template/`, CC0-1.0, verified 2026-11-25), including `tools/a11y_check.mjs`. On 2026-11-26 the page received its own brand identity, motion and layout at the owner's request; the design plan is `DESIGN.md` and the brand files (logo, favicon, Open Graph image) are in `public/brand/`, drawn for this repository and covered by its licence. The only dependencies added are the two font packages below; the other pinned versions are unchanged.
+
+## Third-party notes
+
+- **Chakra Petch** by Cadson Demak: package `@fontsource/chakra-petch`, version v5.3.0, pinned exactly; only the latin subset at weight 600 is bundled. Licence: SIL Open Font License (OFL-1.1).
+- **IBM Plex Sans** by IBM: package `@fontsource-variable/ibm-plex-sans`, version v5.3.0, pinned exactly; only the latin subset of the variable weight axis is bundled. Licence: SIL Open Font License (OFL-1.1).
+
+Both are self-hosted in the built page; nothing is loaded from another origin.
