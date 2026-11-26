@@ -1,0 +1,422 @@
+{
+ "B_blocks": {
+  "blocks": [
+   {
+    "arm": "A0",
+    "criteria_met": [],
+    "loaded_after": [
+     "phi4-mini:3.8b"
+    ],
+    "loaded_before": [],
+    "position": 1,
+    "repetition": 0,
+    "swap_delta_mib": 0.0,
+    "wall_s": 79.40646875000675
+   },
+   {
+    "arm": "A2",
+    "criteria_met": [],
+    "loaded_after": [
+     "ministral-3:8b"
+    ],
+    "loaded_before": [
+     "phi4-mini:3.8b"
+    ],
+    "position": 2,
+    "repetition": 0,
+    "swap_delta_mib": 0.0,
+    "wall_s": 154.81961399997817
+   },
+   {
+    "arm": "A1",
+    "criteria_met": [
+     "exclusion: swap growth 734.1 MiB above 512 MiB"
+    ],
+    "loaded_after": [
+     "llama3.1:8b"
+    ],
+    "loaded_before": [
+     "ministral-3:8b"
+    ],
+    "position": 3,
+    "repetition": 0,
+    "swap_delta_mib": 734.125,
+    "wall_s": 146.70684183298727
+   },
+   {
+    "arm": "A2",
+    "criteria_met": [],
+    "loaded_after": [
+     "ministral-3:8b"
+    ],
+    "loaded_before": [
+     "llama3.1:8b"
+    ],
+    "position": 4,
+    "repetition": 1,
+    "swap_delta_mib": 0.0,
+    "wall_s": 154.9346985410084
+   },
+   {
+    "arm": "A1",
+    "criteria_met": [],
+    "loaded_after": [
+     "llama3.1:8b"
+    ],
+    "loaded_before": [
+     "ministral-3:8b"
+    ],
+    "position": 5,
+    "repetition": 1,
+    "swap_delta_mib": 0.0,
+    "wall_s": 145.5029316250002
+   },
+   {
+    "arm": "A0",
+    "criteria_met": [],
+    "loaded_after": [
+     "phi4-mini:3.8b"
+    ],
+    "loaded_before": [
+     "llama3.1:8b"
+    ],
+    "position": 6,
+    "repetition": 1,
+    "swap_delta_mib": 0.0,
+    "wall_s": 80.61709545800113
+   },
+   {
+    "arm": "A0",
+    "criteria_met": [],
+    "loaded_after": [
+     "phi4-mini:3.8b"
+    ],
+    "loaded_before": [
+     "phi4-mini:3.8b"
+    ],
+    "position": 7,
+    "repetition": 2,
+    "swap_delta_mib": 0.0,
+    "wall_s": 25.66476604199852
+   },
+   {
+    "arm": "A2",
+    "criteria_met": [],
+    "loaded_after": [
+     "ministral-3:8b"
+    ],
+    "loaded_before": [
+     "phi4-mini:3.8b"
+    ],
+    "position": 8,
+    "repetition": 2,
+    "swap_delta_mib": 0.0,
+    "wall_s": 154.69905950000975
+   },
+   {
+    "arm": "A1",
+    "criteria_met": [],
+    "loaded_after": [
+     "llama3.1:8b"
+    ],
+    "loaded_before": [
+     "ministral-3:8b"
+    ],
+    "position": 9,
+    "repetition": 2,
+    "swap_delta_mib": -8.0,
+    "wall_s": 145.34024108300218
+   },
+   {
+    "arm": "A2",
+    "criteria_met": [],
+    "loaded_after": [
+     "ministral-3:8b"
+    ],
+    "loaded_before": [
+     "llama3.1:8b"
+    ],
+    "position": 10,
+    "repetition": 3,
+    "swap_delta_mib": 0.0,
+    "wall_s": 154.9603352920094
+   },
+   {
+    "arm": "A0",
+    "criteria_met": [
+     "exclusion: swap growth 2778.1 MiB above 512 MiB",
+     "stopping rule: swap growth 2778.1 MiB above 2 GiB (memory exhaustion, abort)"
+    ],
+    "loaded_after": [
+     "phi4-mini:3.8b",
+     "ministral-3:8b"
+    ],
+    "loaded_before": [
+     "ministral-3:8b"
+    ],
+    "position": 11,
+    "repetition": 3,
+    "swap_delta_mib": 2778.0625,
+    "wall_s": 80.91300212498754
+   },
+   {
+    "arm": "A1",
+    "criteria_met": [],
+    "loaded_after": [
+     "llama3.1:8b"
+    ],
+    "loaded_before": [
+     "phi4-mini:3.8b",
+     "ministral-3:8b"
+    ],
+    "position": 12,
+    "repetition": 3,
+    "swap_delta_mib": -374.1875,
+    "wall_s": 148.42313224999816
+   },
+   {
+    "arm": "A0",
+    "criteria_met": [],
+    "loaded_after": [
+     "phi4-mini:3.8b"
+    ],
+    "loaded_before": [
+     "llama3.1:8b"
+    ],
+    "position": 13,
+    "repetition": 4,
+    "swap_delta_mib": -48.0,
+    "wall_s": 80.15447870802018
+   },
+   {
+    "arm": "A1",
+    "criteria_met": [],
+    "loaded_after": [
+     "llama3.1:8b"
+    ],
+    "loaded_before": [
+     "phi4-mini:3.8b"
+    ],
+    "position": 14,
+    "repetition": 4,
+    "swap_delta_mib": -120.0625,
+    "wall_s": 141.90738095800043
+   },
+   {
+    "arm": "A2",
+    "criteria_met": [],
+    "loaded_after": [
+     "ministral-3:8b"
+    ],
+    "loaded_before": [
+     "llama3.1:8b"
+    ],
+    "position": 15,
+    "repetition": 4,
+    "swap_delta_mib": -1608.8125,
+    "wall_s": 155.0084154579963
+   }
+  ],
+  "first_stopping_rule_block": 11,
+  "n_blocks": 15,
+  "n_blocks_meeting_a_criterion": 2,
+  "power_note": "power is recorded at run start and end only, not per block",
+  "power_sources_at_run_start_and_end": [
+   "ac"
+  ],
+  "runtime_version_note": "one server process (started by the rerun session) served the whole run; version read once"
+ },
+ "E1_latency_ratio": {
+  "A1/A0": {
+   "items_arm_slower": 300,
+   "median_of_item_ratios": 1.9768231078000895,
+   "median_of_item_ratios_ci": [
+    1.9725831867410712,
+    1.9799358704216636
+   ],
+   "n_items": 300,
+   "ratio_of_medians": 1.9619619231005685,
+   "ratio_of_medians_ci": [
+    1.766702353893032,
+    1.9676922601830347
+   ]
+  },
+  "A2/A0": {
+   "items_arm_slower": 300,
+   "median_of_item_ratios": 2.1623930124003046,
+   "median_of_item_ratios_ci": [
+    2.156008191359981,
+    2.1660117774127863
+   ],
+   "n_items": 300,
+   "ratio_of_medians": 2.1514236857378295,
+   "ratio_of_medians_ci": [
+    1.9369481367430823,
+    2.1570273131342605
+   ]
+  }
+ },
+ "F_strict_format_failures": {
+  "A0": {
+   "most_frequent": [
+    [
+     "B. liquid",
+     5
+    ],
+    [
+     "A. wind energy",
+     5
+    ],
+    [
+     "C. homozygous recessive",
+     5
+    ],
+    [
+     "C. southeast",
+     5
+    ],
+    [
+     "C. It is one of several possible",
+     5
+    ]
+   ],
+   "n_items": 104,
+   "n_records": 520
+  },
+  "A1": {
+   "most_frequent": [
+    [
+     "## Step 1: Understand the question",
+     5
+    ],
+    [
+     "## Step 1: Recall Newton's",
+     5
+    ]
+   ],
+   "n_items": 2,
+   "n_records": 10
+  },
+  "A2": {
+   "most_frequent": [
+    [
+     "A\n```",
+     5
+    ]
+   ],
+   "n_items": 1,
+   "n_records": 5
+  }
+ },
+ "M_runtime_model_mib": {
+  "A0": 2698.5799989700317,
+  "A1": 4777.499999046326,
+  "A2": 5113.589998245239
+ },
+ "P_block_prefill_ms_median": {
+  "A0_rep0": 191.35,
+  "A0_rep1": 191.095,
+  "A0_rep2": 22.046,
+  "A0_rep3": 191.247,
+  "A0_rep4": 191.197,
+  "A1_rep0": 388.5995,
+  "A1_rep1": 388.5195,
+  "A1_rep2": 388.698,
+  "A1_rep3": 390.159,
+  "A1_rep4": 389.0645,
+  "A2_rep0": 422.39200000000005,
+  "A2_rep1": 422.3105,
+  "A2_rep2": 422.249,
+  "A2_rep3": 422.54650000000004,
+  "A2_rep4": 422.5095
+ },
+ "R_accuracy_per_repetition": {
+  "A0_rep0": {
+   "lenient": 0.8133333333333334,
+   "n": 300,
+   "strict": 0.56
+  },
+  "A0_rep1": {
+   "lenient": 0.8133333333333334,
+   "n": 300,
+   "strict": 0.56
+  },
+  "A0_rep2": {
+   "lenient": 0.8133333333333334,
+   "n": 300,
+   "strict": 0.56
+  },
+  "A0_rep3": {
+   "lenient": 0.8133333333333334,
+   "n": 300,
+   "strict": 0.56
+  },
+  "A0_rep4": {
+   "lenient": 0.8133333333333334,
+   "n": 300,
+   "strict": 0.56
+  },
+  "A1_rep0": {
+   "lenient": 0.72,
+   "n": 300,
+   "strict": 0.72
+  },
+  "A1_rep1": {
+   "lenient": 0.72,
+   "n": 300,
+   "strict": 0.72
+  },
+  "A1_rep2": {
+   "lenient": 0.72,
+   "n": 300,
+   "strict": 0.72
+  },
+  "A1_rep3": {
+   "lenient": 0.72,
+   "n": 300,
+   "strict": 0.72
+  },
+  "A1_rep4": {
+   "lenient": 0.72,
+   "n": 300,
+   "strict": 0.72
+  },
+  "A2_rep0": {
+   "lenient": 0.8966666666666666,
+   "n": 300,
+   "strict": 0.8933333333333333
+  },
+  "A2_rep1": {
+   "lenient": 0.8966666666666666,
+   "n": 300,
+   "strict": 0.8933333333333333
+  },
+  "A2_rep2": {
+   "lenient": 0.8966666666666666,
+   "n": 300,
+   "strict": 0.8933333333333333
+  },
+  "A2_rep3": {
+   "lenient": 0.8966666666666666,
+   "n": 300,
+   "strict": 0.8933333333333333
+  },
+  "A2_rep4": {
+   "lenient": 0.8966666666666666,
+   "n": 300,
+   "strict": 0.8933333333333333
+  }
+ },
+ "bootstrap": {
+  "interval": "percentile 95 %",
+  "n_boot": 10000,
+  "seed": 7,
+  "unit": "item"
+ },
+ "generator": "scripts/rerun_exploratory_exp001.py",
+ "label": "exploratory",
+ "note": "Checks of committed records only; no inference and no timing measurement were run. Does not change the frozen EXP-001 analysis or verdict.",
+ "runtime_version": "0.40.6",
+ "source": "results/confirmatory/RUN-EXP-001-0001/result.json",
+ "source_sha256": "f95ee2055a9048559162cf8417a63f31682e5bf23dd724e0813b38e197cd003c"
+}

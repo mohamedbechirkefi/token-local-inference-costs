@@ -1,0 +1,4 @@
+arm,model,n_records,n_items,accuracy_strict,accuracy_lenient,chance,errors,format_fail_strict,format_fail_lenient,latency_ms_median,latency_ms_q1,latency_ms_q3,ttft_ms_median,decode_tps_median,prefill_tps_median,determinism,peak_rss_mib,swap_delta_mib_max,rep_latency_cv
+A0,phi4-mini:3.8b,20,1,1.0,1.0,0.25,0,0,0,537.2639375,537.2639375,537.2639375,514.325167,90.43626753020935,1990.3147023413721,1.0,27.96875,0.0,
+A1,llama3.1:8b,20,1,0.0,0.0,0.25,0,0,0,805.4941464999999,805.4941464999999,805.4941464999999,763.3655835000001,49.6490627787834,1182.0786426051236,1.0,28.671875,-8.0,
+A2,ministral-3:8b,20,1,1.0,1.0,0.25,0,0,0,2739.6614375,2739.6614375,2739.6614375,2692.9450625,45.754424838573726,7250.524966740562,1.0,29.171875,-24.0,
